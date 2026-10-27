@@ -197,7 +197,7 @@ export const apps: App[] = [
     platforms: ['macos', 'windows'],
     status: 'beta',
     version: '0.1.1',
-    accent: '#4f6bff',
+    accent: '#3a55f0',
     onAccent: '#ffffff',
     glow: ['#4fa8ff', '#3b5bff', '#5a2fd6'],
     links: [{ kind: 'releases', href: 'https://github.com/ehroz1/pachaq-releases/releases', label: t('Страница релизов', 'Releases page') }],
@@ -248,7 +248,7 @@ export const apps: App[] = [
     platforms: ['macos'],
     status: 'dev',
     accent: '#ff5b2e',
-    onAccent: '#ffffff',
+    onAccent: '#1d1d1f',
     glow: ['#ff5b2e', '#6b3a2a', '#2a2a33'],
     links: [{ kind: 'releases', href: 'https://github.com/ehroz1/sukhan-releases', label: t('Следить за релизами', 'Watch for releases') }],
     features: [

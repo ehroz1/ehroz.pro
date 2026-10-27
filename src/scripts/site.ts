@@ -444,6 +444,8 @@ function party() {
 
 /* ── Обои и сцены — после первой отрисовки ── */
 const idle = (fn: () => void) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 1200 }) : setTimeout(fn, 200));
-if (document.readyState === 'complete') idle(startWallpaper);
-else addEventListener('load', () => idle(startWallpaper), { once: true });
+// Обои стартуют чуть позже первой отрисовки — компиляция шейдера не мешает загрузке страницы.
+const later = () => setTimeout(() => idle(startWallpaper), 900);
+if (document.readyState === 'complete') later();
+else addEventListener('load', later, { once: true });
 initScenes();
