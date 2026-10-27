@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ehroz1.github.io/ehroz.pro/sitemap-index.xml
