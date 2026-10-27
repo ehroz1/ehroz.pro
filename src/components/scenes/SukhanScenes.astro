@@ -1,5 +1,5 @@
 ---
-// Сцены Sukhan — по ui/src/styles/app.css (токены Morfus + оранжевый #ff5b2e) и строкам ui/src/i18n/ru.json.
+// Сцены Sukhan — по ui/src/styles/app.css (токены Morfus); фирменный оранжевый заменён цветом изделия #F2CC4E по концепции сайта и строкам ui/src/i18n/ru.json.
 // Цифры в сцене «рендер» — из docs/PROGRESS.md (замеры на Apple M4).
 import Scene from './Scene.astro';
 import { asset } from '../../i18n';
@@ -264,7 +264,7 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
     height: 24px;
   }
   .th.t2 {
-    background: repeating-linear-gradient(90deg, #ff5b2e 0 2px, transparent 2px 5px), #24242a;
+    background: repeating-linear-gradient(90deg, #F2CC4E 0 2px, transparent 2px 5px), #24242a;
     height: 24px;
   }
   .stage {
@@ -330,7 +330,7 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
     transition: color 0.1s, transform 0.2s cubic-bezier(0.2, 1.6, 0.4, 1);
   }
   .w:global(.act) {
-    color: #ff5b2e;
+    color: #F2CC4E;
     transform: scale(1.1);
   }
   .safe {
@@ -398,7 +398,7 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
   }
   .tc {
     font: 600 12.5px ui-monospace, Menlo, monospace;
-    color: #ff5b2e;
+    color: #F2CC4E;
   }
   .tl-hint {
     color: #9a9aa5;
@@ -441,7 +441,7 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
   }
   .blk:global(.lift) {
     background: #3a3a44;
-    box-shadow: inset 0 0 0 1.5px #ff5b2e, 0 6px 16px rgba(0, 0, 0, 0.4);
+    box-shadow: inset 0 0 0 1.5px #F2CC4E, 0 6px 16px rgba(0, 0, 0, 0.4);
     z-index: 2;
   }
   .wave {
@@ -462,9 +462,9 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
     bottom: 0;
     left: 0;
     width: 2px;
-    background: #ff5b2e;
+    background: #F2CC4E;
     transition: left 0.11s linear;
-    box-shadow: 0 0 10px rgba(255, 91, 46, 0.6);
+    box-shadow: none;
   }
   .head::before {
     content: '';
@@ -474,7 +474,7 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
     width: 12px;
     height: 10px;
     border-radius: 3px 3px 6px 6px;
-    background: #ff5b2e;
+    background: #F2CC4E;
   }
 
   /* форматы кадра */
@@ -560,7 +560,7 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
     paint-order: stroke fill;
   }
   .cap1 .act {
-    color: #ff5b2e;
+    color: #F2CC4E;
   }
 
   /* рендер */
@@ -571,7 +571,7 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
     display: flex;
     flex-direction: column;
     gap: 30px;
-    background: radial-gradient(80% 60% at 80% 0%, rgba(255, 91, 46, 0.18), transparent 60%), #141417;
+    background: #141417;
     color: #f2f2f5;
   }
   .eng-h {
@@ -622,7 +622,7 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
     background: rgba(255, 255, 255, 0.22);
   }
   .bar.hot .bt2 i {
-    background: #ff5b2e;
+    background: #F2CC4E;
   }
   .bar b {
     text-align: right;

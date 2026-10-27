@@ -26,20 +26,20 @@ const providers: [string, string, number, number, boolean][] = [
   ['OpenAI', 'OpenAI', 3, 1, true],
 ];
 const tiles = [
-  [180, 'linear-gradient(160deg,#f5c28a,#d97a4a)', 'pixabay'],
+  [180, 'linear-gradient(160deg,#b9d8e8,#4f8fb0)', 'pixabay'],
   [120, 'linear-gradient(160deg,#9fb7c9,#4d6a85)', 'pexels'],
   [150, 'linear-gradient(160deg,#e8d9c5,#a88d6c)', 'unsplash'],
   [200, 'linear-gradient(160deg,#bfc8a8,#6f7d52)', 'wikimedia'],
-  [130, 'linear-gradient(160deg,#f0b8a0,#b05f4a)', 'openverse'],
+  [130, 'linear-gradient(160deg,#e3c4e6,#9b5fa8)', 'openverse'],
   [170, 'linear-gradient(160deg,#d6d0e8,#7d6fa8)', 'pexels'],
   [140, 'linear-gradient(160deg,#f4dfa0,#c99b3b)', 'pixabay'],
   [190, 'linear-gradient(160deg,#a8c4b8,#4f7d6c)', 'unsplash'],
   [120, 'linear-gradient(160deg,#c7c9cf,#6e7180)', 'wikimedia'],
-  [160, 'linear-gradient(160deg,#f2c9c0,#c4776a)', 'openverse'],
+  [160, 'linear-gradient(160deg,#c9cff0,#6a74c4)', 'openverse'],
   [150, 'linear-gradient(160deg,#b3d1ef,#5a86b8)', 'pixabay'],
   [130, 'linear-gradient(160deg,#e6cfa8,#9b7a45)', 'pexels'],
 ] as const;
-const src: Record<string, string> = { pixabay: '#2ecc71', pexels: '#05a081', unsplash: '#101114', wikimedia: '#3366cc', openverse: '#ff6428' };
+const src: Record<string, string> = { pixabay: '#2ecc71', pexels: '#05a081', unsplash: '#101114', wikimedia: '#3366cc', openverse: '#e8506a' };
 // простые иконки для режима «Иконки» (stroke, 24×24)
 const icons = [
   '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
@@ -399,7 +399,7 @@ const palette = ['#0b3d5c', '#1b6a8f', '#3fa1c4', '#8fd3e8', '#e8f4f6', '#d9c8a6
             <div class="i-bar">
               <span class="i-q">{ru ? 'дом' : 'home'} · Iconify</span>
               <span class="sws">
-                {['#101114', '#7c5cff', '#ff6428', '#05a081'].map((c, i) => (
+                {['#101114', '#7c5cff', '#e8506a', '#05a081'].map((c, i) => (
                   <i data-sw={c} class:list={{ on: i === 0 }} style={`background:${c}`} />
                 ))}
               </span>
@@ -850,7 +850,7 @@ const palette = ['#0b3d5c', '#1b6a8f', '#3fa1c4', '#8fd3e8', '#e8f4f6', '#d9c8a6
     color: #2563eb;
   }
   .s2 {
-    color: #c2410c;
+    color: #7c3aed;
   }
   .dl {
     display: flex;

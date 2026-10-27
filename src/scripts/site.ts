@@ -1,11 +1,9 @@
-import { startWallpaper } from './wallpaper';
 import { initScenes } from './scenes';
 import './scenes-more';
 
 const $ = <T extends Element = HTMLElement>(s: string, root: ParentNode = document) => root.querySelector<T>(s);
 const $$ = <T extends Element = HTMLElement>(s: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(s));
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 const lang = document.documentElement.lang === 'en' ? 'en' : 'ru';
 
 /* ── Тема ── */
@@ -222,35 +220,6 @@ if (spot) {
   });
 }
 
-/* ── Dock: увеличение как в macOS ── */
-const dock = $('[data-dock]');
-if (dock && finePointer && !reduced) {
-  const items = $$('.dock-item', dock);
-  const MAX = 0.75; // +75% у иконки под курсором
-  const RANGE = 150; // px — насколько далеко «дотягивается» эффект
-  let raf = 0;
-  let px = -1;
-  const apply = () => {
-    raf = 0;
-    items.forEach((it) => {
-      const r = it.getBoundingClientRect();
-      const c = r.left + r.width / 2;
-      const d = px < 0 ? Infinity : Math.abs(px - c);
-      const s = d > RANGE ? 1 : 1 + MAX * Math.cos(((d / RANGE) * Math.PI) / 2) ** 2;
-      it.style.setProperty('--s', s.toFixed(3));
-    });
-  };
-  dock.addEventListener('pointerenter', () => dock.classList.add('live'));
-  dock.addEventListener('pointermove', (e) => {
-    px = e.clientX;
-    if (!raf) raf = requestAnimationFrame(apply);
-  });
-  dock.addEventListener('pointerleave', () => {
-    px = -1;
-    dock.classList.remove('live');
-    apply();
-  });
-}
 // Клик по иконке приложения — «прыжок», как при запуске
 $$('.dock-item a[data-app-link]').forEach((a) =>
   a.addEventListener('click', () => {
@@ -284,92 +253,6 @@ window.addEventListener('pagereveal', (e: Event) => {
   if (card && !document.documentElement.dataset.slug) card.style.viewTransitionName = 'app-icon';
   else if (card && document.documentElement.dataset.slug !== slug) card.style.viewTransitionName = '';
 });
-
-/* ── Появление при прокрутке ── */
-const io = new IntersectionObserver(
-  (entries) =>
-    entries.forEach((en) => {
-      if (en.isIntersecting) {
-        en.target.classList.add('in');
-        io.unobserve(en.target);
-      }
-    }),
-  { rootMargin: '0px 0px -8% 0px', threshold: 0.08 },
-);
-$$('.reveal').forEach((el) => io.observe(el));
-
-/* ── Наклон карточек-окон за курсором + блик ── */
-if (finePointer && !reduced) {
-  $$('[data-tilt]').forEach((el) => {
-    let raf = 0;
-    let tx = 0,
-      ty = 0;
-    const set = () => {
-      raf = 0;
-      el.style.setProperty('--rx', `${(-ty * 5).toFixed(2)}deg`);
-      el.style.setProperty('--ry', `${(tx * 6).toFixed(2)}deg`);
-      el.style.setProperty('--gx', `${((tx + 1) * 50).toFixed(1)}%`);
-      el.style.setProperty('--gy', `${((ty + 1) * 50).toFixed(1)}%`);
-    };
-    el.addEventListener('pointermove', (e) => {
-      const r = el.getBoundingClientRect();
-      tx = ((e.clientX - r.left) / r.width) * 2 - 1;
-      ty = ((e.clientY - r.top) / r.height) * 2 - 1;
-      el.classList.add('tilting');
-      if (!raf) raf = requestAnimationFrame(set);
-    });
-    el.addEventListener('pointerleave', () => {
-      tx = ty = 0;
-      el.classList.remove('tilting');
-      set();
-    });
-  });
-
-  /* Магнитные кнопки */
-  $$('.magnetic').forEach((el) => {
-    el.addEventListener('pointermove', (e) => {
-      const r = el.getBoundingClientRect();
-      const x = e.clientX - (r.left + r.width / 2);
-      const y = e.clientY - (r.top + r.height / 2);
-      el.style.transform = `translate(${x * 0.18}px, ${y * 0.28}px)`;
-    });
-    el.addEventListener('pointerleave', () => {
-      el.style.transform = '';
-    });
-  });
-
-  /* Курсор-кольцо: растёт над интерактивом */
-  const cur = $('.cursor');
-  if (cur) {
-    let x = -100,
-      y = -100,
-      cx = -100,
-      cy = -100,
-      raf = 0;
-    const loop = () => {
-      cx += (x - cx) * 0.25;
-      cy += (y - cy) * 0.25;
-      cur.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
-      raf = Math.abs(x - cx) + Math.abs(y - cy) > 0.3 ? requestAnimationFrame(loop) : 0;
-    };
-    addEventListener(
-      'pointermove',
-      (e) => {
-        if (e.pointerType !== 'mouse') return;
-        x = e.clientX;
-        y = e.clientY;
-        cur.classList.add('on');
-        const t = e.target as HTMLElement;
-        cur.classList.toggle('hover', !!t.closest('a, button, summary, [role="option"], input, label'));
-        if (!raf) raf = requestAnimationFrame(loop);
-      },
-      { passive: true },
-    );
-    document.addEventListener('pointerleave', () => cur.classList.remove('on'));
-    addEventListener('pointerdown', () => cur.classList.add('down'));
-    addEventListener('pointerup', () => cur.classList.remove('down'));
-  }
-}
 
 /* ── Пасхалка: Konami-код или двойной щелчок по логотипу → дождь из иконок ── */
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
@@ -442,10 +325,5 @@ function party() {
   requestAnimationFrame(step);
 }
 
-/* ── Обои и сцены — после первой отрисовки ── */
-const idle = (fn: () => void) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 1200 }) : setTimeout(fn, 200));
-// Обои стартуют чуть позже первой отрисовки — компиляция шейдера не мешает загрузке страницы.
-const later = () => setTimeout(() => idle(startWallpaper), 900);
-if (document.readyState === 'complete') later();
-else addEventListener('load', later, { once: true });
+/* ── Сцены ── */
 initScenes();

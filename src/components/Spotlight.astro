@@ -27,7 +27,7 @@ const items = [
 ];
 ---
 
-<dialog class="spot glass-strong" id="spotlight" aria-label={tr(lang, 'spot.placeholder')}>
+<dialog class="spot" id="spotlight" aria-label={tr(lang, 'spot.placeholder')}>
   <div class="spot-field">
     <Icon name="search" size={22} />
     <input
@@ -61,30 +61,30 @@ const items = [
     width: min(640px, calc(100vw - 24px));
     margin: 14vh auto auto;
     padding: 0;
-    border: 0;
-    border-radius: 20px;
+    border: 1px solid var(--line-strong);
+    background: var(--cell);
     color: var(--text);
-    overflow: hidden;
   }
   .spot[open] {
-    animation: spot-in 0.32s var(--spring);
+    animation: spot-in var(--mid) var(--ease);
   }
   @keyframes spot-in {
     from {
       opacity: 0;
-      transform: scale(0.96) translateY(-6px);
+      transform: translateY(-6px);
     }
   }
   .spot::backdrop {
-    background: rgba(0, 0, 0, 0.18);
+    background: rgba(0, 0, 0, 0.55);
   }
   .spot-field {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 0 18px;
-    height: 62px;
-    color: var(--muted);
+    padding: 0 16px;
+    height: 60px;
+    color: var(--faint);
+    border-bottom: 1px solid var(--line);
   }
   .spot-field input {
     flex: 1;
@@ -94,52 +94,51 @@ const items = [
     outline: 0;
     background: transparent;
     color: var(--text);
-    font: inherit;
-    font-size: 22px;
-    font-weight: 450;
+    font: 500 21px/1 var(--font-sans);
     letter-spacing: -0.01em;
   }
   .spot-field input::-webkit-search-cancel-button {
     display: none;
   }
   .spot-field kbd {
-    font: inherit;
-    font-size: 11px;
-    padding: 2px 7px;
-    border-radius: 6px;
-    background: var(--chip);
+    padding: 4px 6px;
+    border: 1px solid var(--line-strong);
+    font: 500 10px/1 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
   .spot-list {
     list-style: none;
     margin: 0;
-    padding: 6px;
+    padding: 0;
     max-height: min(56vh, 460px);
     overflow-y: auto;
-    border-top: 0.5px solid var(--line);
   }
   .spot-list:empty {
     display: none;
   }
   .spot-list :global(.spot-group) {
-    padding: 8px 12px 4px;
+    padding: 10px 16px 6px;
     color: var(--faint);
-    font-size: 11.5px;
-    font-weight: 650;
+    font: 500 10.5px/1 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
   .spot-list :global(.spot-item) {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 8px 10px;
-    border-radius: 11px;
+    padding: 8px 16px;
+    border-top: 1px solid var(--line);
     cursor: pointer;
   }
   .spot-list :global(.spot-item[aria-selected='true']) {
-    background: color-mix(in srgb, var(--wall-a) 70%, #3478f6);
-    color: #fff;
+    background: var(--accent);
+    color: var(--on-accent);
   }
-  .spot-list :global(.spot-item[aria-selected='true'] small) {
-    color: rgba(255, 255, 255, 0.8);
+  .spot-list :global(.spot-item[aria-selected='true'] small),
+  .spot-list :global(.spot-item[aria-selected='true'] .spot-meta) {
+    color: var(--on-accent);
   }
   .spot-list :global(.spot-item img) {
     width: 40px;
@@ -151,8 +150,7 @@ const items = [
     place-items: center;
     width: 34px;
     height: 34px;
-    border-radius: 9px;
-    background: var(--chip);
+    border: 1px solid var(--line-strong);
   }
   .spot-list :global(.spot-t) {
     display: grid;
@@ -162,31 +160,33 @@ const items = [
   }
   .spot-list :global(.spot-t b) {
     font-weight: 650;
-    font-size: 14.5px;
+    font-size: 15px;
   }
   .spot-list :global(.spot-t small) {
     color: var(--muted);
-    font-size: 12.5px;
+    font-size: 13px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
   .spot-list :global(.spot-meta) {
-    font-size: 12px;
-    opacity: 0.7;
+    color: var(--faint);
+    font: 500 10.5px/1 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     white-space: nowrap;
   }
   .spot-empty {
-    padding: 22px;
-    text-align: center;
+    padding: 22px 16px;
     color: var(--muted);
-    border-top: 0.5px solid var(--line);
   }
   .spot-hint {
-    padding: 9px 16px;
-    border-top: 0.5px solid var(--line);
+    padding: 10px 16px;
+    border-top: 1px solid var(--line);
     color: var(--faint);
-    font-size: 11.5px;
+    font: 500 10.5px/1 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
   @media (max-width: 600px) {
     .spot-list :global(.spot-meta) {

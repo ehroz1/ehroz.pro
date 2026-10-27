@@ -1,0 +1,140 @@
+---
+import type { Lang } from '../content/apps';
+import { apps } from '../content/apps';
+import { tr, path, CONTACTS } from '../i18n';
+import Mark from './Mark.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const other: Lang = lang === 'ru' ? 'en' : 'ru';
+const c = CONTACTS;
+---
+
+<footer class="foot container">
+  <i class="ikat ikat-sep" aria-hidden="true"></i>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a href={path(lang)} class="foot-logo"><Mark size={18} /> ehroz.pro</a>
+      <p>{tr(lang, 'foot.made')}</p>
+    </div>
+    <nav aria-label={tr(lang, 'menu.apps')}>
+      <h2>{tr(lang, 'menu.apps')}</h2>
+      <ul>
+        {
+          apps.map((a, i) => (
+            <li>
+              <a href={path(lang, a.slug)}>
+                <span>{String(i + 1).padStart(2, '0')}</span>
+                {a.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+    <nav aria-label={tr(lang, 'cc.title')}>
+      <h2>{tr(lang, 'cc.title')}</h2>
+      <ul>
+        <li><a href={`https://t.me/${c.telegram}`} target="_blank" rel="noopener">Telegram</a></li>
+        <li><a href={`mailto:${c.email}`}>Email</a></li>
+        <li><a href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href={`https://github.com/${c.github}`} target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href={`https://www.behance.net/${c.behance}`} target="_blank" rel="noopener">Behance</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="ehroz.pro">
+      <h2>ehroz.pro</h2>
+      <ul>
+        <li><a href={c.order} target="_blank" rel="noopener">{tr(lang, 'contact.order')}</a></li>
+        <li><a href={path(other)} hreflang={other} lang={other}>{other === 'en' ? 'English' : 'Русский'}</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 Ehroz</span>
+    <span>{c.city[lang]} · UTC+5</span>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    margin-top: 120px;
+  }
+  .foot-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    margin-top: 24px;
+  }
+  .foot-grid > * {
+    padding: 20px 16px 28px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    min-width: 0;
+  }
+  .foot-brand {
+    grid-column: 1 / -1;
+  }
+  @media (min-width: 900px) {
+    .foot-grid {
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+    }
+    .foot-brand {
+      grid-column: auto;
+    }
+  }
+  .foot-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font: 700 18px/1 var(--font-sans);
+    letter-spacing: -0.02em;
+  }
+  .foot-brand p {
+    margin-top: 12px;
+    max-width: 36ch;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  h2 {
+    margin-bottom: 12px;
+    color: var(--faint);
+    font: 500 10.5px/1 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  ul {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  ul a {
+    display: inline-flex;
+    gap: 10px;
+    color: var(--text-2);
+    font-size: 14px;
+    transition: color var(--fast) var(--ease);
+  }
+  ul a:hover {
+    color: var(--accent);
+  }
+  ul a span {
+    color: var(--faint);
+    font: 400 12px/1.6 var(--font-mono);
+  }
+  .foot-bottom {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    color: var(--faint);
+    font: 500 10.5px/1.4 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+</style>

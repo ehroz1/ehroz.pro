@@ -14,32 +14,31 @@ const { lang, current = '' } = Astro.props;
 ---
 
 <nav class="dock-wrap" aria-label="Dock" style="view-transition-name: dock">
-  <ul class="dock glass" data-dock>
-    <li class="dock-item" data-label={tr(lang, 'menu.home')}>
-      <a href={path(lang)} aria-label={tr(lang, 'menu.home')} aria-current={current === '' ? 'page' : undefined}>
-        <span class="dock-tile tile-home"><Mark size={26} /></span>
+  <ul class="dock" data-dock>
+    <li class="dock-item">
+      <a href={path(lang)} aria-current={current === '' ? 'page' : undefined}>
+        <span class="no">00</span>
+        <span class="tile"><Mark size={22} /></span>
+        <span class="lbl">{tr(lang, 'menu.home')}</span>
       </a>
-      <span class="dock-tip" aria-hidden="true">{tr(lang, 'menu.home')}</span>
-      {current === '' && <i class="dock-dot" />}
     </li>
-    <li class="dock-sep" aria-hidden="true"></li>
     {
-      apps.map((a) => (
-        <li class="dock-item" data-label={a.name}>
+      apps.map((a, i) => (
+        <li class="dock-item" data-tint style={`--tint-d:${a.tint.dark};--tint-l:${a.tint.light}`}>
           <a href={path(lang, a.slug)} aria-label={`${a.name} — ${pick(lang, a.short)}`} aria-current={current === a.slug ? 'page' : undefined} data-app-link={a.slug}>
+            <span class="no">{String(i + 1).padStart(2, '0')}</span>
             <AppIcon slug={a.slug} name={a.name} size={64} class="dock-icon" decorative />
+            <span class="lbl">{a.name}</span>
           </a>
-          <span class="dock-tip" aria-hidden="true">{a.name}</span>
-          {current === a.slug && <i class="dock-dot" />}
         </li>
       ))
     }
-    <li class="dock-sep" aria-hidden="true"></li>
-    <li class="dock-item" data-label="Telegram">
+    <li class="dock-item">
       <a href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener" aria-label={`Telegram @${CONTACTS.telegram}`}>
-        <span class="dock-tile tile-tg"><Icon name="telegram" size={26} /></span>
+        <span class="no">TG</span>
+        <span class="tile"><Icon name="telegram" size={20} /></span>
+        <span class="lbl">Telegram</span>
       </a>
-      <span class="dock-tip" aria-hidden="true">Telegram</span>
     </li>
   </ul>
 </nav>
@@ -49,156 +48,95 @@ const { lang, current = '' } = Astro.props;
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 10px;
+    bottom: 0;
     z-index: 45;
     display: flex;
     justify-content: center;
-    pointer-events: none;
-    padding: 0 8px;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: var(--bg);
+    border-top: 1px solid var(--line);
   }
   .dock {
-    --base: 54px;
-    pointer-events: auto;
     display: flex;
-    align-items: flex-end;
-    gap: 2px;
-    height: calc(var(--base) + 16px);
-    padding: 8px 8px;
+    height: var(--dock-h);
     margin: 0;
+    padding: 0;
     list-style: none;
-    border-radius: 24px;
     max-width: 100%;
-    background: color-mix(in srgb, var(--glass) 85%, transparent);
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-left: 1px solid var(--line);
+  }
+  .dock::-webkit-scrollbar {
+    display: none;
   }
   .dock-item {
-    --s: 1;
-    position: relative;
-    width: calc(var(--base) * var(--s));
-    height: calc(var(--base) * var(--s));
     flex: none;
-    transition: width 0.18s var(--ease-out), height 0.18s var(--ease-out);
-  }
-  .dock.live .dock-item {
-    transition: none;
+    border-right: 1px solid var(--line);
   }
   .dock-item a {
-    display: block;
-    width: 100%;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    justify-items: center;
+    width: 76px;
     height: 100%;
-    border-radius: 14px;
+    padding: 5px 4px 7px;
+    transition: background var(--fast) var(--ease);
   }
-  .dock-item a:active :global(img),
-  .dock-item a:active .dock-tile {
-    filter: brightness(0.75);
+  .dock-item a:hover {
+    background: var(--hover);
+  }
+  .dock-item a[aria-current='page'] {
+    box-shadow: inset 0 -2px 0 var(--tint, var(--text));
+  }
+  .no {
+    justify-self: start;
+    color: var(--faint);
+    font: 500 9px/1 var(--font-mono);
+    letter-spacing: 0.06em;
+  }
+  .dock-item a[aria-current='page'] .no {
+    color: var(--tint, var(--text));
+  }
+  .dock-item :global(.dock-icon),
+  .tile {
+    width: 40px;
+    height: 40px;
+    margin-top: -4px;
+    transition: transform var(--fast) var(--ease);
   }
   .dock-item :global(.dock-icon) {
-    display: block;
-    width: 116%;
-    height: 116%;
-    margin: -8%;
-    max-width: none;
+    width: 46px;
+    height: 46px;
+    margin: -7px 0 -3px;
   }
-  .dock-tile {
-    position: absolute;
-    inset: 8%;
+  .tile {
     display: grid;
     place-items: center;
-    border-radius: 23%;
-    color: #fff;
-    box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.2), 0 3px 8px rgba(0, 0, 0, 0.25);
+    width: 34px;
+    height: 34px;
+    margin: -2px 0 2px;
+    border: 1px solid var(--line-strong);
+    color: var(--text);
   }
-  .dock-tile :global(svg) {
-    width: 46%;
-    height: 46%;
+  .dock-item a:hover :global(.dock-icon),
+  .dock-item a:hover .tile {
+    transform: translateY(-3px);
   }
-  .tile-home {
-    background: linear-gradient(160deg, #2a2a33, #0e0e12);
-  }
-  .tile-tg {
-    background: linear-gradient(180deg, #37aee2, #1e96c8);
-  }
-  .dock-sep {
-    width: 1px;
-    align-self: stretch;
-    margin: 4px 5px;
-    background: var(--line-strong);
-    flex: none;
-  }
-  .dock-tip {
-    position: absolute;
-    left: 50%;
-    bottom: calc(100% + 10px);
-    translate: -50% 4px;
-    padding: 4px 10px;
-    border-radius: 8px;
-    background: var(--glass-strong);
-    -webkit-backdrop-filter: blur(20px);
-    backdrop-filter: blur(20px);
-    box-shadow: var(--glass-edge), var(--shadow-1);
-    font-size: 12.5px;
-    font-weight: 600;
+  .lbl {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
     white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.15s, translate 0.25s var(--spring);
+    color: var(--muted);
+    font: 500 9.5px/1 var(--font-mono);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
-  .dock-item:hover .dock-tip,
-  .dock-item:focus-within .dock-tip {
-    opacity: 1;
-    translate: -50% 0;
-  }
-  .dock-dot {
-    position: absolute;
-    left: 50%;
-    bottom: -6px;
-    width: 4px;
-    height: 4px;
-    margin-left: -2px;
-    border-radius: 50%;
-    background: var(--text);
-    opacity: 0.8;
-  }
-  .dock-item.bounce {
-    animation: bounce 0.9s var(--ease-out);
-  }
-  @keyframes bounce {
-    0%,
-    100% {
-      transform: none;
-    }
-    25% {
-      transform: translateY(-26px);
-    }
-    50% {
-      transform: none;
-    }
-    70% {
-      transform: translateY(-12px);
-    }
-  }
-
-  @media (max-width: 760px), (pointer: coarse) {
-    .dock-wrap {
-      bottom: max(8px, env(safe-area-inset-bottom));
-    }
-    .dock {
-      --base: 46px;
-      overflow-x: auto;
-      overscroll-behavior-x: contain;
-      scrollbar-width: none;
-      justify-content: flex-start;
-      border-radius: 22px;
-      -webkit-mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 10px), transparent);
-      mask-image: linear-gradient(90deg, transparent, #000 10px, #000 calc(100% - 10px), transparent);
-    }
-    .dock::-webkit-scrollbar {
-      display: none;
-    }
-    .dock-tip {
-      display: none;
-    }
-    .dock-dot {
-      bottom: -5px;
+  @media (max-width: 760px) {
+    .dock-item a {
+      width: 64px;
     }
   }
 </style>

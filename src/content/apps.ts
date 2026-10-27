@@ -41,8 +41,12 @@ export interface App {
   accent: string;
   /** Цвет текста на кнопке с акцентом. */
   onAccent: string;
-  /** Три цвета «обоев» страницы приложения (из иконки или интерфейса). */
+  /** Три цвета из иконки или интерфейса (OG-картинки). */
   glow: [string, string, string];
+  /** Цвет изделия в каталоге: ярлык номера, кромка, подписи. dark — для тёмной темы, light — для светлой. */
+  tint: { dark: string; light: string };
+  /** Короткая категория для шапки карточки (моноширинная подпись). */
+  kind: L;
   links: AppLink[];
   features: Feature[];
   steps: [L, L, L];
@@ -71,6 +75,8 @@ export const apps: App[] = [
     accent: '#f5f5f7',
     onAccent: '#1d1d1f',
     glow: ['#5b4a9c', '#2b6f8c', '#9c4a6b'],
+    tint: { dark: '#A99BFF', light: '#5B45E0' },
+    kind: t('Радиальный конвертер', 'Radial converter'),
     links: [
       { kind: 'download', href: 'https://github.com/ehroz1/morfus-releases/releases/latest', label: t('Скачать для Mac', 'Download for Mac') },
       { kind: 'releases', href: 'https://github.com/ehroz1/morfus-releases/releases', label: t('Все версии', 'All releases') },
@@ -146,6 +152,8 @@ export const apps: App[] = [
     accent: '#ffffff',
     onAccent: '#000000',
     glow: ['#3a3a44', '#6c6c7a', '#22222a'],
+    tint: { dark: '#E4E4E8', light: '#2A2A2E' },
+    kind: t('Конвертер в строке меню', 'Menu bar converter'),
     links: [
       { kind: 'download', href: 'https://github.com/ehroz1/morfu-releases/releases/latest', label: t('Скачать для Mac', 'Download for Mac') },
       { kind: 'releases', href: 'https://github.com/ehroz1/morfu-releases/releases', label: t('Все версии', 'All releases') },
@@ -200,6 +208,8 @@ export const apps: App[] = [
     accent: '#3a55f0',
     onAccent: '#ffffff',
     glow: ['#4fa8ff', '#3b5bff', '#5a2fd6'],
+    tint: { dark: '#6E8BFF', light: '#2F4FE6' },
+    kind: t('Сжатие картинок', 'Image compression'),
     links: [{ kind: 'releases', href: 'https://github.com/ehroz1/pachaq-releases/releases', label: t('Страница релизов', 'Releases page') }],
     features: [
       {
@@ -247,9 +257,11 @@ export const apps: App[] = [
     audience: t('Блогерам и SMM-специалистам, которые делают короткие вертикальные ролики.', 'Creators and social media teams making short vertical videos.'),
     platforms: ['macos'],
     status: 'dev',
-    accent: '#ff5b2e',
-    onAccent: '#1d1d1f',
+    accent: '#F2CC4E',
+    onAccent: '#0E0E0F',
     glow: ['#ff5b2e', '#6b3a2a', '#2a2a33'],
+    tint: { dark: '#F2CC4E', light: '#7D5A00' },
+    kind: t('Автосубтитры', 'Auto captions'),
     links: [{ kind: 'releases', href: 'https://github.com/ehroz1/sukhan-releases', label: t('Следить за релизами', 'Watch for releases') }],
     features: [
       {
@@ -300,6 +312,8 @@ export const apps: App[] = [
     accent: '#d4d7e0',
     onAccent: '#101114',
     glow: ['#3a3f4b', '#7c8394', '#1b1e25'],
+    tint: { dark: '#AEB6C6', light: '#4F5868' },
+    kind: t('Удаление фона', 'Background removal'),
     links: [{ kind: 'github', href: 'https://github.com/ehroz1/radius-models', label: t('Модели Core ML', 'Core ML models') }],
     features: [
       {
@@ -339,6 +353,8 @@ export const apps: App[] = [
     accent: '#ededed',
     onAccent: '#171717',
     glow: ['#3d3d3d', '#1f8a5b', '#5c5c5c'],
+    tint: { dark: '#3CCB8A', light: '#0F7046' },
+    kind: t('Расшифровка речи', 'Speech to text'),
     openSource: true,
     links: [
       { kind: 'open', href: 'https://ehroz1.github.io/bla-bla-text/', label: t('Открыть', 'Open app') },
@@ -388,6 +404,8 @@ export const apps: App[] = [
     accent: '#ffffff',
     onAccent: '#101114',
     glow: ['#7c5cff', '#06b6d4', '#ff6428'],
+    tint: { dark: '#2CC7E8', light: '#086A84' },
+    kind: t('Поиск картинок', 'Image search'),
     openSource: true,
     links: [
       { kind: 'open', href: 'https://picta.cc', label: t('Открыть picta.cc', 'Open picta.cc') },

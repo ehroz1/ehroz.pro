@@ -30,11 +30,10 @@ const { id, w = 800, h = 560, label, class: cls, bg = 'wall' } = Astro.props;
     contain: layout paint;
   }
   .scene.bg-wall {
+    /* студийная подложка: ровный графит и точечная сетка 20 px — как стол для предметной съёмки */
     background:
-      radial-gradient(70% 80% at 15% 20%, color-mix(in srgb, var(--wall-a) 85%, transparent), transparent 70%),
-      radial-gradient(60% 70% at 90% 25%, color-mix(in srgb, var(--wall-b) 80%, transparent), transparent 70%),
-      radial-gradient(80% 70% at 55% 105%, color-mix(in srgb, var(--wall-c) 85%, transparent), transparent 70%),
-      #17161f;
+      radial-gradient(circle, rgba(255, 255, 255, 0.07) 1px, transparent 1.2px) 0 0 / 20px 20px,
+      #1b1b1d;
   }
   .scene-inner {
     position: absolute;

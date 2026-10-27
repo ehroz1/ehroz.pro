@@ -1,185 +1,156 @@
 ---
-// Карточка-«окно» продукта на главной.
+// Карточка изделия в каталоге: ярлык номера, категория, демо на подложке, иконка и паспорт.
 import type { App, Lang } from '../content/apps';
 import { path, pick, PLATFORM, STATUS, tr } from '../i18n';
 import AppIcon from './AppIcon.astro';
-import Icon from './Icon.astro';
 import SceneSwitch from './scenes/SceneSwitch.astro';
 
-interface Props { app: App; lang: Lang; featured?: boolean; index: number }
-const { app, lang, featured = false, index } = Astro.props;
-const pIcon = { macos: 'apple', windows: 'windows', web: 'web' } as const;
+interface Props {
+  app: App;
+  lang: Lang;
+  featured?: boolean;
+  index: number;
+  /** Без демо-сцены (компактная карточка: «Другие приложения»). */
+  compact?: boolean;
+}
+const { app, lang, featured = false, index, compact = false } = Astro.props;
+const no = String(index + 1).padStart(2, '0');
 ---
-<article
-  class:list={['win reveal', { featured }]}
-  style={`--d:${(index % 3) * 70}ms;--a:${app.glow[0]};--b:${app.glow[1]};--c:${app.glow[2]}`}
-  data-tilt
->
-  <a class="win-link" href={path(lang, app.slug)} data-app-link={app.slug} aria-label={`${app.name} — ${pick(lang, app.short)}`}>
-    <div class="win-bar">
-      <span class="lights"><i></i><i></i><i></i></span>
-      <span class="win-title">{app.name}</span>
-      <span class="win-plat">
-        {app.platforms.map((p) => <span title={pick(lang, PLATFORM[p])}><Icon name={pIcon[p]} size={13} /></span>)}
-      </span>
-    </div>
-    {featured && (
-      <div class="win-scene">
-        <SceneSwitch fit id={app.features[0].scene} lang={lang} label={pick(lang, app.features[0].title)} />
-      </div>
-    )}
-    <div class="win-body">
-      <AppIcon slug={app.slug} name={app.name} size={featured ? 96 : 84} class="win-icon" eager={index < 3} decorative vt />
-      <div class="win-text">
-        <h3 class="win-name" data-vt-title>{app.name}</h3>
-        <p class="win-short">{pick(lang, app.short)}</p>
-        <div class="win-meta">
-          <span class={`chip ${app.status}`}><i class="dot"></i>{pick(lang, STATUS[app.status])}</span>
-          {app.platforms.map((p) => <span class="chip">{pick(lang, PLATFORM[p])}</span>)}
-          {app.version && <span class="chip">v{app.version}</span>}
+
+<article class:list={['card', { featured, compact }]} data-tint style={`--tint-d:${app.tint.dark};--tint-l:${app.tint.light}`}>
+  <a class="card-link" href={path(lang, app.slug)} data-app-link={app.slug} aria-label={`${app.name} — ${pick(lang, app.short)}`}>
+    <header class="card-h">
+      <span class="tag-no">{no}</span>
+      <span class="card-kind">{pick(lang, app.kind)}</span>
+    </header>
+    {
+      !compact && (
+        <div class="card-plate">
+          <span class="crop tl" />
+          <span class="crop tr" />
+          <span class="crop bl" />
+          <span class="crop br" />
+          <SceneSwitch fit id={app.features[0].scene} lang={lang} label={`${app.name}: ${pick(lang, app.features[0].title)}`} />
         </div>
+      )
+    }
+    <div class="card-body">
+      <AppIcon slug={app.slug} name={app.name} size={compact ? 72 : 76} class="card-icon" eager={index < 4} decorative vt />
+      <h3 class="card-name">{app.name}</h3>
+      <p class="card-short">{pick(lang, app.short)}</p>
+      <div class="spec-tags">
+        <span class={`stag ${app.status}`}><i class="sq" />{pick(lang, STATUS[app.status])}</span>
+        <span class="stag">{app.platforms.map((p) => pick(lang, PLATFORM[p])).join(' · ')}</span>
+        {app.version && <span class="stag">v{app.version}</span>}
       </div>
-      <span class="win-go" aria-hidden="true"><Icon name="arrow" size={18} /></span>
+      <span class="go">{tr(lang, 'apps.open')} {app.name} ↗</span>
     </div>
+    <i class="ikat card-edge" aria-hidden="true" />
   </a>
 </article>
 
 <style>
-  .win {
-    --rx: 0deg;
-    --ry: 0deg;
-    --gx: 50%;
-    --gy: 0%;
+  .card {
     position: relative;
-    grid-column: span 12;
-    border-radius: var(--r-card);
-    perspective: 1200px;
+    min-width: 0;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: var(--cell);
   }
-  @media (min-width: 720px) {
-    .win { grid-column: span 6; }
-  }
-  @media (min-width: 1080px) {
-    .win { grid-column: span 4; }
-    .win.featured { grid-column: span 8; grid-row: span 3; }
-  }
-  .win-link {
+  .card-link {
     position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;
-    border-radius: var(--r-card);
-    overflow: hidden;
-    background:
-      radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--a) 22%, transparent), transparent 60%),
-      radial-gradient(120% 90% at 100% 100%, color-mix(in srgb, var(--b) 18%, transparent), transparent 60%),
-      var(--glass);
-    -webkit-backdrop-filter: blur(28px) saturate(170%);
-    backdrop-filter: blur(28px) saturate(170%);
-    box-shadow: var(--glass-edge), var(--shadow-1);
-    transform: rotateX(var(--rx)) rotateY(var(--ry));
-    transform-style: preserve-3d;
-    transition: transform 0.6s var(--spring), box-shadow 0.4s;
   }
-  :global(.win.tilting) .win-link {
-    transition: transform 0.12s linear, box-shadow 0.4s;
-    box-shadow: var(--glass-edge), var(--shadow-2);
-  }
-  .win-link::after {
-    /* блик за курсором */
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: radial-gradient(500px circle at var(--gx) var(--gy), rgba(255, 255, 255, 0.14), transparent 45%);
-    opacity: 0;
-    transition: opacity 0.3s;
-    mix-blend-mode: soft-light;
-  }
-  :global(.win.tilting) .win-link::after { opacity: 1; }
-  .win-bar {
+  .card-h {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 12px;
     height: 40px;
     padding: 0 14px;
-    border-bottom: 0.5px solid var(--line);
+    border-bottom: 1px solid var(--line);
   }
-  .win-bar .lights i { width: 11px; height: 11px; }
-  .win:not(:hover) .win-bar .lights i { background: color-mix(in srgb, var(--text) 20%, transparent); }
-  .win-title {
-    flex: 1;
-    text-align: center;
-    color: var(--muted);
-    font-size: 12.5px;
-    font-weight: 600;
-    margin-right: 30px;
-  }
-  .win-plat {
-    display: flex;
-    gap: 6px;
+  .card-kind {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: var(--faint);
+    font: 500 10.5px/1 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
-  .win-scene {
+  .card-plate {
     position: relative;
+    height: clamp(220px, 19vw, 290px);
+    background: var(--plate);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .card-body {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    padding: 0 16px 18px;
     flex: 1;
-    min-height: 0;
-    border-bottom: 0.5px solid var(--line);
   }
-    .win-scene { min-height: 300px; }
-  @media (max-width: 1079px) { .win-scene { min-height: 0; aspect-ratio: 800 / 560; } }
-  .win-body {
+  .compact .card-body {
+    padding-top: 16px;
+  }
+  .card-body :global(.card-icon) {
+    width: 76px;
+    height: 76px;
+    margin: -34px 0 -6px -8px;
     position: relative;
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 20px 20px 22px;
+    z-index: 3;
+    transition: transform var(--mid) var(--ease);
   }
-  .featured .win-body { align-items: center; }
-  .win-body :global(.win-icon) {
-    flex: none;
-    width: 84px;
-    height: 84px;
-    margin: -8px -4px -8px -10px;
-    transition: transform 0.5s var(--spring);
-    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25));
+  .compact .card-body :global(.card-icon) {
+    width: 72px;
+    height: 72px;
+    margin: 0 0 -4px -8px;
   }
-  .featured .win-body :global(.win-icon) { width: 96px; height: 96px; }
-  .win:hover .win-body :global(.win-icon) { transform: translateZ(30px) scale(1.06) rotate(-3deg); }
-  .win-text { min-width: 0; flex: 1; }
-  .win-name {
-    font-family: var(--font-display);
-    font-size: 22px;
-    font-weight: 650;
-    letter-spacing: -0.025em;
-    line-height: 1.15;
+  .card-link:hover :global(.card-icon) {
+    transform: translateY(-5px);
   }
-  .featured .win-name { font-size: 28px; }
-  .win-short {
-    margin-top: 4px;
+  .card-name {
+    font: 700 clamp(1.5rem, 1.3rem + 0.8vw, 2rem)/1 var(--font-sans);
+    letter-spacing: -0.035em;
+  }
+  .featured .card-name {
+    font-size: clamp(2rem, 1.5rem + 1.6vw, 3rem);
+  }
+  .card-short {
     color: var(--muted);
     font-size: 15px;
-    line-height: 1.4;
+    line-height: 1.45;
     text-wrap: pretty;
+    max-width: 44ch;
   }
-  .win-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 12px;
+  .go {
+    margin-top: 6px;
   }
-  .win-go {
+  .card-link:hover .go {
+    color: var(--tint);
+  }
+  .card-edge {
     position: absolute;
-    right: 18px;
-    top: 20px;
-    display: grid;
-    place-items: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background: var(--chip);
-    color: var(--muted);
-    transition: transform 0.4s var(--spring), background 0.2s, color 0.2s;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0;
+    color: var(--tint);
+    transition: height var(--fast) var(--ease);
   }
-  .featured .win-go { top: auto; }
-  .win:hover .win-go { transform: translateX(3px); background: var(--accent); color: var(--on-accent); }
+  .card-link:hover .card-edge,
+  .card-link:focus-visible .card-edge {
+    height: 7px;
+    -webkit-mask-size: 14px 7px;
+    mask-size: 14px 7px;
+  }
+  .card-link:focus-visible {
+    outline-offset: -3px;
+  }
 </style>

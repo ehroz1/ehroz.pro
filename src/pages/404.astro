@@ -5,22 +5,21 @@ import Icon from '../components/Icon.astro';
 ---
 <Layout lang="ru" title="404 — ehroz.pro" description={tr('ru', 'nf.text')}>
   <section class="nf container">
-    <div class="nf-win glass-strong">
-      <div class="nf-bar"><span class="lights"><i></i><i></i><i></i></span></div>
-      <div class="nf-body">
-        <p class="nf-code display">404</p>
-        <h1 class="h3">{tr('ru', 'nf.title')} · {tr('en', 'nf.title')}</h1>
-        <p class="lead">{tr('ru', 'nf.text')}<br />{tr('en', 'nf.text')}</p>
-        <a class="btn btn-primary" href={path('ru')}><Icon name="home" />ehroz.pro</a>
+    <div class="sec-bar"><span>404 / {tr('ru', 'nf.title')}</span><span>{tr('en', 'nf.title')}</span></div>
+    <div class="nf-body">
+      <div class="nf-pattern" aria-hidden="true">
+        {Array.from({ length: 9 }, (_, i) => <i class="ikat" style={`opacity:${(1 - Math.abs(i - 4) / 5).toFixed(2)}`} />)}
       </div>
+      <p class="nf-code pixel">404</p>
+      <h1 class="h2">{tr('ru', 'nf.title')}</h1>
+      <p class="lead">{tr('ru', 'nf.text')}<br />{tr('en', 'nf.text')}</p>
+      <a class="btn btn-primary" href={path('ru')}><Icon name="home" />ehroz.pro</a>
     </div>
   </section>
 </Layout>
 <style>
-  .nf { min-height: 100svh; display: grid; place-items: center; padding: 80px 0 140px; }
-  .nf-win { width: min(520px, 100%); border-radius: 16px; overflow: hidden; animation: pop .7s var(--spring) both; }
-  .nf-bar { height: 38px; display: flex; align-items: center; padding: 0 14px; border-bottom: .5px solid var(--line); }
-  .nf-body { display: grid; justify-items: center; gap: 12px; padding: 34px 28px 36px; text-align: center; }
-  .nf-code { font-size: 96px; color: color-mix(in srgb, var(--text) 30%, transparent); }
-  @keyframes pop { from { opacity: 0; transform: scale(.9); } }
+  .nf { padding-top: calc(var(--menubar) + 24px); }
+  .nf-body { position: relative; display: grid; gap: 18px; justify-items: start; padding: 48px 0 64px; border-top: 1px solid var(--line); }
+  .nf-pattern { display: grid; gap: 6px; width: 100%; color: var(--line-strong); margin-bottom: 12px; }
+  .nf-code { font-size: clamp(96px, 18vw, 200px); line-height: 0.9; color: var(--accent); }
 </style>

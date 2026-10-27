@@ -23,87 +23,82 @@ const links = [
 ---
 
 <header class="menubar" style="view-transition-name: menubar">
-  <div class="mb-left">
-    <a class="mb-logo" href={path(lang)} aria-label="ehroz.pro" data-logo>
-      <Mark size={16} />
-      <span>ehroz.pro</span>
-    </a>
-    <a class="mb-item hide-sm" href={`${path(lang)}#apps`}>{tr(lang, 'menu.apps')}</a>
-    <button class="mb-item hide-sm" type="button" data-open="about">{tr(lang, 'menu.about')}</button>
-  </div>
-  <div class="mb-right">
-    <button class="mb-icon" type="button" data-open="spotlight" aria-label={tr(lang, 'menu.search')} title={tr(lang, 'menu.search')}>
-      <Icon name="search" size={15} />
-    </button>
-    <a class="mb-icon mb-lang" href={path(other, slug)} hreflang={other} lang={other} aria-label={tr(lang, 'menu.lang')} title={tr(lang, 'menu.lang')} data-lang-switch>
-      {other.toUpperCase()}
-    </a>
-    <button class="mb-icon" type="button" data-theme-toggle aria-label={tr(lang, 'menu.theme')}>
-      <Icon name="auto" size={15} class="ti ti-auto" />
-      <Icon name="moon" size={15} class="ti ti-dark" />
-      <Icon name="sun" size={15} class="ti ti-light" />
-    </button>
-    <time class="mb-clock hide-xs" data-clock data-lang={lang} aria-label={lang === 'ru' ? 'Время в Астане' : 'Time in Astana'}>&nbsp;</time>
-    <button class="mb-badge" type="button" data-open="cc" aria-haspopup="dialog" aria-expanded="false" aria-controls="cc">
-      <Avatar size={20} />
-      <span class="hide-sm"><b>Ehroz</b> · {c.role}</span>
-    </button>
-  </div>
+  <a class="mb-logo" href={path(lang)} aria-label="ehroz.pro" data-logo>
+    <Mark size={16} />
+    <span>ehroz.pro</span>
+  </a>
+  <nav class="mb-nav hide-sm" aria-label={tr(lang, 'menu.apps')}>
+    <a class="mb-item" href={`${path(lang)}#apps`}>{tr(lang, 'menu.apps')}</a>
+    <button class="mb-item" type="button" data-open="about">{tr(lang, 'menu.about')}</button>
+  </nav>
+  <span class="mb-sp"></span>
+  <button class="mb-item" type="button" data-open="spotlight" aria-label={tr(lang, 'menu.search')} title={tr(lang, 'menu.search')}>
+    <Icon name="search" size={14} />
+    <span class="hide-sm">⌘K</span>
+  </button>
+  <a class="mb-item" href={path(other, slug)} hreflang={other} lang={other} aria-label={tr(lang, 'menu.lang')} title={tr(lang, 'menu.lang')} data-lang-switch>
+    {other.toUpperCase()}
+  </a>
+  <button class="mb-item" type="button" data-theme-toggle aria-label={tr(lang, 'menu.theme')} title={tr(lang, 'menu.theme')}>
+    <Icon name="auto" size={14} class="ti ti-auto" />
+    <Icon name="moon" size={14} class="ti ti-dark" />
+    <Icon name="sun" size={14} class="ti ti-light" />
+  </button>
+  <time class="mb-item mb-clock hide-xs" data-clock data-lang={lang} aria-label={lang === 'ru' ? 'Время в Астане' : 'Time in Astana'}>&nbsp;</time>
+  <button class="mb-badge" type="button" data-open="cc" aria-haspopup="dialog" aria-expanded="false" aria-controls="cc">
+    <Avatar size={20} />
+    <span class="hide-sm">Ehroz · {c.role}</span>
+  </button>
 </header>
 
-<!-- Control Center: контакты -->
-<div class="cc glass-strong" id="cc" role="dialog" aria-modal="false" aria-label={tr(lang, 'cc.title')} hidden>
-  <div class="cc-profile">
-    <Avatar size={56} />
+<!-- Панель контактов -->
+<div class="cc" id="cc" role="dialog" aria-modal="false" aria-label={tr(lang, 'cc.title')} hidden>
+  <div class="cc-head">
+    <Avatar size={48} />
     <div>
       <div class="cc-name">{c.name[lang]}</div>
-      <div class="cc-role">{c.role}</div>
-      <div class="cc-city">{c.city[lang]} · <time data-clock data-lang={lang} data-short>&nbsp;</time></div>
+      <div class="cc-meta">{c.role}</div>
+      <div class="cc-meta">{c.city[lang]} · <time data-clock data-lang={lang} data-short>&nbsp;</time></div>
     </div>
   </div>
-  <div class="cc-grid">
+  <ul class="cc-list">
     {
       links.map((l) => (
-        <div class="cc-tile">
+        <li class="cc-row">
           <a class="cc-link" href={l.href} target="_blank" rel="noopener me">
-            <span class={`cc-ic ic-${l.id}`}>
-              <Icon name={l.id} size={17} />
-            </span>
-            <span class="cc-txt">
-              <b>{l.label}</b>
-              <small>{l.value}</small>
-            </span>
+            <Icon name={l.id} size={16} />
+            <span class="cc-label">{l.label}</span>
+            <span class="cc-value">{l.value}</span>
           </a>
           {l.copy && (
             <button class="cc-copy" type="button" data-copy={l.copy} aria-label={`${tr(lang, 'cc.copy')}: ${l.copy}`} title={tr(lang, 'cc.copy')}>
-              <Icon name="copy" size={15} />
+              <Icon name="copy" size={14} />
             </button>
           )}
-        </div>
+        </li>
       ))
     }
+  </ul>
+  <div class="cc-seg" role="group" aria-label={tr(lang, 'menu.theme')}>
+    <button type="button" data-set-theme="auto">{tr(lang, 'theme.auto')}</button>
+    <button type="button" data-set-theme="dark">{tr(lang, 'theme.dark')}</button>
+    <button type="button" data-set-theme="light">{tr(lang, 'theme.light')}</button>
   </div>
-  <div class="cc-row">
-    <div class="cc-seg" role="group" aria-label={tr(lang, 'menu.theme')}>
-      <button type="button" data-set-theme="auto">{tr(lang, 'theme.auto')}</button>
-      <button type="button" data-set-theme="dark">{tr(lang, 'theme.dark')}</button>
-      <button type="button" data-set-theme="light">{tr(lang, 'theme.light')}</button>
-    </div>
-  </div>
-  <a class="btn btn-primary cc-order magnetic" href={c.order} target="_blank" rel="noopener">
+  <a class="btn btn-primary cc-order" href={c.order} target="_blank" rel="noopener">
     <Icon name="briefcase" />
     {tr(lang, 'contact.order')}
   </a>
   <div class="cc-toast" role="status" aria-live="polite"></div>
 </div>
 
-<!-- «About this Mac» → «About Ehroz» -->
-<dialog class="about glass-strong" id="about" aria-label={tr(lang, 'about.mac.title')}>
+<!-- «About this Mac» → «About Ehroz»: паспорт мастера -->
+<dialog class="about" id="about" aria-label={tr(lang, 'about.mac.title')}>
   <div class="about-bar">
-    <form method="dialog"><button class="lights" aria-label="Close"><i></i><i></i><i></i></button></form>
+    <span>{tr(lang, 'about.mac.title')}</span>
+    <form method="dialog"><button class="about-x" aria-label="Close">×</button></form>
   </div>
   <div class="about-body">
-    <div class="about-avatar"><Avatar size={112} /></div>
+    <Avatar size={96} />
     <h2 class="about-name">Ehroz</h2>
     <p class="about-sub">{c.role} · ehroz.pro</p>
     <dl class="about-spec">
@@ -124,92 +119,82 @@ const links = [
     z-index: 50;
     height: var(--menubar);
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 8px 0 12px;
-    font-size: 13px;
-    font-weight: 500;
+    align-items: stretch;
+    padding-left: max(0px, env(safe-area-inset-left, 0px));
+    padding-right: max(0px, env(safe-area-inset-right, 0px));
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
     color: var(--text);
-    background: color-mix(in srgb, var(--bg) 42%, transparent);
-    -webkit-backdrop-filter: blur(30px) saturate(180%);
-    backdrop-filter: blur(30px) saturate(180%);
-    box-shadow: inset 0 -0.5px 0 var(--line);
-  }
-  .mb-left,
-  .mb-right {
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    min-width: 0;
+    font: 500 11px/1 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
   .mb-logo {
     display: flex;
     align-items: center;
-    gap: 7px;
-    padding: 0 10px 0 6px;
-    height: 24px;
-    border-radius: 6px;
-    font-weight: 700;
+    gap: 8px;
+    padding: 0 16px;
+    border-right: 1px solid var(--line);
+    font: 700 14px/1 var(--font-sans);
     letter-spacing: -0.01em;
-    user-select: none;
+    text-transform: none;
   }
   .mb-logo :global(.mark) {
-    transition: transform 0.6s var(--spring);
+    transition: transform var(--mid) var(--ease);
   }
   .mb-logo:hover :global(.mark) {
     transform: rotate(60deg);
   }
+  .mb-nav {
+    display: flex;
+  }
+  .mb-sp {
+    flex: 1;
+  }
   .mb-item,
-  .mb-icon,
   .mb-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    height: 24px;
-    padding: 0 9px;
-    border-radius: 6px;
-    color: inherit;
-    font: inherit;
-    background: none;
+    gap: 8px;
+    padding: 0 14px;
     border: 0;
+    border-right: 1px solid var(--line);
+    background: transparent;
+    color: var(--text-2);
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    white-space: nowrap;
     cursor: pointer;
+    transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+  }
+  .mb-sp + .mb-item {
+    border-left: 1px solid var(--line);
   }
   .mb-item:hover,
-  .mb-icon:hover,
   .mb-badge:hover,
-  .mb-badge[aria-expanded='true'],
-  .mb-logo:hover {
+  .mb-badge[aria-expanded='true'] {
     background: var(--hover);
-  }
-  .mb-icon {
-    padding: 0 7px;
-  }
-  .mb-lang {
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    color: var(--text);
   }
   .mb-clock {
-    padding: 0 8px;
+    cursor: default;
     font-variant-numeric: tabular-nums;
-    white-space: nowrap;
+  }
+  .mb-clock:hover {
+    background: transparent;
   }
   .mb-badge {
-    padding: 0 9px 0 3px;
-    margin-left: 2px;
-    white-space: nowrap;
-    border-radius: 999px;
-    height: 26px;
-    background: var(--chip);
+    border-right: 0;
+    background: var(--btn);
+    color: var(--on-btn);
+    padding: 0 14px 0 10px;
   }
-  .mb-badge b {
-    font-weight: 650;
-  }
-  .mb-badge span {
-    color: var(--muted);
-  }
-  .mb-badge span b {
+  .mb-badge:hover,
+  .mb-badge[aria-expanded='true'] {
+    background: var(--hover);
     color: var(--text);
+    box-shadow: inset 0 0 0 1px var(--line-strong);
   }
   :global(.ti) {
     display: none;
@@ -224,29 +209,31 @@ const links = [
     .hide-sm {
       display: none !important;
     }
+    .mb-item,
     .mb-badge {
-      padding: 0 3px;
+      padding: 0 11px;
+    }
+    .mb-logo {
+      padding: 0 12px;
     }
   }
-  @media (max-width: 380px) {
+  @media (max-width: 400px) {
     .hide-xs {
       display: none !important;
     }
   }
 
-  /* Control Center */
+  /* Панель контактов */
   .cc {
     position: fixed;
     z-index: 55;
-    top: calc(var(--menubar) + 8px);
-    right: 8px;
-    width: min(360px, calc(100vw - 16px));
-    padding: 14px;
-    border-radius: 22px;
+    top: calc(var(--menubar) - 1px);
+    right: max(0px, env(safe-area-inset-right, 0px));
+    width: min(380px, 100vw);
     display: grid;
-    gap: 10px;
-    transform-origin: top right;
-    animation: cc-in 0.38s var(--spring);
+    background: var(--cell);
+    border: 1px solid var(--line-strong);
+    animation: cc-in var(--mid) var(--ease);
   }
   .cc[hidden] {
     display: none;
@@ -254,99 +241,59 @@ const links = [
   @keyframes cc-in {
     from {
       opacity: 0;
-      transform: scale(0.92) translateY(-8px);
+      transform: translateY(-6px);
     }
   }
-  .cc-profile {
+  .cc-head {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 12px;
-    border-radius: 16px;
-    background: var(--chip);
+    padding: 16px;
+    border-bottom: 1px solid var(--line);
   }
   .cc-name {
-    font-family: var(--font-display);
-    font-size: 20px;
-    font-weight: 650;
+    font: 700 20px/1.1 var(--font-sans);
     letter-spacing: -0.02em;
   }
-  .cc-role,
-  .cc-city {
+  .cc-meta {
     color: var(--muted);
-    font-size: 13px;
+    font: 400 12px/1.5 var(--font-mono);
   }
-  .cc-city time {
-    font-variant-numeric: tabular-nums;
+  .cc-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
-  .cc-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-  .cc-tile {
+  .cc-row {
     position: relative;
-    border-radius: 16px;
-    background: var(--chip);
-    transition: background 0.2s, transform 0.3s var(--spring);
-  }
-  .cc-tile:hover {
-    background: var(--hover);
-    transform: scale(1.02);
-  }
-  .cc-tile:first-child {
-    grid-column: span 2;
+    border-bottom: 1px solid var(--line);
   }
   .cc-link {
-    display: flex;
+    display: grid;
+    grid-template-columns: 16px 90px 1fr;
     align-items: center;
-    gap: 10px;
-    padding: 10px;
+    gap: 12px;
+    padding: 12px 16px;
     min-width: 0;
+    transition: background var(--fast) var(--ease);
   }
-  .cc-ic {
-    display: grid;
-    place-items: center;
-    width: 34px;
-    height: 34px;
-    flex: none;
-    border-radius: 50%;
-    color: #fff;
-    background: #3a3a44;
+  .cc-link:hover {
+    background: var(--hover);
   }
-  .ic-telegram {
-    background: linear-gradient(180deg, #37aee2, #1e96c8);
+  .cc-label {
+    font: 500 11px/1 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--faint);
   }
-  .ic-mail {
-    background: linear-gradient(180deg, #4ea4ff, #1f6fe5);
-  }
-  .ic-instagram {
-    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
-  }
-  .ic-github {
-    background: #24292f;
-  }
-  .ic-behance {
-    background: #1769ff;
-  }
-  .cc-txt {
-    display: grid;
-    min-width: 0;
-    line-height: 1.25;
-  }
-  .cc-txt b {
-    font-size: 13px;
-    font-weight: 650;
-  }
-  .cc-txt small {
-    color: var(--muted);
-    font-size: 12px;
+  .cc-value {
+    font-size: 14px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  .cc-tile:has(.cc-copy) .cc-link {
-    padding-right: 40px;
+  .cc-row:has(.cc-copy) .cc-link {
+    padding-right: 48px;
   }
   .cc-copy {
     position: absolute;
@@ -355,148 +302,145 @@ const links = [
     translate: 0 -50%;
     display: grid;
     place-items: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 0;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--line);
+    background: var(--cell);
     color: var(--muted);
-    background: transparent;
     cursor: pointer;
   }
   .cc-copy:hover {
     color: var(--text);
-    background: var(--hover);
+    border-color: var(--text);
   }
   .cc-seg {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-    padding: 3px;
-    border-radius: 12px;
-    background: var(--chip);
+    border-bottom: 1px solid var(--line);
   }
   .cc-seg button {
-    height: 30px;
+    height: 38px;
     border: 0;
-    border-radius: 9px;
+    border-right: 1px solid var(--line);
     background: transparent;
     color: var(--muted);
-    font: inherit;
-    font-size: 12.5px;
-    font-weight: 600;
+    font: 500 10.5px/1 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
     cursor: pointer;
   }
+  .cc-seg button:last-child {
+    border-right: 0;
+  }
   .cc-seg button[aria-pressed='true'] {
-    background: var(--glass-strong);
-    color: var(--text);
-    box-shadow: var(--shadow-1);
+    background: var(--text);
+    color: var(--bg);
   }
   .cc-order {
-    width: 100%;
+    margin: 12px 16px 16px;
   }
   .cc-toast {
     position: absolute;
-    left: 50%;
-    bottom: -44px;
-    translate: -50% 0;
-    padding: 7px 14px;
-    border-radius: 999px;
+    left: 16px;
+    right: 16px;
+    bottom: -40px;
+    padding: 9px 12px;
     background: var(--accent);
     color: var(--on-accent);
-    font-size: 13px;
-    font-weight: 600;
+    font: 500 11px/1 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     opacity: 0;
-    transition: opacity 0.25s, transform 0.35s var(--spring);
-    transform: translateY(-6px);
+    transition: opacity var(--fast) var(--ease);
     pointer-events: none;
-    white-space: nowrap;
   }
-  .cc-toast.on {
+  .cc-toast:global(.on) {
     opacity: 1;
-    transform: none;
   }
 
-  /* About */
+  /* Об Ehroz */
   .about {
-    width: min(340px, calc(100vw - 32px));
+    width: min(360px, calc(100vw - 32px));
     margin: auto;
     padding: 0;
-    border: 0;
-    border-radius: 16px;
+    border: 1px solid var(--line-strong);
+    background: var(--cell);
     color: var(--text);
-    overflow: hidden;
   }
   .about[open] {
-    animation: about-in 0.45s var(--spring);
-  }
-  @keyframes about-in {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
+    animation: cc-in var(--mid) var(--ease);
   }
   .about::backdrop {
-    background: rgba(0, 0, 0, 0.3);
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.55);
   }
   .about-bar {
-    height: 36px;
     display: flex;
     align-items: center;
-    padding: 0 12px;
+    justify-content: space-between;
+    height: 36px;
+    padding-left: 14px;
+    border-bottom: 1px solid var(--line);
+    color: var(--faint);
+    font: 500 11px/1 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
-  .about-bar button {
+  .about-x {
+    width: 36px;
+    height: 35px;
     border: 0;
-    padding: 0;
-    background: none;
+    border-left: 1px solid var(--line);
+    background: transparent;
+    color: var(--text);
+    font-size: 18px;
     cursor: pointer;
+  }
+  .about-x:hover {
+    background: var(--hover);
   }
   .about-body {
     display: grid;
     justify-items: center;
     gap: 6px;
-    padding: 4px 24px 24px;
+    padding: 24px;
     text-align: center;
   }
-  .about-avatar {
-    margin-bottom: 8px;
-    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.3));
-  }
   .about-name {
-    font-family: var(--font-display);
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.03em;
+    margin-top: 10px;
+    font: 750 30px/1 var(--font-sans);
+    letter-spacing: -0.035em;
   }
   .about-sub {
     color: var(--muted);
-    font-size: 13px;
-    margin-bottom: 10px;
+    font: 400 12px/1.5 var(--font-mono);
+    margin-bottom: 12px;
   }
   .about-spec {
-    display: grid;
-    gap: 4px;
     width: 100%;
-    margin-bottom: 14px;
-    font-size: 12.5px;
+    margin: 0 0 16px;
+    border-top: 1px solid var(--line);
+    text-align: left;
   }
   .about-spec div {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1.2fr;
     gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
   }
   .about-spec dt {
-    text-align: right;
-    font-weight: 650;
+    color: var(--faint);
+    font: 500 10.5px/1.5 var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
   .about-spec dd {
-    text-align: left;
-    color: var(--muted);
+    margin: 0;
+    font: 400 12.5px/1.5 var(--font-mono);
   }
   .about-egg {
     margin-top: 12px;
     color: var(--faint);
-    font-size: 11.5px;
+    font: 400 11px/1.5 var(--font-mono);
   }
 </style>
