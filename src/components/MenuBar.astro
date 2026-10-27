@@ -1,0 +1,501 @@
+---
+import type { Lang } from '../content/apps';
+import { tr, path, CONTACTS } from '../i18n';
+import Icon from './Icon.astro';
+import Mark from './Mark.astro';
+import Avatar from './Avatar.astro';
+
+interface Props {
+  lang: Lang;
+  /** slug текущего приложения — чтобы переключатель языка вёл на ту же страницу. */
+  slug?: string;
+}
+const { lang, slug = '' } = Astro.props;
+const other: Lang = lang === 'ru' ? 'en' : 'ru';
+const c = CONTACTS;
+const links = [
+  { id: 'telegram', label: 'Telegram', value: `@${c.telegram}`, href: `https://t.me/${c.telegram}` },
+  { id: 'mail', label: 'Email', value: c.email, href: `mailto:${c.email}`, copy: c.email },
+  { id: 'instagram', label: 'Instagram', value: `@${c.instagram}`, href: `https://instagram.com/${c.instagram}` },
+  { id: 'github', label: 'GitHub', value: c.github, href: `https://github.com/${c.github}` },
+  { id: 'behance', label: 'Behance', value: c.behance, href: `https://www.behance.net/${c.behance}` },
+];
+---
+
+<header class="menubar" style="view-transition-name: menubar">
+  <div class="mb-left">
+    <a class="mb-logo" href={path(lang)} aria-label="ehroz.pro" data-logo>
+      <Mark size={16} />
+      <span>ehroz.pro</span>
+    </a>
+    <a class="mb-item hide-sm" href={`${path(lang)}#apps`}>{tr(lang, 'menu.apps')}</a>
+    <button class="mb-item hide-sm" type="button" data-open="about">{tr(lang, 'menu.about')}</button>
+  </div>
+  <div class="mb-right">
+    <button class="mb-icon" type="button" data-open="spotlight" aria-label={tr(lang, 'menu.search')} title={tr(lang, 'menu.search')}>
+      <Icon name="search" size={15} />
+    </button>
+    <a class="mb-icon mb-lang" href={path(other, slug)} hreflang={other} lang={other} aria-label={tr(lang, 'menu.lang')} title={tr(lang, 'menu.lang')} data-lang-switch>
+      {other.toUpperCase()}
+    </a>
+    <button class="mb-icon" type="button" data-theme-toggle aria-label={tr(lang, 'menu.theme')}>
+      <Icon name="auto" size={15} class="ti ti-auto" />
+      <Icon name="moon" size={15} class="ti ti-dark" />
+      <Icon name="sun" size={15} class="ti ti-light" />
+    </button>
+    <time class="mb-clock hide-xs" data-clock data-lang={lang} aria-label={lang === 'ru' ? 'Время в Астане' : 'Time in Astana'}>&nbsp;</time>
+    <button class="mb-badge" type="button" data-open="cc" aria-haspopup="dialog" aria-expanded="false" aria-controls="cc">
+      <Avatar size={20} />
+      <span class="hide-sm"><b>Ehroz</b> · {c.role}</span>
+    </button>
+  </div>
+</header>
+
+<!-- Control Center: контакты -->
+<div class="cc glass-strong" id="cc" role="dialog" aria-modal="false" aria-label={tr(lang, 'cc.title')} hidden>
+  <div class="cc-profile">
+    <Avatar size={56} />
+    <div>
+      <div class="cc-name">{c.name[lang]}</div>
+      <div class="cc-role">{c.role}</div>
+      <div class="cc-city">{c.city[lang]} · <time data-clock data-lang={lang} data-short>&nbsp;</time></div>
+    </div>
+  </div>
+  <div class="cc-grid">
+    {
+      links.map((l) => (
+        <div class="cc-tile">
+          <a class="cc-link" href={l.href} target="_blank" rel="noopener me">
+            <span class={`cc-ic ic-${l.id}`}>
+              <Icon name={l.id} size={17} />
+            </span>
+            <span class="cc-txt">
+              <b>{l.label}</b>
+              <small>{l.value}</small>
+            </span>
+          </a>
+          {l.copy && (
+            <button class="cc-copy" type="button" data-copy={l.copy} aria-label={`${tr(lang, 'cc.copy')}: ${l.copy}`} title={tr(lang, 'cc.copy')}>
+              <Icon name="copy" size={15} />
+            </button>
+          )}
+        </div>
+      ))
+    }
+  </div>
+  <div class="cc-row">
+    <div class="cc-seg" role="group" aria-label={tr(lang, 'menu.theme')}>
+      <button type="button" data-set-theme="auto">{tr(lang, 'theme.auto')}</button>
+      <button type="button" data-set-theme="dark">{tr(lang, 'theme.dark')}</button>
+      <button type="button" data-set-theme="light">{tr(lang, 'theme.light')}</button>
+    </div>
+  </div>
+  <a class="btn btn-primary cc-order magnetic" href={c.order} target="_blank" rel="noopener">
+    <Icon name="briefcase" />
+    {tr(lang, 'contact.order')}
+  </a>
+  <div class="cc-toast" role="status" aria-live="polite"></div>
+</div>
+
+<!-- «About this Mac» → «About Ehroz» -->
+<dialog class="about glass-strong" id="about" aria-label={tr(lang, 'about.mac.title')}>
+  <div class="about-bar">
+    <form method="dialog"><button class="lights" aria-label="Close"><i></i><i></i><i></i></button></form>
+  </div>
+  <div class="about-body">
+    <div class="about-avatar"><Avatar size={112} /></div>
+    <h2 class="about-name">Ehroz</h2>
+    <p class="about-sub">{c.role} · ehroz.pro</p>
+    <dl class="about-spec">
+      <div><dt>{tr(lang, 'about.mac.chip')}</dt><dd>{tr(lang, 'about.mac.chipv')}</dd></div>
+      <div><dt>{tr(lang, 'about.mac.mem')}</dt><dd>{tr(lang, 'about.mac.memv')}</dd></div>
+      <div><dt>{tr(lang, 'about.mac.disk')}</dt><dd>{tr(lang, 'about.mac.diskv')}</dd></div>
+      <div><dt>{tr(lang, 'about.mac.os')}</dt><dd>{tr(lang, 'about.mac.osv')}</dd></div>
+    </dl>
+    <a class="btn btn-sm" href={`${path(lang)}#about`} data-close-about>{tr(lang, 'about.mac.more')}</a>
+    <p class="about-egg">{tr(lang, 'about.mac.egg')}</p>
+  </div>
+</dialog>
+
+<style>
+  .menubar {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    height: var(--menubar);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px 0 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    background: color-mix(in srgb, var(--bg) 42%, transparent);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    backdrop-filter: blur(30px) saturate(180%);
+    box-shadow: inset 0 -0.5px 0 var(--line);
+  }
+  .mb-left,
+  .mb-right {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    min-width: 0;
+  }
+  .mb-logo {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 10px 0 6px;
+    height: 24px;
+    border-radius: 6px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    user-select: none;
+  }
+  .mb-logo :global(.mark) {
+    transition: transform 0.6s var(--spring);
+  }
+  .mb-logo:hover :global(.mark) {
+    transform: rotate(60deg);
+  }
+  .mb-item,
+  .mb-icon,
+  .mb-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 24px;
+    padding: 0 9px;
+    border-radius: 6px;
+    color: inherit;
+    font: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  .mb-item:hover,
+  .mb-icon:hover,
+  .mb-badge:hover,
+  .mb-badge[aria-expanded='true'],
+  .mb-logo:hover {
+    background: var(--hover);
+  }
+  .mb-icon {
+    padding: 0 7px;
+  }
+  .mb-lang {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .mb-clock {
+    padding: 0 8px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .mb-badge {
+    padding: 0 9px 0 3px;
+    margin-left: 2px;
+    white-space: nowrap;
+    border-radius: 999px;
+    height: 26px;
+    background: var(--chip);
+  }
+  .mb-badge b {
+    font-weight: 650;
+  }
+  .mb-badge span {
+    color: var(--muted);
+  }
+  .mb-badge span b {
+    color: var(--text);
+  }
+  :global(.ti) {
+    display: none;
+  }
+  :global(html[data-theme-pref='auto'] .ti-auto),
+  :global(html:not([data-theme-pref]) .ti-auto),
+  :global(html[data-theme-pref='dark'] .ti-dark),
+  :global(html[data-theme-pref='light'] .ti-light) {
+    display: block;
+  }
+  @media (max-width: 760px) {
+    .hide-sm {
+      display: none !important;
+    }
+    .mb-badge {
+      padding: 0 3px;
+    }
+  }
+  @media (max-width: 380px) {
+    .hide-xs {
+      display: none !important;
+    }
+  }
+
+  /* Control Center */
+  .cc {
+    position: fixed;
+    z-index: 55;
+    top: calc(var(--menubar) + 8px);
+    right: 8px;
+    width: min(360px, calc(100vw - 16px));
+    padding: 14px;
+    border-radius: 22px;
+    display: grid;
+    gap: 10px;
+    transform-origin: top right;
+    animation: cc-in 0.38s var(--spring);
+  }
+  .cc[hidden] {
+    display: none;
+  }
+  @keyframes cc-in {
+    from {
+      opacity: 0;
+      transform: scale(0.92) translateY(-8px);
+    }
+  }
+  .cc-profile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px;
+    border-radius: 16px;
+    background: var(--chip);
+  }
+  .cc-name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+  }
+  .cc-role,
+  .cc-city {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .cc-city time {
+    font-variant-numeric: tabular-nums;
+  }
+  .cc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .cc-tile {
+    position: relative;
+    border-radius: 16px;
+    background: var(--chip);
+    transition: background 0.2s, transform 0.3s var(--spring);
+  }
+  .cc-tile:hover {
+    background: var(--hover);
+    transform: scale(1.02);
+  }
+  .cc-tile:first-child {
+    grid-column: span 2;
+  }
+  .cc-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    min-width: 0;
+  }
+  .cc-ic {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    flex: none;
+    border-radius: 50%;
+    color: #fff;
+    background: #3a3a44;
+  }
+  .ic-telegram {
+    background: linear-gradient(180deg, #37aee2, #1e96c8);
+  }
+  .ic-mail {
+    background: linear-gradient(180deg, #4ea4ff, #1f6fe5);
+  }
+  .ic-instagram {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+  }
+  .ic-github {
+    background: #24292f;
+  }
+  .ic-behance {
+    background: #1769ff;
+  }
+  .cc-txt {
+    display: grid;
+    min-width: 0;
+    line-height: 1.25;
+  }
+  .cc-txt b {
+    font-size: 13px;
+    font-weight: 650;
+  }
+  .cc-txt small {
+    color: var(--muted);
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .cc-tile:has(.cc-copy) .cc-link {
+    padding-right: 40px;
+  }
+  .cc-copy {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    translate: 0 -50%;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 0;
+    color: var(--muted);
+    background: transparent;
+    cursor: pointer;
+  }
+  .cc-copy:hover {
+    color: var(--text);
+    background: var(--hover);
+  }
+  .cc-seg {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    padding: 3px;
+    border-radius: 12px;
+    background: var(--chip);
+  }
+  .cc-seg button {
+    height: 30px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .cc-seg button[aria-pressed='true'] {
+    background: var(--glass-strong);
+    color: var(--text);
+    box-shadow: var(--shadow-1);
+  }
+  .cc-order {
+    width: 100%;
+  }
+  .cc-toast {
+    position: absolute;
+    left: 50%;
+    bottom: -44px;
+    translate: -50% 0;
+    padding: 7px 14px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.25s, transform 0.35s var(--spring);
+    transform: translateY(-6px);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .cc-toast.on {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* About */
+  .about {
+    width: min(340px, calc(100vw - 32px));
+    padding: 0;
+    border: 0;
+    border-radius: 16px;
+    color: var(--text);
+    overflow: hidden;
+  }
+  .about[open] {
+    animation: about-in 0.45s var(--spring);
+  }
+  @keyframes about-in {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+  }
+  .about::backdrop {
+    background: rgba(0, 0, 0, 0.3);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+  }
+  .about-bar {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+  }
+  .about-bar button {
+    border: 0;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+  }
+  .about-body {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    padding: 4px 24px 24px;
+    text-align: center;
+  }
+  .about-avatar {
+    margin-bottom: 8px;
+    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.3));
+  }
+  .about-name {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+  .about-sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  .about-spec {
+    display: grid;
+    gap: 4px;
+    width: 100%;
+    margin-bottom: 14px;
+    font-size: 12.5px;
+  }
+  .about-spec div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .about-spec dt {
+    text-align: right;
+    font-weight: 650;
+  }
+  .about-spec dd {
+    text-align: left;
+    color: var(--muted);
+  }
+  .about-egg {
+    margin-top: 12px;
+    color: var(--faint);
+    font-size: 11.5px;
+  }
+</style>

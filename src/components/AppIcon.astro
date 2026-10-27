@@ -1,0 +1,33 @@
+---
+import { asset } from '../i18n';
+interface Props {
+  slug: string;
+  name: string;
+  size: number;
+  class?: string;
+  eager?: boolean;
+  /** Пустой alt, когда рядом уже есть подпись с названием. */
+  decorative?: boolean;
+  style?: string;
+  /** Иконка участвует в переходе между страницами (View Transitions). */
+  vt?: boolean;
+}
+const { slug, name, size, class: cls, eager = false, decorative = false, style, vt = false } = Astro.props;
+// Иконки нарисованы с полями, как настоящие иконки macOS: сам скруглённый квадрат — ~80% картинки.
+const w = size >= 200 ? 640 : size >= 80 ? 320 : 160;
+---
+
+<img
+  class={cls}
+  src={asset(`icons/${slug}-${w}.webp`)}
+  srcset={`${asset(`icons/${slug}-160.webp`)} 160w, ${asset(`icons/${slug}-320.webp`)} 320w, ${asset(`icons/${slug}-640.webp`)} 640w`}
+  sizes={`${size}px`}
+  width={size}
+  height={size}
+  alt={decorative ? '' : `${name}`}
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+  data-icon={slug}
+  data-vt-icon={vt ? slug : undefined}
+  style={style}
+/>

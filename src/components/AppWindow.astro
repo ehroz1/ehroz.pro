@@ -1,0 +1,185 @@
+---
+// Карточка-«окно» продукта на главной.
+import type { App, Lang } from '../content/apps';
+import { path, pick, PLATFORM, STATUS, tr } from '../i18n';
+import AppIcon from './AppIcon.astro';
+import Icon from './Icon.astro';
+import SceneSwitch from './scenes/SceneSwitch.astro';
+
+interface Props { app: App; lang: Lang; featured?: boolean; index: number }
+const { app, lang, featured = false, index } = Astro.props;
+const pIcon = { macos: 'apple', windows: 'windows', web: 'web' } as const;
+---
+<article
+  class:list={['win reveal', { featured }]}
+  style={`--d:${(index % 3) * 70}ms;--a:${app.glow[0]};--b:${app.glow[1]};--c:${app.glow[2]}`}
+  data-tilt
+>
+  <a class="win-link" href={path(lang, app.slug)} data-app-link={app.slug} aria-label={`${app.name} — ${pick(lang, app.short)}`}>
+    <div class="win-bar">
+      <span class="lights"><i></i><i></i><i></i></span>
+      <span class="win-title">{app.name}</span>
+      <span class="win-plat">
+        {app.platforms.map((p) => <span title={pick(lang, PLATFORM[p])}><Icon name={pIcon[p]} size={13} /></span>)}
+      </span>
+    </div>
+    {featured && (
+      <div class="win-scene">
+        <SceneSwitch fit id={app.features[0].scene} lang={lang} label={pick(lang, app.features[0].title)} />
+      </div>
+    )}
+    <div class="win-body">
+      <AppIcon slug={app.slug} name={app.name} size={featured ? 96 : 84} class="win-icon" eager={index < 3} decorative vt />
+      <div class="win-text">
+        <h3 class="win-name" data-vt-title>{app.name}</h3>
+        <p class="win-short">{pick(lang, app.short)}</p>
+        <div class="win-meta">
+          <span class={`chip ${app.status}`}><i class="dot"></i>{pick(lang, STATUS[app.status])}</span>
+          {app.platforms.map((p) => <span class="chip">{pick(lang, PLATFORM[p])}</span>)}
+          {app.version && <span class="chip">v{app.version}</span>}
+        </div>
+      </div>
+      <span class="win-go" aria-hidden="true"><Icon name="arrow" size={18} /></span>
+    </div>
+  </a>
+</article>
+
+<style>
+  .win {
+    --rx: 0deg;
+    --ry: 0deg;
+    --gx: 50%;
+    --gy: 0%;
+    position: relative;
+    grid-column: span 12;
+    border-radius: var(--r-card);
+    perspective: 1200px;
+  }
+  @media (min-width: 720px) {
+    .win { grid-column: span 6; }
+  }
+  @media (min-width: 1080px) {
+    .win { grid-column: span 4; }
+    .win.featured { grid-column: span 8; grid-row: span 3; }
+  }
+  .win-link {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: var(--r-card);
+    overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--a) 22%, transparent), transparent 60%),
+      radial-gradient(120% 90% at 100% 100%, color-mix(in srgb, var(--b) 18%, transparent), transparent 60%),
+      var(--glass);
+    -webkit-backdrop-filter: blur(28px) saturate(170%);
+    backdrop-filter: blur(28px) saturate(170%);
+    box-shadow: var(--glass-edge), var(--shadow-1);
+    transform: rotateX(var(--rx)) rotateY(var(--ry));
+    transform-style: preserve-3d;
+    transition: transform 0.6s var(--spring), box-shadow 0.4s;
+  }
+  :global(.win.tilting) .win-link {
+    transition: transform 0.12s linear, box-shadow 0.4s;
+    box-shadow: var(--glass-edge), var(--shadow-2);
+  }
+  .win-link::after {
+    /* блик за курсором */
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(500px circle at var(--gx) var(--gy), rgba(255, 255, 255, 0.14), transparent 45%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    mix-blend-mode: soft-light;
+  }
+  :global(.win.tilting) .win-link::after { opacity: 1; }
+  .win-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 40px;
+    padding: 0 14px;
+    border-bottom: 0.5px solid var(--line);
+  }
+  .win-bar .lights i { width: 11px; height: 11px; }
+  .win:not(:hover) .win-bar .lights i { background: color-mix(in srgb, var(--text) 20%, transparent); }
+  .win-title {
+    flex: 1;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 600;
+    margin-right: 30px;
+  }
+  .win-plat {
+    display: flex;
+    gap: 6px;
+    color: var(--faint);
+  }
+  .win-scene {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    border-bottom: 0.5px solid var(--line);
+  }
+    .win-scene { min-height: 300px; }
+  @media (max-width: 1079px) { .win-scene { min-height: 0; aspect-ratio: 800 / 560; } }
+  .win-body {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 20px 22px;
+  }
+  .featured .win-body { align-items: center; }
+  .win-body :global(.win-icon) {
+    flex: none;
+    width: 84px;
+    height: 84px;
+    margin: -8px -4px -8px -10px;
+    transition: transform 0.5s var(--spring);
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.25));
+  }
+  .featured .win-body :global(.win-icon) { width: 96px; height: 96px; }
+  .win:hover .win-body :global(.win-icon) { transform: translateZ(30px) scale(1.06) rotate(-3deg); }
+  .win-text { min-width: 0; flex: 1; }
+  .win-name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 650;
+    letter-spacing: -0.025em;
+    line-height: 1.15;
+  }
+  .featured .win-name { font-size: 28px; }
+  .win-short {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.4;
+    text-wrap: pretty;
+  }
+  .win-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+  .win-go {
+    position: absolute;
+    right: 18px;
+    top: 20px;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--chip);
+    color: var(--muted);
+    transition: transform 0.4s var(--spring), background 0.2s, color 0.2s;
+  }
+  .featured .win-go { top: auto; }
+  .win:hover .win-go { transform: translateX(3px); background: var(--accent); color: var(--on-accent); }
+</style>

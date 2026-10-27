@@ -1,0 +1,990 @@
+---
+// Сцены Pachaq — по src/index.html и src/style.css (окно 440×600, системный стиль macOS).
+import Scene from './Scene.astro';
+import Cursor from './Cursor.astro';
+import { asset } from '../../i18n';
+
+interface Props {
+  id: string;
+  lang: 'ru' | 'en';
+  label: string;
+}
+const { id, lang, label } = Astro.props;
+const ru = lang === 'ru';
+const sz = (s: string) => (ru ? s : s.replace(/,/g, '.').replace(/МБ/g, 'MB').replace(/КБ/g, 'KB'));
+const rows = [
+  ['hero.webp', '2,8 МБ → 312 КБ', 89, 'a'],
+  ['team.webp', '1,9 МБ → 244 КБ', 87, 'b'],
+  ['product.webp', '3,4 МБ → 498 КБ', 85, 'c'],
+  ['banner.webp', '1,2 МБ → 190 КБ', 84, 'd'],
+];
+const logo = asset('icons/pachaq-160.webp');
+---
+
+{
+  id === 'pachaq-drop' && (
+    <Scene id={id} label={label} w={780} h={680}>
+      {[0, 1, 2, 3].map((i) => (
+        <span class={`fly f${i}`} data-fly>
+          <i class={`ph ${'abcd'[i]}`} />
+        </span>
+      ))}
+      <div class="pw">
+        <div class="pw-head">
+          <span class="lights">
+            <i />
+            <i />
+            <i />
+          </span>
+          <span class="brand">
+            <img src={logo} width="22" height="22" alt="" />
+            Pachaq
+          </span>
+          <span class="ib">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M4 7h10M18 7h2M4 17h4M12 17h8" />
+              <circle cx="16" cy="7" r="2" />
+              <circle cx="10" cy="17" r="2" />
+            </svg>
+          </span>
+        </div>
+        <div class="quick">
+          <div class="seg">
+            {['WebP', 'JPEG', 'PNG', ru ? 'Как есть' : 'As is'].map((t, i) => (
+              <span data-fmt class:list={{ on: i === 0 }}>
+                {t}
+              </span>
+            ))}
+          </div>
+          <span class="pop">{ru ? 'Без обрезки' : 'No crop'}</span>
+          <span class="tbtn">{ru ? 'Вручную' : 'Manual'}</span>
+        </div>
+        <div class="drop" data-el="drop">
+          <svg class="glyph" viewBox="0 0 64 64" fill="none">
+            <defs>
+              <linearGradient id="pg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#5ac8fa" />
+                <stop offset="1" stop-color="#5e5ce6" />
+              </linearGradient>
+            </defs>
+            <rect x="8" y="12" width="48" height="40" rx="9" fill="url(#pg)" opacity=".16" />
+            <rect x="8" y="12" width="48" height="40" rx="9" stroke="url(#pg)" stroke-width="2.5" />
+            <path d="M32 22v18m0 0-7-7m7 7 7-7" stroke="url(#pg)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <h4>{ru ? 'Перетащите изображения' : 'Drop images here'}</h4>
+          <p>
+            {ru ? 'JPEG, PNG, WebP, HEIC, TIFF — файлы или папки' : 'JPEG, PNG, WebP, HEIC, TIFF — files or folders'}
+            <br />
+            {ru ? 'или вставьте из буфера' : 'or paste from the clipboard'} <span class="kbd">⌘V</span>
+          </p>
+          <div class="acts">
+            <span class="btn2">{ru ? 'Выбрать файлы…' : 'Choose files…'}</span>
+            <span class="btn2">{ru ? 'Из буфера' : 'From clipboard'}</span>
+          </div>
+          <div class="progress" data-el="progress" />
+        </div>
+        <div class="summary">
+          <span>{ru ? 'Последние' : 'Recent'}</span>
+          <span class="clear">{ru ? 'Очистить' : 'Clear'}</span>
+        </div>
+        <div class="list" data-el="list">
+          <div class="empty" data-el="empty">
+            {ru ? 'Здесь появятся сжатые файлы' : 'Compressed files will appear here'}
+          </div>
+          {rows.map(([n, s, p, k]) => (
+            <div class="row" data-prow>
+              <span class={`thumb ph ${k}`} />
+              <span class="meta">
+                <b>{n}</b>
+                <small>{sz(String(s))}</small>
+              </span>
+              <span class="badge">−{p}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'pachaq-crop' && (
+    <Scene id={id} label={label} w={800} h={560}>
+      <div class="editor">
+        <div class="ed-top">
+          <span class="lights">
+            <i />
+            <i />
+            <i />
+          </span>
+          <b>IMG_0834.HEIC</b>
+          <span class="ed-count">1 / 3</span>
+        </div>
+        <div class="ed-stage">
+          <div class="ed-img">
+            <svg viewBox="0 0 160 100" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#7fb6ff" />
+                  <stop offset="1" stop-color="#ffd2a8" />
+                </linearGradient>
+              </defs>
+              <rect width="160" height="100" fill="url(#sky)" />
+              <circle cx="112" cy="34" r="10" fill="#fff4d6" />
+              <path d="M0 70 L30 44 L52 62 L80 30 L112 66 L132 52 L160 70 V100 H0Z" fill="#5d6f9e" />
+              <path d="M0 82 L40 64 L76 80 L110 68 L160 84 V100 H0Z" fill="#33406a" />
+              <circle cx="80" cy="74" r="5" fill="#ffcf9e" />
+              <rect x="76" y="78" width="8" height="14" rx="3" fill="#e5483d" />
+            </svg>
+            <div class="ed-box" data-el="box" style="left:30%;top:8%;width:40%;height:84%">
+              <i class="g1" />
+              <i class="g2" />
+              <i class="g3" />
+              <i class="g4" />
+              <b />
+              <b />
+              <b />
+              <b />
+              <span class="ed-size" data-el="size">
+                1080 × 1080
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="ed-bar">
+          <div class="seg small">
+            {['1:1', '4:5', '16:9', '9:16'].map((a, i) => (
+              <span data-ar={a} class:list={{ on: i === 0 }}>
+                {a}
+              </span>
+            ))}
+          </div>
+          <div class="ed-actions">
+            <span class="btn2">{ru ? 'Отмена' : 'Cancel'}</span>
+            <span class="btn2">{ru ? 'Пропустить' : 'Skip'}</span>
+            <span class="btn2 primary">{ru ? 'Сохранить' : 'Save'}</span>
+          </div>
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'pachaq-watch' && (
+    <Scene id={id} label={label}>
+      <div class="sw">
+        <div class="sw-side">
+          <span class="lights">
+            <i />
+            <i />
+            <i />
+          </span>
+          {(ru ? ['Сжатие', 'Размер', 'Обрезка', 'Папки наблюдения', 'Интеграция', 'Общие'] : ['Compression', 'Size', 'Crop', 'Watch folders', 'Integration', 'General']).map((n, i) => (
+            <span class:list={['sw-link', { on: i === 3 }]}>{n}</span>
+          ))}
+        </div>
+        <div class="sw-main">
+          <div class="sw-hero">
+            <span class="big" />
+            <h4>{ru ? 'Папки наблюдения' : 'Watch folders'}</h4>
+            <p>{ru ? 'Положите файл в такую папку — Pachaq сразу сожмёт и обрежет его по текущим настройкам.' : 'Drop a file into such a folder — Pachaq compresses and crops it right away with your current settings.'}</p>
+          </div>
+          <div class="sw-cols">
+            <div class="fold">
+              <div class="fold-h">📁 ~/Desktop/{ru ? 'Фото для сайта' : 'Site photos'}</div>
+              {['IMG_0834.HEIC', 'cover.png', 'team.jpg'].map((n, i) => (
+                <div class="fi" data-w>
+                  <i class={`ph ${'abc'[i]}`} />
+                  {n}
+                </div>
+              ))}
+            </div>
+            <div class="fold out">
+              <div class="fold-h">📁 …/pachaq</div>
+              {[
+                ['IMG_0834.webp', '−86%'],
+                ['cover.webp', '−78%'],
+                ['team.webp', '−83%'],
+              ].map(([n, p], i) => (
+                <div class="fi" data-wo>
+                  <i class={`ph ${'abc'[i]}`} />
+                  {n} <em>{p}</em>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div class="sw-field">
+            <span>{ru ? 'Подпапка для результатов' : 'Output subfolder'}</span>
+            <span class="field">pachaq</span>
+          </div>
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'pachaq-context' && (
+    <Scene id={id} label={label}>
+      <div class="finder">
+        <div class="fd-bar">
+          <span class="lights">
+            <i />
+            <i />
+            <i />
+          </span>
+          <b>{ru ? 'Загрузки' : 'Downloads'}</b>
+        </div>
+        <div class="fd-grid">
+          {['IMG_0834.HEIC', 'cover.png', 'team.jpg', 'logo.png'].map((n, i) => (
+            <div class="fd-item" data-el={i === 0 ? 'sel' : undefined}>
+              <i class={`ph ${'abcd'[i]}`} />
+              <span>{n}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="cmenu" data-el="menu">
+        {(ru ? ['Открыть', 'Открыть в программе', '—', 'Переместить в Корзину', '—', 'Свойства', 'Переименовать', 'Сжать «IMG_0834.HEIC»', '—', 'Быстрые действия'] : ['Open', 'Open With', '—', 'Move to Trash', '—', 'Get Info', 'Rename', 'Compress “IMG_0834.HEIC”', '—', 'Quick Actions']).map((t, i, a) =>
+          t === '—' ? <hr /> : <span class:list={['ci', { last: i === a.length - 1 }]} data-el={i === a.length - 1 ? 'qa' : undefined}>{t}{i === a.length - 1 && <em>›</em>}</span>,
+        )}
+      </div>
+      <div class="cmenu sub" data-el="sub">
+        <span class="ci">{ru ? 'Повернуть влево' : 'Rotate Left'}</span>
+        <span class="ci">{ru ? 'Разметка' : 'Markup'}</span>
+        <span class="ci" data-el="qatarget">
+          <img src={logo} width="16" height="16" alt="" />
+          {ru ? 'Сжать в Pachaq' : 'Compress in Pachaq'}
+        </span>
+      </div>
+      <div class="ptoast" data-el="toast">
+        <img src={logo} width="28" height="28" alt="" />
+        <span>
+          <b>Pachaq</b>
+          <small>IMG_0834.webp · −86%</small>
+        </span>
+      </div>
+      <div class="term-line">
+        <span>❯</span> pachaq --compress ~/Downloads/*.HEIC
+      </div>
+      <Cursor x={520} y={470} />
+    </Scene>
+  )
+}
+
+<style>
+  /* фото-заглушки: простые «пейзажи» из градиентов */
+  .ph {
+    display: block;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+  }
+  .ph.a {
+    background: linear-gradient(180deg, #8ec5ff 0 45%, #4a7bd0 45% 70%, #2d4e8c 70%);
+  }
+  .ph.b {
+    background: linear-gradient(180deg, #ffd1a6 0 40%, #f08a6b 40% 68%, #8a3e5c 68%);
+  }
+  .ph.c {
+    background: radial-gradient(circle at 30% 35%, #fff2c6 0 14%, transparent 15%), linear-gradient(160deg, #6fd3a6, #2a8a7b);
+  }
+  .ph.d {
+    background: linear-gradient(135deg, #c9b8ff, #7f6cf0 55%, #4b3fb0);
+  }
+  .fly {
+    position: absolute;
+    left: 40px;
+    z-index: 5;
+    width: 70px;
+    height: 70px;
+    padding: 4px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    transition: transform 0.9s cubic-bezier(0.45, 0, 0.2, 1), opacity 0.3s;
+  }
+  .fly .ph {
+    width: 100%;
+    height: 100%;
+  }
+  .f0 {
+    top: 120px;
+    transform: rotate(-8deg);
+  }
+  .f1 {
+    top: 220px;
+    left: 20px;
+    transform: rotate(6deg);
+  }
+  .f2 {
+    top: 330px;
+    transform: rotate(-3deg);
+  }
+  .f3 {
+    top: 430px;
+    left: 30px;
+    transform: rotate(9deg);
+  }
+  :global(.fly.go) {
+    transform: translate(380px, calc(190px - var(--t, 0px))) rotate(0deg) scale(0.7);
+  }
+  .f0 {
+    --t: 120px;
+  }
+  .f1 {
+    --t: 220px;
+  }
+  .f2 {
+    --t: 330px;
+  }
+  .f3 {
+    --t: 430px;
+  }
+  :global(.fly.gone) {
+    opacity: 0;
+  }
+
+  .pw {
+    position: absolute;
+    left: 250px;
+    top: 40px;
+    width: 440px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    background: rgba(246, 246, 248, 0.86);
+    -webkit-backdrop-filter: blur(30px) saturate(170%);
+    backdrop-filter: blur(30px) saturate(170%);
+    color: #1d1d1f;
+    font-size: 13px;
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2), 0 30px 70px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+  }
+  .pw-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 44px;
+    padding: 0 14px;
+  }
+  .pw-head .lights {
+    position: absolute;
+    left: 14px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-left: 68px;
+    font-weight: 600;
+  }
+  .brand img {
+    margin: -2px;
+  }
+  .ib {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 24px;
+    color: #6e6e73;
+  }
+  .ib svg {
+    width: 16px;
+    height: 16px;
+  }
+  .quick {
+    display: flex;
+    gap: 8px;
+    padding: 0 14px 12px;
+  }
+  .seg {
+    display: flex;
+    flex: 1;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 7px;
+    background: rgba(0, 0, 0, 0.08);
+  }
+  .seg span {
+    flex: 1;
+    text-align: center;
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  .seg span:global(.on) {
+    background: #fff;
+    box-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.05);
+  }
+  .seg.small span {
+    padding: 4px 12px;
+  }
+  .pop,
+  .tbtn {
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: #fff;
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.12);
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+  .drop {
+    position: relative;
+    margin: 0 14px;
+    height: 200px;
+    border-radius: 14px;
+    border: 1.5px dashed rgba(0, 0, 0, 0.14);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    overflow: hidden;
+    transition: all 0.18s ease;
+  }
+  .drop:global(.over) {
+    border-color: #0a84ff;
+    background: color-mix(in srgb, #0a84ff 10%, #fff);
+    transform: scale(1.01);
+  }
+  .glyph {
+    width: 54px;
+    height: 54px;
+    transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1);
+  }
+  .drop:global(.over) .glyph {
+    transform: translateY(-4px) scale(1.06);
+  }
+  .drop h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+  .drop p {
+    margin: 0;
+    color: #6e6e73;
+    font-size: 12px;
+    text-align: center;
+  }
+  .kbd {
+    display: inline-block;
+    padding: 0 5px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.08);
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .acts,
+  .ed-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .btn2 {
+    padding: 4px 12px;
+    border-radius: 6px;
+    background: #fff;
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
+    box-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.12);
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  .btn2.primary {
+    background: linear-gradient(180deg, #3d9bff, #0a84ff);
+    color: #fff;
+    border-color: transparent;
+  }
+  .progress {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 0;
+    background: linear-gradient(90deg, #5ac8fa, #5e5ce6);
+    transition: width 0.3s;
+  }
+  .summary {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 18px 6px;
+    color: #6e6e73;
+    font-size: 11.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .clear {
+    text-transform: none;
+    font-weight: 400;
+    color: #0a84ff;
+    font-size: 12px;
+  }
+  .list {
+    flex: 1;
+    padding: 0 8px 12px;
+  }
+  .empty {
+    color: #a1a1a6;
+    text-align: center;
+    padding: 28px 0;
+    font-size: 12px;
+  }
+  .row {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 10px;
+    border-radius: 8px;
+  }
+  .row:global(.in) {
+    display: flex;
+    animation: rin 0.25s ease both;
+  }
+  @keyframes rin {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+  }
+  .thumb {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+  }
+  .meta {
+    flex: 1;
+    display: grid;
+    min-width: 0;
+  }
+  .meta b {
+    font-weight: 500;
+  }
+  .meta small {
+    color: #6e6e73;
+    font-size: 11.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .badge {
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    background: color-mix(in srgb, #30d158 16%, transparent);
+    color: color-mix(in srgb, #30d158 80%, #1d1d1f);
+  }
+
+  /* редактор обрезки */
+  .editor {
+    position: absolute;
+    inset: 30px 50px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    background: #1e1e20;
+    color: #f5f5f7;
+    font-size: 13px;
+    box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.12), 0 30px 70px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+  }
+  .ed-top {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 40px;
+  }
+  .ed-top .lights {
+    position: absolute;
+    left: 14px;
+  }
+  .ed-count {
+    color: #98989d;
+  }
+  .ed-stage {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    padding: 10px 20px;
+    background: #141416;
+  }
+  .ed-img {
+    position: relative;
+    width: 560px;
+    height: 350px;
+  }
+  .ed-img svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .ed-box {
+    position: absolute;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
+    outline: 1.5px solid #fff;
+    transition: left 0.6s cubic-bezier(0.2, 1, 0.3, 1), top 0.6s cubic-bezier(0.2, 1, 0.3, 1), width 0.6s cubic-bezier(0.2, 1, 0.3, 1), height 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+  }
+  .ed-box i {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.35);
+  }
+  .ed-box .g1,
+  .ed-box .g2 {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+  }
+  .ed-box .g1 {
+    left: 33.3%;
+  }
+  .ed-box .g2 {
+    left: 66.6%;
+  }
+  .ed-box .g3,
+  .ed-box .g4 {
+    left: 0;
+    right: 0;
+    height: 1px;
+  }
+  .ed-box .g3 {
+    top: 33.3%;
+  }
+  .ed-box .g4 {
+    top: 66.6%;
+  }
+  .ed-box b {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 3px solid #fff;
+  }
+  .ed-box b:nth-of-type(1) {
+    left: -3px;
+    top: -3px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .ed-box b:nth-of-type(2) {
+    right: -3px;
+    top: -3px;
+    border-left: 0;
+    border-bottom: 0;
+  }
+  .ed-box b:nth-of-type(3) {
+    left: -3px;
+    bottom: -3px;
+    border-right: 0;
+    border-top: 0;
+  }
+  .ed-box b:nth-of-type(4) {
+    right: -3px;
+    bottom: -3px;
+    border-left: 0;
+    border-top: 0;
+  }
+  .ed-size {
+    position: absolute;
+    left: 50%;
+    bottom: 8px;
+    translate: -50% 0;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.6);
+    font-size: 11.5px;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .ed-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+  }
+  .editor .seg {
+    flex: none;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  .editor .seg span:global(.on) {
+    background: rgba(255, 255, 255, 0.22);
+    box-shadow: none;
+  }
+  .editor .btn2 {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #f5f5f7;
+  }
+  .editor .btn2.primary {
+    background: linear-gradient(180deg, #3d9bff, #0a84ff);
+  }
+
+  /* окно настроек — папки наблюдения */
+  .sw {
+    position: absolute;
+    inset: 36px 50px;
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    border-radius: 12px;
+    background: rgba(246, 246, 248, 0.95);
+    color: #1d1d1f;
+    font-size: 13px;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+  }
+  .sw-side {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 14px 10px;
+    background: rgba(0, 0, 0, 0.04);
+    border-right: 0.5px solid rgba(0, 0, 0, 0.09);
+  }
+  .sw-side .lights {
+    margin: 0 0 18px 4px;
+  }
+  .sw-link {
+    padding: 6px 10px;
+    border-radius: 7px;
+  }
+  .sw-link.on {
+    background: rgba(0, 0, 0, 0.08);
+    font-weight: 600;
+  }
+  .sw-main {
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .sw-hero {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 6px;
+  }
+  .big {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #34c759, #00a86b);
+    box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.4);
+  }
+  .sw-hero h4 {
+    margin: 0;
+    font-size: 15px;
+  }
+  .sw-hero p {
+    margin: 0;
+    max-width: 420px;
+    color: #6e6e73;
+    font-size: 12px;
+  }
+  .sw-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .fold {
+    padding: 10px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.12), 0 0 0 0.5px rgba(0, 0, 0, 0.05);
+    min-height: 168px;
+  }
+  .fold-h {
+    margin-bottom: 8px;
+    color: #6e6e73;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .fi {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px;
+    border-radius: 6px;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.35s, transform 0.45s cubic-bezier(0.2, 1.3, 0.4, 1);
+  }
+  .fi:global(.in) {
+    opacity: 1;
+    transform: none;
+  }
+  .fi .ph {
+    width: 26px;
+    height: 26px;
+  }
+  .fi em {
+    margin-left: auto;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 11px;
+    color: color-mix(in srgb, #30d158 80%, #1d1d1f);
+  }
+  .sw-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.12);
+  }
+  .field {
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 0.5px solid rgba(0, 0, 0, 0.14);
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 12px;
+  }
+
+  /* Finder + контекстное меню */
+  .finder {
+    position: absolute;
+    left: 50px;
+    top: 50px;
+    width: 470px;
+    height: 330px;
+    border-radius: 12px;
+    background: rgba(250, 250, 252, 0.94);
+    color: #1d1d1f;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+  }
+  .fd-bar {
+    display: flex;
+    align-items: center;
+    gap: 70px;
+    height: 46px;
+    padding: 0 14px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+    font-size: 13px;
+  }
+  .fd-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    padding: 22px;
+  }
+  .fd-item {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    padding: 6px;
+    border-radius: 8px;
+  }
+  .fd-item .ph {
+    width: 64px;
+    height: 50px;
+  }
+  .fd-item:global(.on) {
+    background: rgba(0, 0, 0, 0.07);
+  }
+  .fd-item:global(.on) span {
+    background: #0a84ff;
+    color: #fff;
+    border-radius: 4px;
+    padding: 0 4px;
+  }
+  .cmenu {
+    position: absolute;
+    left: 170px;
+    top: 168px;
+    z-index: 10;
+    width: 236px;
+    padding: 5px;
+    border-radius: 10px;
+    background: rgba(240, 240, 244, 0.86);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    backdrop-filter: blur(24px) saturate(180%);
+    color: #1d1d1f;
+    font-size: 13px;
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.2), 0 12px 34px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: scale(0.96);
+    transform-origin: 0 0;
+    transition: opacity 0.12s, transform 0.12s;
+  }
+  .cmenu:global(.on) {
+    opacity: 1;
+    transform: none;
+  }
+  .cmenu.sub {
+    left: 404px;
+    top: 316px;
+    width: 210px;
+  }
+  .cmenu hr {
+    margin: 4px 8px;
+    border: 0;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.15);
+  }
+  .ci {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 10px;
+    border-radius: 5px;
+  }
+  .ci em {
+    margin-left: auto;
+    font-style: normal;
+  }
+  .ci:global(.hl) {
+    background: #0a84ff;
+    color: #fff;
+  }
+  .ptoast {
+    position: absolute;
+    right: 24px;
+    top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 280px;
+    padding: 12px;
+    border-radius: 16px;
+    background: rgba(240, 240, 244, 0.9);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    color: #1d1d1f;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.3s, transform 0.45s cubic-bezier(0.2, 1.3, 0.4, 1);
+  }
+  .ptoast:global(.on) {
+    opacity: 1;
+    transform: none;
+  }
+  .ptoast span {
+    display: grid;
+    font-size: 13px;
+  }
+  .ptoast small {
+    color: #6e6e73;
+  }
+  .term-line {
+    position: absolute;
+    left: 50px;
+    bottom: 44px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    background: rgba(20, 20, 24, 0.85);
+    color: #f2f2f5;
+    font: 14px ui-monospace, 'SF Mono', Menlo, monospace;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  }
+  .term-line span {
+    color: #3ddc84;
+  }
+</style>

@@ -1,0 +1,643 @@
+---
+// Сцены Morfu: строка меню с «m», панель очереди, островок у чёлки, векторизация.
+// Подписи и примеры чисел — из README Morfu; размеры файлов — примеры для демонстрации.
+import Scene from './Scene.astro';
+import Cursor from './Cursor.astro';
+
+interface Props {
+  id: string;
+  lang: 'ru' | 'en';
+  label: string;
+}
+const { id, lang, label } = Astro.props;
+const ru = lang === 'ru';
+const mb = (s: string) => (ru ? s : s.replace(',', '.').replace('МБ', 'MB').replace('ГБ', 'GB'));
+const clock = ru ? 'Вт 21:45' : 'Tue 9:45 PM';
+
+// «Растровый» логотип для сцены векторизации: клетки 24×24 по форме листа.
+const N = 24;
+const cells: string[] = [];
+for (let y = 0; y < N; y++)
+  for (let x = 0; x < N; x++) {
+    const u = (x + 0.5) / N - 0.5,
+      v = (y + 0.5) / N - 0.5;
+    const leaf = Math.abs(u) < 0.36 * Math.cos(v * 2.6) && Math.abs(v) < 0.42 && !(Math.abs(u) < 0.03 && v > -0.3);
+    const ring = Math.abs(Math.hypot(u, v) - 0.47) < 0.03;
+    if (leaf || ring) cells.push(`<rect x="${x}" y="${y}" width="1.04" height="1.04"/>`);
+  }
+---
+
+{
+  (id === 'morfu-menubar' || id === 'morfu-savings') && (
+    <Scene id={id} label={label}>
+      <div class="mbar">
+        <span class="apple"></span>
+        <b>Finder</b>
+        <span class="sp" />
+        <span class="m-icon" data-el="micon">m</span>
+        <span class="mbi">
+          <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.2 1 4.6a10 10 0 0 1 14 0Z" fill="currentColor" opacity=".9" /></svg>
+        </span>
+        <span class="mbi batt"><i /></span>
+        <span class="mbi">{clock}</span>
+      </div>
+      <div class="panel" data-el="panel">
+        <div class="p-head">
+          <b>Morfu</b>
+          <span class="p-fmt">{id === 'morfu-savings' ? (ru ? 'Сжать' : 'Compress') : 'MP4'} ▾</span>
+        </div>
+        <div class="p-rows" data-el="rows">
+          {id === 'morfu-menubar' ? (
+            <div class="p-row" data-el="row">
+              <span class="p-thumb vid" />
+              <span class="p-txt">
+                <b>{ru ? 'Отпуск.mov' : 'Trip.mov'}</b>
+                <small data-el="rowsub">MOV → MP4 · H.264</small>
+                <span class="p-prog">
+                  <i data-el="prog" />
+                </span>
+              </span>
+              <span class="p-pct" data-el="pct" />
+            </div>
+          ) : (
+            [
+              ['vid', ru ? 'Отпуск.mp4' : 'Trip.mp4', '12,4 МБ → 3,1 МБ', '−75%'],
+              ['photo', 'IMG_2231.webp', '4,8 МБ → 0,9 МБ', '−81%'],
+              ['pdf', ru ? 'Договор.pdf' : 'Contract.pdf', '9,6 МБ → 2,2 МБ', '−77%'],
+              ['photo', ru ? 'Скриншот.png' : 'Screenshot.png', '2,1 МБ → 0,6 МБ', '−71%'],
+            ].map(([k, n, s, p], i) => (
+              <div class="p-row done" style={`--i:${i}`} data-done-row>
+                <span class={`p-thumb ${k}`} />
+                <span class="p-txt">
+                  <b>{n}</b>
+                  <small>{mb(s)}</small>
+                </span>
+                <span class="p-save">{p}</span>
+              </div>
+            ))
+          )}
+        </div>
+        {id === 'morfu-savings' && (
+          <div class="p-stats">
+            <div>
+              <small>{ru ? 'За месяц' : 'This month'}</small>
+              <b data-count="2.4" data-unit={ru ? 'ГБ' : 'GB'}>0</b>
+            </div>
+            <div>
+              <small>{ru ? 'За всё время' : 'All time'}</small>
+              <b data-count="18.7" data-unit={ru ? 'ГБ' : 'GB'}>0</b>
+            </div>
+          </div>
+        )}
+      </div>
+      {id === 'morfu-menubar' && (
+        <>
+          <div class="dfile" data-el="file" style="left:110px;top:360px">
+            <span class="p-thumb vid big" />
+            <span class="fname">{ru ? 'Отпуск.mov' : 'Trip.mov'}</span>
+          </div>
+          <div class="dfile out" data-el="out" style="left:150px;top:180px">
+            <span class="p-thumb vid big" />
+            <span class="fname">{ru ? 'Отпуск.mp4' : 'Trip.mp4'}</span>
+          </div>
+          <div class="ghost2" data-el="ghost">
+            <span class="p-thumb vid big" />
+          </div>
+          <Cursor x={300} y={460} />
+        </>
+      )}
+    </Scene>
+  )
+}
+
+{
+  id === 'morfu-notch' && (
+    <Scene id={id} label={label}>
+      <div class="screen">
+        <div class="notch" data-el="notch">
+          <div class="isl">
+            <span class="isl-ring">
+              <svg width="34" height="34" viewBox="0 0 36 36">
+                <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="3.5" />
+                <circle data-el="ring" cx="18" cy="18" r="15" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" transform="rotate(-90 18 18)" />
+              </svg>
+            </span>
+            <span class="isl-txt">
+              <b>{ru ? 'Презентация.pdf' : 'Deck.pdf'}</b>
+              <small data-el="islsub">{ru ? 'Сжатие PDF…' : 'Compressing PDF…'}</small>
+            </span>
+            <span class="isl-res" data-el="islres">−62%</span>
+          </div>
+        </div>
+        <div class="dfile" data-el="file" style="left:340px;top:380px">
+          <span class="p-thumb pdf big" />
+          <span class="fname">{ru ? 'Презентация.pdf' : 'Deck.pdf'}</span>
+        </div>
+        <div class="ghost2" data-el="ghost">
+          <span class="p-thumb pdf big" />
+        </div>
+        <Cursor x={600} y={470} />
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'morfu-trace' && (
+    <Scene id={id} label={label}>
+      <div class="trace">
+        <div class="tr-head">
+          <span class="lights">
+            <i />
+            <i />
+            <i />
+          </span>
+          <div class="tr-seg">
+            <span data-el="bw" class="on">
+              {ru ? 'SVG ч/б' : 'SVG b/w'}
+            </span>
+            <span data-el="col">{ru ? 'SVG цвет' : 'SVG colour'}</span>
+          </div>
+        </div>
+        <div class="tr-cols">
+          <div class="tr-pane">
+            <svg viewBox={`0 0 ${N} ${N}`} class="raster" shape-rendering="crispEdges" set:html={`<g fill="#1d1d22">${cells.join('')}</g>`} />
+            <small>logo.png · 24 × 24</small>
+          </div>
+          <div class="tr-arrow">→</div>
+          <div class="tr-pane">
+            <svg viewBox="-60 -60 120 120" class="vector" data-el="vec">
+              <circle r="56" fill="none" stroke="currentColor" stroke-width="7" class="v-ring" />
+              <path class="v-leaf" d="M0 -50 C 34 -30 40 10 0 50 C -40 10 -34 -30 0 -50 Z" />
+              <path class="v-vein" d="M0 -36 L0 50" />
+            </svg>
+            <small>logo.svg · 1,2 {ru ? 'КБ' : 'KB'}</small>
+          </div>
+        </div>
+        <div class="tr-sliders">
+          {(ru ? ['Цвета', 'Детали', 'Сглаживание'] : ['Colours', 'Detail', 'Smoothing']).map((n, i) => (
+            <label>
+              <span>{n}</span>
+              <span class="trk">
+                <i data-el={`s${i}`} style={`--v:${[30, 60, 45][i]}%`} />
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+<style>
+  .mbar {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 14px;
+    color: #fff;
+    font-size: 13px;
+    background: rgba(20, 20, 26, 0.35);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+  }
+  .apple {
+    width: 12px;
+    height: 14px;
+    border-radius: 6px 6px 7px 7px;
+    background: #fff;
+  }
+  .sp {
+    flex: 1;
+  }
+  .m-icon {
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 22px;
+    border-radius: 5px;
+    font: 700 19px/1 'New York', 'Times New Roman', Georgia, serif;
+    transition: background 0.2s, transform 0.3s cubic-bezier(0.2, 1.3, 0.4, 1);
+  }
+  :global(.m-icon.hot) {
+    background: rgba(255, 255, 255, 0.28);
+    transform: scale(1.15);
+  }
+  .mbi {
+    display: flex;
+    align-items: center;
+    opacity: 0.95;
+  }
+  .batt {
+    width: 24px;
+    height: 11px;
+    border-radius: 3px;
+    border: 1.2px solid rgba(255, 255, 255, 0.8);
+    padding: 1px;
+  }
+  .batt i {
+    display: block;
+    width: 70%;
+    height: 100%;
+    border-radius: 1px;
+    background: #fff;
+  }
+  .panel {
+    position: absolute;
+    top: 36px;
+    right: 120px;
+    width: 340px;
+    padding: 10px;
+    border-radius: 14px;
+    background: rgba(32, 32, 38, 0.72);
+    -webkit-backdrop-filter: blur(30px) saturate(170%);
+    backdrop-filter: blur(30px) saturate(170%);
+    color: #f2f2f5;
+    box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.18), 0 20px 50px rgba(0, 0, 0, 0.45);
+    transform-origin: 80% 0;
+    transition: opacity 0.2s, transform 0.35s cubic-bezier(0.2, 1.3, 0.4, 1);
+  }
+  :global([data-scene='morfu-menubar']) .panel {
+    opacity: 0;
+    transform: scale(0.9) translateY(-8px);
+  }
+  :global([data-scene='morfu-menubar'] .panel.on) {
+    opacity: 1;
+    transform: none;
+  }
+  .p-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 6px 10px;
+  }
+  .p-head b {
+    font-size: 14px;
+  }
+  .p-fmt {
+    padding: 3px 9px;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .p-rows {
+    display: grid;
+    gap: 4px;
+  }
+  .p-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .p-row.done {
+    animation: rowin 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) both;
+    animation-delay: calc(var(--i) * 140ms + 200ms);
+  }
+  @keyframes rowin {
+    from {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+  }
+  :global(.p-row.away) {
+    opacity: 0.35;
+  }
+  .p-thumb {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 7px;
+    box-shadow: inset 0 0 0 0.5px rgba(255, 255, 255, 0.25);
+  }
+  .p-thumb.big {
+    width: 64px;
+    height: 64px;
+    border-radius: 10px;
+  }
+  .p-thumb.vid {
+    background:
+      linear-gradient(transparent 0 0),
+      radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.95) 0 14%, transparent 15%),
+      linear-gradient(160deg, #2bb3c0, #2d5aa8 60%, #1d2c5a);
+  }
+  .p-thumb.photo {
+    background: linear-gradient(180deg, #f6a96b, #e2717d 50%, #4d3d7a 51%, #2b2d55);
+  }
+  .p-thumb.pdf {
+    background: linear-gradient(180deg, #fff 0 30%, #f2f2f5 30%), #fff;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1), inset 0 -10px 0 #e5483d;
+  }
+  .p-txt {
+    flex: 1;
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+  }
+  .p-txt b {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .p-txt small {
+    color: #a1a1ab;
+    font-size: 11.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .p-prog {
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.14);
+    overflow: hidden;
+    margin-top: 3px;
+  }
+  .p-prog i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: #fff;
+    border-radius: 2px;
+    transition: width 0.25s linear;
+  }
+  .p-pct,
+  .p-save {
+    font-size: 12.5px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .p-save {
+    color: #3ddc84;
+  }
+  .p-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .p-stats div {
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .p-stats small {
+    display: block;
+    color: #a1a1ab;
+    font-size: 11.5px;
+  }
+  .p-stats b {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .dfile {
+    position: absolute;
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    width: 120px;
+    transition: opacity 0.3s, transform 0.4s cubic-bezier(0.2, 1.3, 0.4, 1);
+  }
+  .dfile.out {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  :global(.dfile.out.show) {
+    opacity: 1;
+    transform: none;
+  }
+  :global(.dfile.lifted) {
+    opacity: 0.4;
+  }
+  .fname {
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  }
+  .ghost2 {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 29;
+    opacity: 0;
+    transition: translate 0.9s cubic-bezier(0.45, 0, 0.2, 1), opacity 0.2s, scale 0.3s;
+  }
+  :global(.ghost2.on) {
+    opacity: 0.85;
+  }
+  :global(.ghost2.small) {
+    scale: 0.4;
+  }
+  /* чёлка */
+  .screen {
+    position: absolute;
+    inset: 0;
+  }
+  .notch {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 190px;
+    height: 32px;
+    translate: -50% 0;
+    border-radius: 0 0 14px 14px;
+    background: #000;
+    overflow: hidden;
+    transition: width 0.5s cubic-bezier(0.2, 1.2, 0.4, 1), height 0.5s cubic-bezier(0.2, 1.2, 0.4, 1), border-radius 0.5s;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  }
+  :global(.notch.wide) {
+    width: 300px;
+    height: 46px;
+  }
+  :global(.notch.open) {
+    width: 380px;
+    height: 104px;
+    border-radius: 0 0 30px 30px;
+  }
+  .isl {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.25s 0.1s;
+  }
+  :global(.notch.open .isl) {
+    opacity: 1;
+  }
+  .isl-ring {
+    display: grid;
+  }
+  .isl-ring circle[data-el='ring'] {
+    transition: stroke-dashoffset 0.25s linear;
+  }
+  .isl-txt {
+    flex: 1;
+    display: grid;
+    min-width: 0;
+  }
+  .isl-txt b {
+    font-size: 14px;
+  }
+  .isl-txt small {
+    color: #a1a1ab;
+    font-size: 12px;
+  }
+  .isl-res {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(61, 220, 132, 0.18);
+    color: #3ddc84;
+    font-weight: 700;
+    font-size: 13px;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.2s, transform 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+  }
+  :global(.isl-res.on) {
+    opacity: 1;
+    transform: none;
+  }
+  /* векторизация */
+  .trace {
+    position: absolute;
+    inset: 50px 70px;
+    border-radius: 14px;
+    background: rgba(246, 246, 248, 0.96);
+    color: #1d1d22;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+    padding: 0 26px 22px;
+    display: flex;
+    flex-direction: column;
+  }
+  .tr-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+  }
+  .tr-seg {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 9px;
+    background: rgba(0, 0, 0, 0.06);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .tr-seg span {
+    padding: 5px 12px;
+    border-radius: 7px;
+    color: #5d5d66;
+    transition: background 0.2s, color 0.2s;
+  }
+  .tr-seg span:global(.on) {
+    background: #fff;
+    color: #1d1d22;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  }
+  .tr-cols {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 40px 1fr;
+    align-items: center;
+    gap: 10px;
+  }
+  .tr-pane {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.07);
+  }
+  .tr-pane small {
+    color: #6e6e78;
+    font-size: 12px;
+  }
+  .tr-pane svg {
+    width: 190px;
+    height: 190px;
+  }
+  .raster {
+    filter: blur(0.6px);
+  }
+  .tr-arrow {
+    text-align: center;
+    font-size: 26px;
+    color: #a1a1ab;
+  }
+  .vector {
+    color: #1d1d22;
+  }
+  .v-leaf {
+    fill: #1d1d22;
+    transition: fill 0.5s;
+  }
+  .v-vein {
+    stroke: #fff;
+    stroke-width: 5;
+    stroke-linecap: round;
+  }
+  .v-ring {
+    transition: stroke 0.5s;
+  }
+  :global(.vector.col) .v-leaf {
+    fill: #2f9e5b;
+  }
+  :global(.vector.col) .v-ring {
+    stroke: #e0913a;
+  }
+  .tr-sliders {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 16px;
+  }
+  .tr-sliders label {
+    display: grid;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .trk {
+    position: relative;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(0, 0, 0, 0.12);
+  }
+  .trk i {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: var(--v);
+    border-radius: 2px;
+    background: #1d1d22;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .trk i::after {
+    content: '';
+    position: absolute;
+    right: -9px;
+    top: -7px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+  }
+</style>

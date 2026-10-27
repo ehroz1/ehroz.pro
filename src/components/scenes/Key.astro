@@ -1,0 +1,26 @@
+---
+interface Props { k: string; id?: string; wide?: boolean }
+const { k, id, wide } = Astro.props;
+---
+<span class:list={['s-key', { wide }]} data-el={id}>{k}</span>
+<style>
+  .s-key {
+    display: inline-grid;
+    place-items: center;
+    min-width: 46px;
+    height: 46px;
+    padding: 0 10px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #fdfdfd, #e9e9ee);
+    color: #1d1d1f;
+    font: 600 20px/1 -apple-system, system-ui, sans-serif;
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25), 0 3px 0 #b9b9c2, 0 6px 14px rgba(0, 0, 0, 0.3);
+    transition: transform 0.12s, box-shadow 0.12s, opacity 0.25s;
+  }
+  .s-key.wide { min-width: 70px; }
+  :global(.s-key.down) {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.25), 0 0 0 #b9b9c2, 0 3px 8px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(180deg, #f1f1f4, #dcdce3);
+  }
+</style>

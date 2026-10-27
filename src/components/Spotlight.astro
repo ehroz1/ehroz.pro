@@ -1,0 +1,196 @@
+---
+import type { Lang } from '../content/apps';
+import { apps } from '../content/apps';
+import { path, tr, pick, asset, CONTACTS, PLATFORM } from '../i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const items = [
+  ...apps.map((a) => ({
+    type: 'app',
+    title: a.name,
+    sub: pick(lang, a.short),
+    meta: a.platforms.map((p) => pick(lang, PLATFORM[p])).join(' · '),
+    href: path(lang, a.slug),
+    icon: asset(`icons/${a.slug}-160.webp`),
+    slug: a.slug,
+    keys: [a.name, a.short.ru, a.short.en, a.tagline.ru, a.tagline.en, ...a.platforms, ...a.features.map((f) => f.title[lang])].join(' ').toLowerCase(),
+  })),
+  { type: 'action', title: 'Telegram', sub: `@${CONTACTS.telegram}`, href: `https://t.me/${CONTACTS.telegram}`, ic: 'telegram', keys: 'telegram телеграм contact контакт написать message' },
+  { type: 'action', title: 'Email', sub: CONTACTS.email, href: `mailto:${CONTACTS.email}`, ic: 'mail', keys: 'email почта mail contact контакт' },
+  { type: 'action', title: tr(lang, 'contact.order'), sub: CONTACTS.order.replace('https://', ''), href: CONTACTS.order, ic: 'briefcase', keys: 'order заказать сайт website hire' },
+  { type: 'action', title: tr(lang, 'menu.lang'), sub: lang === 'ru' ? 'English version' : 'Русская версия', href: path(lang === 'ru' ? 'en' : 'ru'), ic: 'globe', keys: 'language язык english русский en ru' },
+  { type: 'action', title: tr(lang, 'menu.theme'), sub: `${tr(lang, 'theme.dark')} / ${tr(lang, 'theme.light')}`, action: 'theme', ic: 'moon', keys: 'theme тема dark light тёмная светлая' },
+];
+---
+
+<dialog class="spot glass-strong" id="spotlight" aria-label={tr(lang, 'spot.placeholder')}>
+  <div class="spot-field">
+    <Icon name="search" size={22} />
+    <input
+      type="search"
+      placeholder={tr(lang, 'spot.placeholder')}
+      aria-label={tr(lang, 'spot.placeholder')}
+      autocomplete="off"
+      spellcheck="false"
+      role="combobox"
+      aria-expanded="true"
+      aria-controls="spot-list"
+      aria-autocomplete="list"
+    />
+    <kbd>esc</kbd>
+  </div>
+  <ul class="spot-list" id="spot-list" role="listbox"></ul>
+  <p class="spot-empty" hidden>{tr(lang, 'spot.empty')}</p>
+  <p class="spot-hint">{tr(lang, 'spot.hint')}</p>
+  <template id="spot-icons">
+    <span data-ic="telegram"><Icon name="telegram" size={18} /></span>
+    <span data-ic="mail"><Icon name="mail" size={18} /></span>
+    <span data-ic="briefcase"><Icon name="briefcase" size={18} /></span>
+    <span data-ic="globe"><Icon name="globe" size={18} /></span>
+    <span data-ic="moon"><Icon name="moon" size={18} /></span>
+  </template>
+  <script type="application/json" id="spot-data" set:html={JSON.stringify({ items, labels: { apps: tr(lang, 'spot.apps'), actions: tr(lang, 'spot.actions') } })} />
+</dialog>
+
+<style>
+  .spot {
+    width: min(640px, calc(100vw - 24px));
+    margin: 14vh auto auto;
+    padding: 0;
+    border: 0;
+    border-radius: 20px;
+    color: var(--text);
+    overflow: hidden;
+  }
+  .spot[open] {
+    animation: spot-in 0.32s var(--spring);
+  }
+  @keyframes spot-in {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(-6px);
+    }
+  }
+  .spot::backdrop {
+    background: rgba(0, 0, 0, 0.18);
+  }
+  .spot-field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 18px;
+    height: 62px;
+    color: var(--muted);
+  }
+  .spot-field input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    font-size: 22px;
+    font-weight: 450;
+    letter-spacing: -0.01em;
+  }
+  .spot-field input::-webkit-search-cancel-button {
+    display: none;
+  }
+  .spot-field kbd {
+    font: inherit;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: var(--chip);
+  }
+  .spot-list {
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    max-height: min(56vh, 460px);
+    overflow-y: auto;
+    border-top: 0.5px solid var(--line);
+  }
+  .spot-list:empty {
+    display: none;
+  }
+  .spot-list :global(.spot-group) {
+    padding: 8px 12px 4px;
+    color: var(--faint);
+    font-size: 11.5px;
+    font-weight: 650;
+  }
+  .spot-list :global(.spot-item) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 10px;
+    border-radius: 11px;
+    cursor: pointer;
+  }
+  .spot-list :global(.spot-item[aria-selected='true']) {
+    background: color-mix(in srgb, var(--wall-a) 70%, #3478f6);
+    color: #fff;
+  }
+  .spot-list :global(.spot-item[aria-selected='true'] small) {
+    color: rgba(255, 255, 255, 0.8);
+  }
+  .spot-list :global(.spot-item img) {
+    width: 40px;
+    height: 40px;
+    margin: -3px;
+  }
+  .spot-list :global(.spot-ic) {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: var(--chip);
+  }
+  .spot-list :global(.spot-t) {
+    display: grid;
+    min-width: 0;
+    flex: 1;
+    line-height: 1.3;
+  }
+  .spot-list :global(.spot-t b) {
+    font-weight: 650;
+    font-size: 14.5px;
+  }
+  .spot-list :global(.spot-t small) {
+    color: var(--muted);
+    font-size: 12.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .spot-list :global(.spot-meta) {
+    font-size: 12px;
+    opacity: 0.7;
+    white-space: nowrap;
+  }
+  .spot-empty {
+    padding: 22px;
+    text-align: center;
+    color: var(--muted);
+    border-top: 0.5px solid var(--line);
+  }
+  .spot-hint {
+    padding: 9px 16px;
+    border-top: 0.5px solid var(--line);
+    color: var(--faint);
+    font-size: 11.5px;
+  }
+  @media (max-width: 600px) {
+    .spot-list :global(.spot-meta) {
+      display: none;
+    }
+  }
+</style>

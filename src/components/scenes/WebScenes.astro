@@ -1,0 +1,1207 @@
+---
+// Сцены radius, BLA-БЛА и Picta.
+// BLA-БЛА — по скриншотам docs/assets и таблице сервисов из README; Picta — по css/styles.css и README.
+import Scene from './Scene.astro';
+import { asset } from '../../i18n';
+
+interface Props {
+  id: string;
+  lang: 'ru' | 'en';
+  label: string;
+}
+const { id, lang, label } = Astro.props;
+const ru = lang === 'ru';
+const dots = (n: number) => '●●●'.slice(0, n) + '○○○'.slice(0, 3 - n);
+const providers: [string, string, number, number, boolean][] = [
+  ['Groq Whisper', 'Groq', 2, 1, false],
+  ['Google Gemini', 'Google AI Studio', 3, 2, false],
+  ['ElevenLabs Scribe', 'ElevenLabs', 3, 3, false],
+  ['Speechmatics', 'Speechmatics', 3, 0, false],
+  ['AssemblyAI', 'AssemblyAI', 2, 0, false],
+  ['Gladia', 'Gladia', 3, 2, false],
+  ['Mistral Voxtral', 'Mistral', 2, 0, false],
+  ['Deepgram Nova-3', 'Deepgram', 3, 0, false],
+  ['Soniox', 'Soniox', 3, 3, true],
+  ['Yandex SpeechKit', 'Yandex Cloud', 2, 3, true],
+  ['OpenAI', 'OpenAI', 3, 1, true],
+];
+const tiles = [
+  [180, 'linear-gradient(160deg,#f5c28a,#d97a4a)', 'pixabay'],
+  [120, 'linear-gradient(160deg,#9fb7c9,#4d6a85)', 'pexels'],
+  [150, 'linear-gradient(160deg,#e8d9c5,#a88d6c)', 'unsplash'],
+  [200, 'linear-gradient(160deg,#bfc8a8,#6f7d52)', 'wikimedia'],
+  [130, 'linear-gradient(160deg,#f0b8a0,#b05f4a)', 'openverse'],
+  [170, 'linear-gradient(160deg,#d6d0e8,#7d6fa8)', 'pexels'],
+  [140, 'linear-gradient(160deg,#f4dfa0,#c99b3b)', 'pixabay'],
+  [190, 'linear-gradient(160deg,#a8c4b8,#4f7d6c)', 'unsplash'],
+  [120, 'linear-gradient(160deg,#c7c9cf,#6e7180)', 'wikimedia'],
+  [160, 'linear-gradient(160deg,#f2c9c0,#c4776a)', 'openverse'],
+  [150, 'linear-gradient(160deg,#b3d1ef,#5a86b8)', 'pixabay'],
+  [130, 'linear-gradient(160deg,#e6cfa8,#9b7a45)', 'pexels'],
+] as const;
+const src: Record<string, string> = { pixabay: '#2ecc71', pexels: '#05a081', unsplash: '#101114', wikimedia: '#3366cc', openverse: '#ff6428' };
+// простые иконки для режима «Иконки» (stroke, 24×24)
+const icons = [
+  '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  '<path d="M4 12l8-8 8 8v8H4z"/><path d="M10 20v-5h4v5"/>',
+  '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+  '<rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/>',
+  '<path d="M4 6h16M4 12h16M4 18h10"/>',
+  '<circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/>',
+  '<path d="M12 3l2.6 5.5 6 .8-4.4 4.2 1.1 6L12 16.7 6.7 19.5l1.1-6L3.4 9.3l6-.8z"/>',
+  '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 15l4-4 4 4 3-3 5 5"/><circle cx="15" cy="9" r="1.5"/>',
+  '<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M10 21h4"/>',
+  '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>',
+];
+const palette = ['#0b3d5c', '#1b6a8f', '#3fa1c4', '#8fd3e8', '#e8f4f6', '#d9c8a6'];
+---
+
+{
+  id === 'radius-matte' && (
+    <Scene id={id} label={label} bg="none" class="rad">
+      <div class="split" data-el="split" style="--x:50%">
+        <div class="layer orig">
+          <svg viewBox="0 0 800 560" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="rb" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#e9d7c3" />
+                <stop offset="1" stop-color="#9a8b7c" />
+              </linearGradient>
+            </defs>
+            <rect width="800" height="560" fill="url(#rb)" />
+            <rect x="80" y="60" width="180" height="300" rx="6" fill="#c9b49c" />
+            <rect x="560" y="120" width="140" height="80" rx="4" fill="#b8a189" />
+            <circle cx="640" cy="420" r="60" fill="#8c9a6a" opacity=".7" />
+          </svg>
+        </div>
+        <div class="layer cut">
+          <span class="checker" />
+        </div>
+        <svg class="subject" viewBox="0 0 800 560">
+          <defs>
+            <filter id="soft">
+              <feGaussianBlur stdDeviation="1.2" />
+            </filter>
+          </defs>
+          <path d="M250 560 C 260 430 320 380 400 380 C 480 380 540 430 550 560 Z" fill="#2e3a4f" />
+          <rect x="378" y="320" width="44" height="70" rx="18" fill="#d6a385" />
+          <ellipse cx="400" cy="250" rx="78" ry="92" fill="#e2b293" />
+          <g filter="url(#soft)" stroke="#3b2a22" stroke-width="3" fill="none" stroke-linecap="round" opacity=".95">
+            {Array.from({ length: 46 }, (_, i) => {
+              const a = -Math.PI * 0.95 + (i / 45) * Math.PI * 0.9;
+              const x0 = 400 + Math.cos(a) * 70,
+                y0 = 230 + Math.sin(a) * 84;
+              const x1 = 400 + Math.cos(a) * (104 + (i % 5) * 7),
+                y1 = 220 + Math.sin(a) * (120 + (i % 3) * 9);
+              return <path d={`M${x0.toFixed(1)} ${y0.toFixed(1)} Q ${((x0 + x1) / 2 + ((i % 2) - 0.5) * 18).toFixed(1)} ${((y0 + y1) / 2).toFixed(1)} ${x1.toFixed(1)} ${y1.toFixed(1)}`} />;
+            })}
+          </g>
+          <path d="M322 230 C 330 150 470 150 478 230 C 470 190 330 190 322 230 Z" fill="#3b2a22" />
+        </svg>
+        <div class="handle">
+          <span>‹ ›</span>
+        </div>
+        <span class="lbl l">{ru ? 'Исходник' : 'Original'}</span>
+        <span class="lbl r">{ru ? 'Альфа-маска' : 'Alpha matte'}</span>
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'radius-local' && (
+    <Scene id={id} label={label} class="rad2">
+      <div class="pipe">
+        {[
+          [ru ? 'Вход' : 'Input', 'RGB', '1 × 3 × 2048 × 2048', '[0, 1]'],
+          [ru ? 'Модель' : 'Model', 'BiRefNet HR-matting', 'Core ML · fp16', ru ? 'нормализация и сигмоида внутри' : 'normalisation + sigmoid baked in'],
+          [ru ? 'Выход' : 'Output', ru ? 'Альфа-маска' : 'Alpha matte', '1 × 1 × 2048 × 2048', '[0, 1]'],
+        ].map(([h, t, s, n], i) => (
+          <>
+            {i > 0 && <span class="arr" data-step />}
+            <div class="node" data-step>
+              <small>{h}</small>
+              <b>{t}</b>
+              <span>{s}</span>
+              <em>{n}</em>
+            </div>
+          </>
+        ))}
+      </div>
+      <div class="offline" data-step>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M2 8.8a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0M12 20h.01M3 3l18 18" />
+        </svg>
+        {ru ? 'Работает без интернета — фото не покидает Mac' : 'Works offline — the photo never leaves the Mac'}
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'bla-upload' && (
+    <Scene id={id} label={label} bg="none" class="bla">
+      <div class="card">
+        <div class="c-h">
+          <span class="ok">✓</span>
+          <span>
+            <b>{ru ? 'Файл' : 'File'}</b>
+            <small>{ru ? 'Любое аудио или видео — звук извлечём сами.' : 'Any audio or video — we’ll extract the sound.'}</small>
+          </span>
+        </div>
+        <div class="file" data-el="file">
+          <span class="fic">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <rect x="3" y="5" width="18" height="14" rx="2" />
+              <path d="m10 9 5 3-5 3z" />
+            </svg>
+          </span>
+          <span class="fmeta">
+            <b>lecture.mp4</b>
+            <span>
+              <i>412 {ru ? 'МБ' : 'MB'}</i>
+              <i>1:48:20</i>
+              <i>h264 · aac</i>
+            </span>
+          </span>
+          <span class="x">✕</span>
+        </div>
+        <div class="lbl2">{ru ? 'Подготовка файла' : 'File preparation'}</div>
+        <div class="select">{ru ? 'Сжать в MP3 16 кГц моно — рекомендуется (≈0,35 МБ/мин, авто-нарезка)' : 'Compress to 16 kHz mono MP3 — recommended (≈0.35 MB/min, auto-split)'}</div>
+        <div class="prep">
+          <div class="st" data-el="status" data-steps={JSON.stringify(ru ? ['Файл выбран', 'Сжимаю в MP3 16 кГц моно…', 'Режу под лимит Groq — 25 МБ на запрос', 'Готово: 2 части, таймкоды склеятся'] : ['File selected', 'Compressing to 16 kHz mono MP3…', 'Splitting for Groq’s 25 MB limit', 'Done: 2 parts, timestamps will be merged'])}>
+            {ru ? 'Файл выбран' : 'File selected'}
+          </div>
+          <div class="pb">
+            <i data-el="bar" />
+          </div>
+          <div class="chunks">
+            <span data-chunk>
+              {ru ? 'Часть 1' : 'Part 1'} · 0:00–54:10 · 19 {ru ? 'МБ' : 'MB'}
+            </span>
+            <span data-chunk>
+              {ru ? 'Часть 2' : 'Part 2'} · 54:10–1:48:20 · 19 {ru ? 'МБ' : 'MB'}
+            </span>
+          </div>
+        </div>
+        <p class="fine">{ru ? 'Обработка идёт прямо в браузере — файл никуда не загружается, кроме выбранного сервиса.' : 'Processing happens in your browser — the file goes nowhere except the service you pick.'}</p>
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'bla-providers' && (
+    <Scene id={id} label={label} bg="none" class="bla">
+      <div class="prov">
+        <div class="c-h">
+          <span class="ok">✓</span>
+          <span>
+            <b>{ru ? 'Сервис' : 'Service'}</b>
+            <small>{ru ? 'Точки — качество распознавания по языкам.' : 'Dots show recognition quality per language.'}</small>
+          </span>
+        </div>
+        <div class="tabs">
+          {[
+            ['all', ru ? 'Все' : 'All'],
+            ['mix', 'RU + EN'],
+            ['kz', 'Қазақша'],
+            ['free', ru ? 'Без карты' : 'No card'],
+          ].map(([k, t], i) => (
+            <span data-tab={k} class:list={{ on: i === 0 }}>
+              {t}
+            </span>
+          ))}
+        </div>
+        <div class="pgrid">
+          {providers.map(([n, c, mix, kz, card], i) => (
+            <div class:list={['pc', { sel: i === 0 }]} data-p={[mix >= 3 ? 'mix' : '', kz >= 2 ? 'kz' : '', card ? '' : 'free'].join(' ')}>
+              <b>{n}</b>
+              <small>{c}</small>
+              <span class="dots">
+                <i>RU+EN {dots(mix)}</i>
+                <i>KZ {kz ? dots(kz) : '—'}</i>
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'bla-result' && (
+    <Scene id={id} label={label} bg="none" class="bla">
+      <div class="res">
+        <div class="res-h">
+          <b>{ru ? 'Результат' : 'Result'}</b>
+          <span class="tags">
+            <i>Groq Whisper</i>
+            <i>whisper-large-v3</i>
+            <i>{ru ? 'пример' : 'sample'}</i>
+          </span>
+        </div>
+        <div class="lines">
+          {(ru
+            ? [
+                ['00:00:02', '1', 'Добрый день! Сегодня поговорим про onboarding новых сотрудников.'],
+                ['00:00:09', '2', 'Да, и про то, какие tools мы используем в первую неделю.'],
+                ['00:00:16', '1', 'Начнём с чек-листа: доступы, Slack, Notion и встреча с ментором.'],
+                ['00:00:24', '2', 'Сәлеметсіз бе! Мен де қосыламын.'],
+                ['00:00:29', '1', 'Отлично, тогда по порядку.'],
+              ]
+            : [
+                ['00:00:02', '1', 'Good afternoon! Today we’ll talk about onboarding new hires.'],
+                ['00:00:09', '2', 'Yes, and which tools we use during the first week.'],
+                ['00:00:16', '1', 'Let’s start with the checklist: access, Slack, Notion and a mentor call.'],
+                ['00:00:24', '2', 'Сәлеметсіз бе! I’ll join too.'],
+                ['00:00:29', '1', 'Great, let’s go step by step.'],
+              ]
+          ).map(([t, s, txt]) => (
+            <p data-line>
+              <time>{t}</time>
+              <em class={`sp s${s}`}>{ru ? 'Спикер' : 'Speaker'} {s}</em>
+              <span>{txt}</span>
+            </p>
+          ))}
+        </div>
+        <div class="dl">
+          <span class="copy">{ru ? 'Копировать' : 'Copy'}</span>
+          {['TXT', 'MD', 'SRT', 'VTT', 'JSON'].map((f) => (
+            <span data-dl>{f}</span>
+          ))}
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'picta-search' && (
+    <Scene id={id} label={label} bg="none" class="picta">
+      <div class="pt">
+        <div class="pt-top">
+          <img src={asset('icons/picta-160.webp')} width="34" height="34" alt="" />
+          <div class="pt-search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+            <span class="q" data-el="q" data-q={ru ? 'кот на подоконнике' : 'cat on a windowsill'} />
+            <span class="caret" />
+          </div>
+        </div>
+        <div class="pt-hint" data-el="hint">
+          {ru ? (
+            <>
+              Ищем как: <b>cat on a windowsill</b> · <u>искать как есть</u>
+            </>
+          ) : (
+            <>
+              Searching for: <b>cat on a windowsill</b>
+            </>
+          )}
+        </div>
+        <div class="pt-chips">
+          {Object.entries(src).map(([k, c]) => (
+            <span>
+              <i style={`background:${c}`} />
+              {k[0].toUpperCase() + k.slice(1)}
+            </span>
+          ))}
+          <span class="ext">Яндекс ↗</span>
+          <span class="ext">Pinterest ↗</span>
+        </div>
+        <div class="masonry">
+          {[0, 1, 2, 3].map((col) => (
+            <div class="mcol">
+              {tiles
+                .filter((_, i) => i % 4 === col)
+                .map(([h, bg, s]) => (
+                  <span class="tile" data-tile style={`height:${h}px;background:${bg}`}>
+                    <i style={`background:${src[s]}`} />
+                  </span>
+                ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'picta-license' && (
+    <Scene id={id} label={label} bg="none" class="picta dim">
+      <div class="viewer" data-el="modal">
+        <div class="v-img">
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice">
+            <rect width="400" height="300" fill="#cbb79c" />
+            <rect x="40" y="30" width="320" height="190" rx="6" fill="#9fc1dc" />
+            <rect x="196" y="30" width="8" height="190" fill="#e9e1d4" />
+            <rect x="40" y="122" width="320" height="8" fill="#e9e1d4" />
+            <rect y="220" width="400" height="80" fill="#e9e1d4" />
+            <ellipse cx="200" cy="216" rx="64" ry="30" fill="#2f2f36" />
+            <circle cx="236" cy="176" r="26" fill="#2f2f36" />
+            <path d="M216 156l6-20 12 16M246 152l10-18 4 22" fill="#2f2f36" />
+            <path d="M140 222c-30 6-34 26-14 30" stroke="#2f2f36" stroke-width="10" fill="none" stroke-linecap="round" />
+          </svg>
+        </div>
+        <div class="v-side">
+          <b class="v-t">{ru ? 'Кот на подоконнике' : 'Cat on a windowsill'}</b>
+          <small class="v-a">Wikimedia Commons</small>
+          <div class="v-tags">
+            <span class="lic" data-tag>
+              CC BY-SA 4.0 ↗
+            </span>
+            <span class="ok2" data-tag>
+              ✓ {ru ? 'Можно для коммерции' : 'OK for commercial use'}
+            </span>
+            <span class="warn2" data-tag>
+              ! {ru ? 'Нужна атрибуция' : 'Attribution required'}
+            </span>
+          </div>
+          <div class="v-meta">
+            <span>4032 × 3024</span>
+            <span>{ru ? 'кот · окно · дом' : 'cat · window · home'}</span>
+          </div>
+          <div class="v-btns">
+            <span class="pri">{ru ? 'Скачать' : 'Download'}</span>
+            <span>{ru ? 'Копировать' : 'Copy'}</span>
+            <span>{ru ? 'Поделиться' : 'Share'}</span>
+            <span>♡</span>
+          </div>
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'picta-icons' && (
+    <Scene id={id} label={label} bg="none" class="picta">
+      <div class="pt">
+        <div class="pt-top">
+          <img src={asset('icons/picta-160.webp')} width="34" height="34" alt="" />
+          <div class="modes">
+            <span>{ru ? 'Фото' : 'Photos'}</span>
+            <span data-mode="icons" class="on">
+              {ru ? 'Иконки' : 'Icons'}
+            </span>
+            <span data-mode="colors">{ru ? 'Цвета' : 'Colours'}</span>
+          </div>
+        </div>
+        <div class="panes">
+          <div class="pane on" data-pane="icons">
+            <div class="i-bar">
+              <span class="i-q">{ru ? 'дом' : 'home'} · Iconify</span>
+              <span class="sws">
+                {['#101114', '#7c5cff', '#ff6428', '#05a081'].map((c, i) => (
+                  <i data-sw={c} class:list={{ on: i === 0 }} style={`background:${c}`} />
+                ))}
+              </span>
+              <span class="b">SVG</span>
+              <span class="b">PNG 512</span>
+            </div>
+            <div class="igrid" data-el="grid">
+              {icons.concat(icons).map((p) => (
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={p} />
+                </span>
+              ))}
+            </div>
+          </div>
+          <div class="pane" data-pane="colors">
+            <div class="c-word">
+              {ru ? 'море' : 'sea'}
+              <small>{ru ? 'палитра по фото' : 'palette from photos'}</small>
+            </div>
+            <div class="pal">
+              {palette.map((c) => (
+                <span style={`background:${c}`}>
+                  <i>{c}</i>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+<style>
+  /* radius */
+  :global(.scene.rad) {
+    background: #1b1e25;
+  }
+  .split {
+    position: absolute;
+    inset: 0;
+  }
+  .layer {
+    position: absolute;
+    inset: 0;
+  }
+  .layer svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .cut {
+    clip-path: inset(0 0 0 var(--x));
+    transition: clip-path 1.1s cubic-bezier(0.6, 0, 0.2, 1);
+  }
+  .checker {
+    position: absolute;
+    inset: 0;
+    background: repeating-conic-gradient(#e9eaee 0 25%, #c9ccd4 0 50%) 0 0 / 28px 28px;
+  }
+  .subject {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--x);
+    width: 3px;
+    margin-left: -1.5px;
+    background: #fff;
+    transition: left 1.1s cubic-bezier(0.6, 0, 0.2, 1);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.35);
+  }
+  .handle span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #fff;
+    color: #101114;
+    font: 700 16px -apple-system, system-ui;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  }
+  .lbl {
+    position: absolute;
+    top: 18px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: rgba(16, 17, 20, 0.7);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .lbl.l {
+    left: 18px;
+  }
+  .lbl.r {
+    right: 18px;
+  }
+  :global(.scene.rad2) .pipe {
+    position: absolute;
+    left: 40px;
+    right: 40px;
+    top: 150px;
+    display: flex;
+    align-items: center;
+  }
+  .node {
+    flex: 1;
+    display: grid;
+    gap: 4px;
+    padding: 18px;
+    border-radius: 16px;
+    background: rgba(20, 22, 28, 0.65);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    color: #f2f2f5;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    opacity: 0.35;
+    transform: scale(0.96);
+    transition: opacity 0.4s, transform 0.5s cubic-bezier(0.2, 1.3, 0.4, 1), box-shadow 0.4s;
+  }
+  .node:global(.on) {
+    opacity: 1;
+    transform: none;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.22), 0 20px 40px rgba(0, 0, 0, 0.35);
+  }
+  .node small {
+    color: #9aa1b0;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 650;
+  }
+  .node b {
+    font-size: 17px;
+  }
+  .node span {
+    font: 13px ui-monospace, Menlo, monospace;
+    color: #d4d7e0;
+  }
+  .node em {
+    font-style: normal;
+    font-size: 12px;
+    color: #9aa1b0;
+  }
+  .arr {
+    width: 44px;
+    height: 2px;
+    margin: 0 6px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2));
+    position: relative;
+    flex: none;
+  }
+  .arr:global(.on) {
+    background: #fff;
+  }
+  .arr::after {
+    content: '';
+    position: absolute;
+    right: -2px;
+    top: -4px;
+    border: 5px solid transparent;
+    border-left-color: rgba(255, 255, 255, 0.7);
+  }
+  .offline {
+    position: absolute;
+    left: 50%;
+    bottom: 120px;
+    translate: -50% 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.92);
+    color: #101114;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .offline:global(.on) {
+    opacity: 1;
+  }
+
+  /* BLA-БЛА — светлая тема shadcn */
+  :global(.scene.bla) {
+    background: #fafafa;
+    color: #171717;
+    font-family: -apple-system, 'Inter', system-ui, sans-serif;
+  }
+  .card,
+  .prov,
+  .res {
+    position: absolute;
+    inset: 32px 60px;
+    padding: 24px;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+  }
+  .c-h {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .c-h span:last-child {
+    display: grid;
+  }
+  .c-h b {
+    font-size: 16px;
+  }
+  .c-h small {
+    color: #737373;
+  }
+  .ok {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    flex: none;
+    border-radius: 50%;
+    background: #171717;
+    color: #fff;
+    font-size: 14px;
+  }
+  .file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s, transform 0.4s cubic-bezier(0.2, 1.3, 0.4, 1);
+  }
+  .file:global(.in) {
+    opacity: 1;
+    transform: none;
+  }
+  .fic {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: #f5f5f5;
+  }
+  .fmeta {
+    flex: 1;
+    display: grid;
+    gap: 4px;
+  }
+  .fmeta span {
+    display: flex;
+    gap: 6px;
+  }
+  .fmeta i {
+    font-style: normal;
+    font-size: 12px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: #f5f5f5;
+  }
+  .x {
+    color: #737373;
+  }
+  .lbl2 {
+    margin: 16px 0 6px;
+    font-weight: 600;
+  }
+  .select {
+    padding: 9px 12px;
+    border: 1px solid #e5e5e5;
+    border-radius: 9px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .prep {
+    margin-top: 16px;
+    display: grid;
+    gap: 8px;
+  }
+  .st {
+    font-weight: 500;
+  }
+  .pb {
+    height: 6px;
+    border-radius: 3px;
+    background: #f5f5f5;
+    overflow: hidden;
+  }
+  .pb i {
+    display: block;
+    height: 100%;
+    width: 0;
+    background: #171717;
+    transition: width 0.1s linear;
+  }
+  .chunks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .chunks span {
+    padding: 9px 12px;
+    border-radius: 9px;
+    border: 1px dashed #d4d4d4;
+    color: #a3a3a3;
+    font-size: 12.5px;
+    transition: all 0.3s;
+  }
+  .chunks span:global(.on) {
+    border-style: solid;
+    color: #171717;
+  }
+  .chunks span:global(.done) {
+    background: color-mix(in oklch, oklch(0.6 0.15 155) 12%, #fff);
+    border-color: oklch(0.6 0.15 155);
+  }
+  .fine {
+    margin: 14px 0 0;
+    color: #737373;
+    font-size: 12px;
+  }
+  .tabs {
+    display: inline-flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 9px;
+    background: #f5f5f5;
+    margin-bottom: 14px;
+  }
+  .tabs span {
+    padding: 4px 12px;
+    border-radius: 7px;
+    color: #525252;
+    transition: background 0.2s;
+  }
+  .tabs span:global(.on) {
+    background: #fff;
+    color: #171717;
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  .pgrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .pc {
+    display: grid;
+    gap: 2px;
+    padding: 10px 12px;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .pc.sel {
+    border: 2px solid #171717;
+    padding: 9px 11px;
+  }
+  .pc:global(.dim) {
+    opacity: 0.25;
+    transform: scale(0.97);
+  }
+  .pc b {
+    font-size: 13px;
+  }
+  .pc small {
+    color: #737373;
+    font-size: 11.5px;
+  }
+  .dots {
+    display: grid;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #525252;
+  }
+  .dots i {
+    font-style: normal;
+    letter-spacing: 0.02em;
+  }
+  .res-h {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .res-h b {
+    font-size: 17px;
+  }
+  .tags {
+    display: flex;
+    gap: 6px;
+  }
+  .tags i {
+    font-style: normal;
+    font-size: 12px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: #f5f5f5;
+  }
+  .lines p {
+    display: grid;
+    grid-template-columns: 74px 84px 1fr;
+    gap: 8px;
+    margin: 0;
+    padding: 9px 0;
+    border-bottom: 1px solid #f0f0f0;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s, transform 0.4s;
+  }
+  .lines p:global(.in) {
+    opacity: 1;
+    transform: none;
+  }
+  .lines time {
+    color: #737373;
+    font: 12.5px ui-monospace, Menlo, monospace;
+    padding-top: 2px;
+  }
+  .sp {
+    font-style: normal;
+    font-size: 12px;
+    font-weight: 600;
+    padding-top: 2px;
+  }
+  .s1 {
+    color: #2563eb;
+  }
+  .s2 {
+    color: #c2410c;
+  }
+  .dl {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .dl span {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #e5e5e5;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+  }
+  .dl .copy {
+    background: #171717;
+    color: #fff;
+    border-color: #171717;
+  }
+  .dl span:global(.hl) {
+    background: #f5f5f5;
+  }
+
+  /* Picta */
+  :global(.scene.picta) {
+    background: #fafafa;
+    color: #101114;
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+  .pt {
+    position: absolute;
+    inset: 0;
+    padding: 22px 28px;
+  }
+  .pt-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .pt-top img {
+    width: 40px;
+    height: 40px;
+    margin: -3px;
+  }
+  .pt-search {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 46px;
+    padding: 0 14px;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #d8d9e2;
+    color: #6e7180;
+    font-size: 16px;
+  }
+  .q {
+    color: #101114;
+  }
+  .caret {
+    width: 1.5px;
+    height: 20px;
+    margin-left: -8px;
+    background: #101114;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  .pt-hint {
+    margin: 10px 0 0 54px;
+    color: #6e7180;
+    font-size: 13px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .pt-hint:global(.on) {
+    opacity: 1;
+  }
+  .pt-hint b {
+    color: #101114;
+  }
+  .pt-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 12px 0 14px;
+  }
+  .pt-chips span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: #fff;
+    border: 1px solid #eaeaee;
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  .pt-chips i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .pt-chips .ext {
+    color: #6e7180;
+  }
+  .masonry {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .mcol {
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  .tile {
+    position: relative;
+    border-radius: 8px;
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+    transition: opacity 0.35s, transform 0.5s cubic-bezier(0.2, 1.2, 0.4, 1);
+  }
+  .tile:global(.in) {
+    opacity: 1;
+    transform: none;
+  }
+  .tile i {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+  }
+  :global(.scene.picta.dim) {
+    background:
+      linear-gradient(rgba(16, 17, 20, 0.6), rgba(16, 17, 20, 0.6)),
+      repeating-linear-gradient(90deg, #e8e2d8 0 180px, #d9e1e8 180px 360px);
+  }
+  .viewer {
+    position: absolute;
+    inset: 40px 40px;
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    border-radius: 14px;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transform: scale(0.96);
+    transition: opacity 0.3s, transform 0.4s cubic-bezier(0.2, 1.2, 0.4, 1);
+  }
+  .viewer:global(.on) {
+    opacity: 1;
+    transform: none;
+  }
+  .v-img svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .v-side {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px 22px;
+  }
+  .v-t {
+    font-size: 19px;
+    letter-spacing: -0.01em;
+  }
+  .v-a {
+    color: #6e7180;
+  }
+  .v-tags {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .v-tags span {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.3s, transform 0.4s cubic-bezier(0.2, 1.3, 0.4, 1);
+  }
+  .v-tags span:global(.in) {
+    opacity: 1;
+    transform: none;
+  }
+  .lic {
+    background: #f0f0f2;
+  }
+  .ok2 {
+    background: #e7f7ee;
+    color: #13804a;
+  }
+  .warn2 {
+    background: #fff4e0;
+    color: #a86200;
+  }
+  .v-meta {
+    display: grid;
+    gap: 3px;
+    color: #6e7180;
+    font-size: 12.5px;
+    margin-top: auto;
+  }
+  .v-btns {
+    display: flex;
+    gap: 6px;
+  }
+  .v-btns span {
+    padding: 7px 11px;
+    border-radius: 6px;
+    border: 1px solid #eaeaee;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .v-btns .pri {
+    background: #101114;
+    color: #fff;
+    border-color: #101114;
+  }
+  .modes {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 8px;
+    background: #f0f0f2;
+  }
+  .modes span {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6e7180;
+  }
+  .modes span:global(.on) {
+    background: #101114;
+    color: #fff;
+  }
+  .panes {
+    position: relative;
+    margin-top: 18px;
+    height: 440px;
+  }
+  .pane {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.35s, transform 0.45s cubic-bezier(0.2, 1.2, 0.4, 1);
+  }
+  .pane:global(.on) {
+    opacity: 1;
+    transform: none;
+  }
+  .i-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-size: 13px;
+  }
+  .i-q {
+    flex: 1;
+    color: #6e7180;
+  }
+  .sws {
+    display: flex;
+    gap: 6px;
+  }
+  .sws i {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px #fafafa;
+    transition: box-shadow 0.2s;
+  }
+  .sws i:global(.on) {
+    box-shadow: 0 0 0 2px #fafafa, 0 0 0 4px #101114;
+  }
+  .b {
+    padding: 5px 10px;
+    border-radius: 6px;
+    border: 1px solid #eaeaee;
+    background: #fff;
+    font-weight: 600;
+  }
+  .igrid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    color: #101114;
+    transition: color 0.4s;
+  }
+  .igrid span {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #eaeaee;
+  }
+  .igrid svg {
+    width: 44%;
+    height: 44%;
+  }
+  .c-word {
+    display: grid;
+    font-size: 54px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 18px;
+  }
+  .c-word small {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6e7180;
+    letter-spacing: 0;
+  }
+  .pal {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    height: 250px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .pal span {
+    position: relative;
+  }
+  .pal i {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.85);
+    color: #101114;
+    font: 600 11px ui-monospace, Menlo, monospace;
+    font-style: normal;
+  }
+</style>

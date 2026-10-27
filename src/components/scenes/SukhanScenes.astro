@@ -1,0 +1,651 @@
+---
+// Сцены Sukhan — по ui/src/styles/app.css (токены Morfus + оранжевый #ff5b2e) и строкам ui/src/i18n/ru.json.
+// Цифры в сцене «рендер» — из docs/PROGRESS.md (замеры на Apple M4).
+import Scene from './Scene.astro';
+import { asset } from '../../i18n';
+
+interface Props {
+  id: string;
+  lang: 'ru' | 'en';
+  label: string;
+}
+const { id, lang, label } = Astro.props;
+const ru = lang === 'ru';
+const groups = ru ? [['Сегодня', 'покажу,'], ['как', 'сделать'], ['субтитры'], ['за', 'одну', 'минуту']] : [['Today', 'I’ll', 'show'], ['how', 'to', 'make'], ['captions'], ['in', 'one', 'minute']];
+let wi = 0;
+const words = groups.map((g, gi) => g.map((w) => ({ w, gi, i: wi++ })));
+// waveform
+const wave = Array.from({ length: 120 }, (_, i) => {
+  const t = i / 120;
+  const env = 0.35 + 0.65 * Math.abs(Math.sin(t * 9.5)) * (0.6 + 0.4 * Math.sin(t * 31));
+  return Math.max(0.08, Math.min(1, env * (0.7 + 0.3 * Math.sin(i * 1.7))));
+});
+const flat = words.flat();
+const blocks = flat.map((w, i) => ({ ...w, x: 2 + i * 8.2, wd: 4 + (w.w.length % 5) * 0.9 }));
+const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
+---
+
+{
+  shell && (
+    <Scene id={id} label={label} w={900} h={600} bg="none" class="sk">
+      <div class="app">
+        <div class="tb">
+          <span class="lights">
+            <i />
+            <i />
+            <i />
+          </span>
+          <b>{ru ? 'Без названия' : 'Untitled'}</b>
+          <img src={asset('icons/sukhan-160.webp')} width="20" height="20" alt="" class="tb-ic" />
+        </div>
+        <aside class="lib">
+          <div class="h">{ru ? 'Медиатека' : 'Library'}</div>
+          {['reels_intro.mov', 'interview.mp4', 'voice.m4a'].map((n, i) => (
+            <div class:list={['lib-item', { on: i === 0 }]}>
+              <i class={`th t${i}`} />
+              <span>
+                {n}
+                <small>{['0:12', '1:48', '0:37'][i]}</small>
+              </span>
+            </div>
+          ))}
+        </aside>
+        <section class="stage">
+          <div class="frame916">
+            <div class="video">
+              <span class="person" />
+            </div>
+            <div class="caps">
+              {groups.map((g, gi) => (
+                <div data-g={gi} class:list={['grp', { on: gi === 0 }]}>
+                  {words
+                    .flat()
+                    .filter((w) => w.gi === gi)
+                    .map((w) => (
+                      <span class="w" data-w data-gi={gi}>
+                        {w.w}
+                      </span>
+                    ))}
+                </div>
+              ))}
+            </div>
+            <div class="safe" />
+          </div>
+        </section>
+        <aside class="insp">
+          <div class="h">{ru ? 'Распознавание' : 'Recognition'}</div>
+          <label class="fld">
+            <small>{ru ? 'Провайдер' : 'Provider'}</small>
+            <span class="sel">Groq Whisper</span>
+          </label>
+          <p class="hint">{ru ? 'Быстро и точно, пословные таймкоды. Щедрый бесплатный лимит.' : 'Fast and accurate, word-level timing. Generous free tier.'}</p>
+          <label class="fld">
+            <small>{ru ? 'Язык речи' : 'Speech language'}</small>
+            <span class="sel">{ru ? 'Русский' : 'Russian'}</span>
+          </label>
+          <span class="done">{ru ? '8 слов · whisper-large-v3' : '10 words · whisper-large-v3'}</span>
+          <span class="bt">{ru ? 'Распознать заново' : 'Recognize again'}</span>
+        </aside>
+        <footer class="tl">
+          <div class="tl-bar">
+            <span class="tc" data-el="time">
+              00:00.00
+            </span>
+            <span class="tl-hint">{ru ? 'Перетащите фразу, чтобы сдвинуть её целиком' : 'Drag a phrase to move it as a whole'}</span>
+          </div>
+          <div class="tl-body">
+            <div class="ruler">
+              {Array.from({ length: 13 }, (_, i) => (
+                <span style={`left:${(i / 12) * 100}%`}>{i}s</span>
+              ))}
+            </div>
+            <div class="words">
+              {blocks.map((b, i) => (
+                <span class="blk" data-el={i === 4 ? 'drag' : undefined} style={`left:${b.x}%;width:${b.wd}%`}>
+                  {b.w}
+                </span>
+              ))}
+            </div>
+            <div class="wave">
+              {wave.map((v) => (
+                <i style={`height:${(v * 100).toFixed(0)}%`} />
+              ))}
+            </div>
+            <span class="head" data-el="head" />
+          </div>
+        </footer>
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'sukhan-formats' && (
+    <Scene id={id} label={label} w={800} h={560} bg="none" class="sk">
+      <div class="fmt">
+        <div class="fmt-bar">
+          <span class="h">{ru ? 'Формат кадра' : 'Frame format'}</span>
+          <div class="seg">
+            {['9:16', '1:1', '4:5', '16:9'].map((a, i) => (
+              <span data-ar={a} class:list={{ on: i === 0 }}>
+                {a}
+              </span>
+            ))}
+          </div>
+          <div class="seg">
+            <span class="on">{ru ? 'Кадрировать' : 'Crop'}</span>
+            <span>{ru ? 'Вписать с размытием' : 'Fit with blur'}</span>
+          </div>
+        </div>
+        <div class="fmt-stage">
+          <div class="fr" data-el="frame" data-ar="9:16">
+            <div class="video">
+              <span class="person" />
+            </div>
+            <div class="cap1">
+              <span>{ru ? 'Формат' : 'Any'}</span> <span class="act">{ru ? 'любой' : 'format'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+{
+  id === 'sukhan-engine' && (
+    <Scene id={id} label={label} w={800} h={560} bg="none" class="sk">
+      <div class="eng">
+        <div class="eng-h">
+          <span class="h">Rust · cosmic-text · swash · tiny-skia</span>
+          <b>{ru ? 'Экспорт ролика 60 с, 1080×1920, все эффекты' : 'Exporting a 60 s 1080×1920 clip, all effects'}</b>
+          <small>Apple M4</small>
+        </div>
+        <div class="bars">
+          {[
+            [ru ? 'Длина ролика' : 'Clip length', '60 с', 100, 'muted'],
+            [ru ? 'Экспорт с субтитрами' : 'Export with captions', '8,0 с', 13.3, 'hot'],
+            [ru ? 'Перекод без субтитров' : 'Re-encode without captions', '8,0 с', 13.3, ''],
+          ].map(([n, v, p, k]) => (
+            <div class={`bar ${k}`}>
+              <span class="bn">{n}</span>
+              <span class="bt2">
+                <i data-bar={p} />
+              </span>
+              <b>{ru ? v : String(v).replace(',', '.').replace(' с', ' s')}</b>
+            </div>
+          ))}
+        </div>
+        <div class="eng-cards">
+          <div>
+            <b>3,7 {ru ? 'мс' : 'ms'}</b>
+            <small>{ru ? 'кадр субтитров в превью (бюджет 33 мс)' : 'caption frame in the preview (33 ms budget)'}</small>
+          </div>
+          <div>
+            <b>{ru ? '= байт в байт' : '= byte for byte'}</b>
+            <small>{ru ? 'нативный и WASM-рендер дают одинаковый кадр' : 'native and WASM renders produce the same frame'}</small>
+          </div>
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+<style>
+  :global(.scene.sk) {
+    background: #0f0f12;
+  }
+  .app {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 170px 1fr 220px;
+    grid-template-rows: 44px 1fr 170px;
+    background: #1c1c21;
+    color: #f2f2f5;
+    font-size: 12.5px;
+  }
+  .tb {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  }
+  .tb .lights {
+    position: absolute;
+    left: 14px;
+  }
+  .tb-ic {
+    position: absolute;
+    right: 14px;
+  }
+  .h {
+    color: #9a9aa5;
+    font-size: 11px;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .lib {
+    padding: 14px 10px;
+    background: #19191d;
+    border-right: 1px solid rgba(255, 255, 255, 0.09);
+  }
+  .lib-item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 6px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+  }
+  .lib-item.on {
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .lib-item span {
+    display: grid;
+    font-size: 12px;
+  }
+  .lib-item small {
+    color: #9a9aa5;
+    font-size: 11px;
+  }
+  .th {
+    width: 30px;
+    height: 40px;
+    border-radius: 5px;
+    background: linear-gradient(160deg, #3a3446, #1f2a3a);
+  }
+  .th.t1 {
+    width: 40px;
+    height: 24px;
+  }
+  .th.t2 {
+    background: repeating-linear-gradient(90deg, #ff5b2e 0 2px, transparent 2px 5px), #24242a;
+    height: 24px;
+  }
+  .stage {
+    display: grid;
+    place-items: center;
+    background: #141417;
+  }
+  .frame916 {
+    position: relative;
+    width: 196px;
+    height: 348px;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .video {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(60% 40% at 50% 30%, rgba(255, 200, 150, 0.35), transparent 70%),
+      linear-gradient(180deg, #4a3f5e, #2a2f45 60%, #1a1d29);
+  }
+  .person {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 70%;
+    height: 66%;
+    translate: -50% 0;
+    background:
+      radial-gradient(circle at 50% 22%, #d9a888 0 17%, transparent 17.5%),
+      radial-gradient(ellipse 60% 52% at 50% 100%, #2b2b33 0 99%, transparent 100%);
+  }
+  .caps {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 60%;
+    display: grid;
+    place-items: center;
+  }
+  .grp {
+    grid-area: 1 / 1;
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.12s, transform 0.25s cubic-bezier(0.2, 1.6, 0.4, 1);
+  }
+  .grp:global(.on) {
+    opacity: 1;
+    transform: none;
+  }
+  .w {
+    font: 900 21px/1.1 -apple-system, 'SF Pro Display', system-ui, sans-serif;
+    text-transform: uppercase;
+    color: #fff;
+    -webkit-text-stroke: 4px #000;
+    paint-order: stroke fill;
+    letter-spacing: -0.01em;
+    transition: color 0.1s, transform 0.2s cubic-bezier(0.2, 1.6, 0.4, 1);
+  }
+  .w:global(.act) {
+    color: #ff5b2e;
+    transform: scale(1.1);
+  }
+  .safe {
+    position: absolute;
+    inset: 12% 14% 22% 6%;
+    border: 1px dashed rgba(255, 255, 255, 0.22);
+    border-radius: 4px;
+  }
+  .insp {
+    padding: 14px 12px;
+    background: #24242a;
+    border-left: 1px solid rgba(255, 255, 255, 0.09);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .fld {
+    display: grid;
+    gap: 4px;
+  }
+  .fld small {
+    color: #9a9aa5;
+  }
+  .sel {
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: #2c2c33;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+  .sel::after {
+    content: '⌄';
+    float: right;
+    color: #9a9aa5;
+  }
+  .hint {
+    margin: -4px 0 0;
+    color: #9a9aa5;
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+  .done {
+    color: #3ddc84;
+    font-size: 12px;
+  }
+  .bt {
+    padding: 7px;
+    border-radius: 8px;
+    background: #f2f2f5;
+    color: #1d1d1f;
+    text-align: center;
+    font-weight: 650;
+  }
+  .tl {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(255, 255, 255, 0.09);
+    background: #19191d;
+  }
+  .tl-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 14px;
+  }
+  .tc {
+    font: 600 12.5px ui-monospace, Menlo, monospace;
+    color: #ff5b2e;
+  }
+  .tl-hint {
+    color: #9a9aa5;
+    font-size: 11.5px;
+  }
+  .tl-body {
+    position: relative;
+    flex: 1;
+    margin: 0 14px 12px;
+  }
+  .ruler {
+    position: relative;
+    height: 16px;
+    color: #6e6e78;
+    font-size: 10px;
+  }
+  .ruler span {
+    position: absolute;
+    translate: -50% 0;
+  }
+  .words {
+    position: relative;
+    height: 32px;
+    margin-top: 4px;
+  }
+  .blk {
+    position: absolute;
+    top: 0;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border-radius: 6px;
+    background: #2c2c33;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    font-size: 11px;
+    font-weight: 600;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: translate 0.35s cubic-bezier(0.2, 1.2, 0.4, 1), box-shadow 0.2s, background 0.2s;
+  }
+  .blk:global(.lift) {
+    background: #3a3a44;
+    box-shadow: inset 0 0 0 1.5px #ff5b2e, 0 6px 16px rgba(0, 0, 0, 0.4);
+    z-index: 2;
+  }
+  .wave {
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    height: 54px;
+    margin-top: 6px;
+  }
+  .wave i {
+    flex: 1;
+    border-radius: 1px;
+    background: rgba(242, 242, 245, 0.32);
+  }
+  .head {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    background: #ff5b2e;
+    transition: left 0.11s linear;
+    box-shadow: 0 0 10px rgba(255, 91, 46, 0.6);
+  }
+  .head::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -5px;
+    width: 12px;
+    height: 10px;
+    border-radius: 3px 3px 6px 6px;
+    background: #ff5b2e;
+  }
+
+  /* форматы кадра */
+  .fmt {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: #141417;
+    color: #f2f2f5;
+    font-size: 12.5px;
+  }
+  .fmt-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    background: #1c1c21;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+  }
+  .fmt-bar .h {
+    margin: 0;
+  }
+  .seg {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    border-radius: 9px;
+    background: #2c2c33;
+  }
+  .seg span {
+    padding: 5px 12px;
+    border-radius: 7px;
+    color: #9a9aa5;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+  }
+  .seg span:global(.on) {
+    background: #f2f2f5;
+    color: #1d1d1f;
+  }
+  .fmt-stage {
+    flex: 1;
+    display: grid;
+    place-items: center;
+  }
+  .fr {
+    position: relative;
+    height: 400px;
+    aspect-ratio: 9 / 16;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: aspect-ratio 0.6s cubic-bezier(0.2, 1, 0.3, 1), height 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 30px 60px rgba(0, 0, 0, 0.5);
+  }
+  .fr:global([data-ar='1:1']) {
+    aspect-ratio: 1;
+    height: 380px;
+  }
+  .fr:global([data-ar='4:5']) {
+    aspect-ratio: 4 / 5;
+    height: 400px;
+  }
+  .fr:global([data-ar='16:9']) {
+    aspect-ratio: 16 / 9;
+    height: 300px;
+  }
+  .fr .person {
+    width: auto;
+    height: 70%;
+    aspect-ratio: 1 / 1;
+  }
+  .cap1 {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18%;
+    text-align: center;
+    font: 900 26px/1 -apple-system, system-ui, sans-serif;
+    text-transform: uppercase;
+    color: #fff;
+    -webkit-text-stroke: 5px #000;
+    paint-order: stroke fill;
+  }
+  .cap1 .act {
+    color: #ff5b2e;
+  }
+
+  /* рендер */
+  .eng {
+    position: absolute;
+    inset: 0;
+    padding: 46px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    background: radial-gradient(80% 60% at 80% 0%, rgba(255, 91, 46, 0.18), transparent 60%), #141417;
+    color: #f2f2f5;
+  }
+  .eng-h {
+    display: grid;
+    gap: 6px;
+  }
+  .eng-h .h {
+    margin: 0;
+  }
+  .eng-h b {
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+  .eng-h small {
+    color: #9a9aa5;
+    font-size: 13px;
+  }
+  .bars {
+    display: grid;
+    gap: 18px;
+  }
+  .bar {
+    display: grid;
+    grid-template-columns: 210px 1fr 70px;
+    align-items: center;
+    gap: 16px;
+    font-size: 14px;
+  }
+  .bn {
+    color: #c7c7cc;
+  }
+  .bt2 {
+    height: 26px;
+    border-radius: 7px;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+  }
+  .bt2 i {
+    display: block;
+    height: 100%;
+    width: calc(var(--p, 0) * 1%);
+    border-radius: 7px;
+    background: #f2f2f5;
+    transition: width 1.4s cubic-bezier(0.2, 1, 0.3, 1);
+  }
+  .bar.muted .bt2 i {
+    background: rgba(255, 255, 255, 0.22);
+  }
+  .bar.hot .bt2 i {
+    background: #ff5b2e;
+  }
+  .bar b {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-size: 17px;
+  }
+  .eng-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: auto;
+  }
+  .eng-cards div {
+    display: grid;
+    gap: 4px;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  .eng-cards b {
+    font-size: 24px;
+    letter-spacing: -0.02em;
+  }
+  .eng-cards small {
+    color: #9a9aa5;
+    font-size: 13px;
+  }
+</style>

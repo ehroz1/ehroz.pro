@@ -1,0 +1,478 @@
+@import 'tailwindcss';
+
+/* Inter (opsz) — только для заголовков; интерфейс — системный шрифт, как в Morfus. */
+@font-face {
+  font-family: 'Inter Display';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/inter/files/inter-cyrillic-opsz-normal.woff2') format('woff2-variations');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Inter Display';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/inter/files/inter-cyrillic-ext-opsz-normal.woff2') format('woff2-variations');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Inter Display';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('@fontsource-variable/inter/files/inter-latin-opsz-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI Variable', 'Segoe UI', system-ui, 'Inter', sans-serif;
+  --font-display: 'Inter Display', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* ── Токены. Тёмная тема — флагманская; светлая — палитра Morfus (#f5f5f7). ── */
+:root {
+  color-scheme: dark;
+  --bg: #08080b;
+  --bg-2: #101015;
+  --text: #f5f5f7;
+  --muted: #a1a1ab;
+  --faint: #6e6e78;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --glass: rgba(28, 28, 34, 0.55);
+  --glass-strong: rgba(30, 30, 36, 0.78);
+  --glass-hi: rgba(255, 255, 255, 0.14);
+  --glass-edge: inset 0 0 0 0.5px rgba(255, 255, 255, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  --chip: rgba(255, 255, 255, 0.08);
+  --hover: rgba(255, 255, 255, 0.07);
+  --shadow-1: 0 1px 1px rgba(0, 0, 0, 0.3), 0 8px 24px -6px rgba(0, 0, 0, 0.5);
+  --shadow-2: 0 2px 4px rgba(0, 0, 0, 0.25), 0 24px 60px -12px rgba(0, 0, 0, 0.65), 0 60px 120px -40px rgba(0, 0, 0, 0.6);
+  --accent: #f5f5f7;
+  --on-accent: #111114;
+  --ok: #3ddc84;
+  --warn: #ffb547;
+  --bad: #ff6b63;
+  --r-window: 14px;
+  --r-card: 22px;
+  --menubar: 32px;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --spring: cubic-bezier(0.2, 1.3, 0.4, 1);
+  --grain-opacity: 0.07;
+  --wall-a: #5b4a9c;
+  --wall-b: #2b6f8c;
+  --wall-c: #9c4a6b;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme='dark']) {
+    color-scheme: light;
+    --bg: #f5f5f7;
+    --bg-2: #ececf0;
+    --text: #1d1d22;
+    --muted: #5d5d66;
+    --faint: #8a8a94;
+    --line: rgba(0, 0, 0, 0.09);
+    --line-strong: rgba(0, 0, 0, 0.16);
+    --glass: rgba(255, 255, 255, 0.55);
+    --glass-strong: rgba(255, 255, 255, 0.8);
+    --glass-hi: rgba(255, 255, 255, 0.7);
+    --glass-edge: inset 0 0 0 0.5px rgba(255, 255, 255, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 0 0 0.5px rgba(0, 0, 0, 0.08);
+    --chip: rgba(0, 0, 0, 0.055);
+    --hover: rgba(0, 0, 0, 0.045);
+    --shadow-1: 0 1px 1px rgba(0, 0, 0, 0.06), 0 8px 24px -8px rgba(30, 30, 60, 0.2);
+    --shadow-2: 0 2px 4px rgba(0, 0, 0, 0.05), 0 24px 60px -16px rgba(30, 30, 60, 0.25), 0 60px 120px -40px rgba(30, 30, 60, 0.25);
+    --accent: #1d1d1f;
+    --on-accent: #ffffff;
+    --ok: #1f9d55;
+    --warn: #c77700;
+    --bad: #d83a34;
+    --grain-opacity: 0.045;
+  }
+}
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f5f5f7;
+  --bg-2: #ececf0;
+  --text: #1d1d22;
+  --muted: #5d5d66;
+  --faint: #8a8a94;
+  --line: rgba(0, 0, 0, 0.09);
+  --line-strong: rgba(0, 0, 0, 0.16);
+  --glass: rgba(255, 255, 255, 0.55);
+  --glass-strong: rgba(255, 255, 255, 0.8);
+  --glass-hi: rgba(255, 255, 255, 0.7);
+  --glass-edge: inset 0 0 0 0.5px rgba(255, 255, 255, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 0 0 0.5px rgba(0, 0, 0, 0.08);
+  --chip: rgba(0, 0, 0, 0.055);
+  --hover: rgba(0, 0, 0, 0.045);
+  --shadow-1: 0 1px 1px rgba(0, 0, 0, 0.06), 0 8px 24px -8px rgba(30, 30, 60, 0.2);
+  --shadow-2: 0 2px 4px rgba(0, 0, 0, 0.05), 0 24px 60px -16px rgba(30, 30, 60, 0.25), 0 60px 120px -40px rgba(30, 30, 60, 0.25);
+  --accent: #1d1d1f;
+  --on-accent: #ffffff;
+  --ok: #1f9d55;
+  --warn: #c77700;
+  --bad: #d83a34;
+  --grain-opacity: 0.045;
+}
+
+/* ── База ── */
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-padding-top: calc(var(--menubar) + 24px);
+}
+body {
+  /* фон только у html — иначе он перекроет «обои» с z-index: -2 */
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+::selection {
+  background: color-mix(in srgb, var(--wall-a) 55%, transparent);
+  color: var(--text);
+}
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--text) 80%, transparent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.skip {
+  position: fixed;
+  left: 12px;
+  top: -60px;
+  z-index: 100;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+  transition: top 0.2s;
+}
+.skip:focus {
+  top: calc(var(--menubar) + 8px);
+}
+
+/* Обои и зерно */
+.wallpaper {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(60% 60% at 18% 22%, color-mix(in srgb, var(--wall-a) 75%, transparent), transparent 70%),
+    radial-gradient(55% 55% at 85% 30%, color-mix(in srgb, var(--wall-b) 70%, transparent), transparent 70%),
+    radial-gradient(70% 60% at 55% 95%, color-mix(in srgb, var(--wall-c) 70%, transparent), transparent 70%),
+    var(--bg);
+  transition: opacity 1.2s var(--ease-out);
+}
+.wallpaper canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1.4s var(--ease-out);
+}
+.wallpaper canvas.on {
+  opacity: 1;
+}
+.wallpaper::after {
+  /* затемнение/высветление, чтобы текст читался поверх любых обоев */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 80% at 50% 40%, transparent 30%, color-mix(in srgb, var(--bg) 55%, transparent) 100%);
+}
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 60;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .5 0 0 0 0 .5 0 0 0 1.2 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* ── Материалы ── */
+.glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  backdrop-filter: blur(28px) saturate(170%);
+  box-shadow: var(--glass-edge), var(--shadow-1);
+}
+.glass-strong {
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  backdrop-filter: blur(40px) saturate(180%);
+  box-shadow: var(--glass-edge), var(--shadow-2);
+}
+
+/* ── Типографика ── */
+.display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-weight: 650;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+}
+.h2 {
+  font-family: var(--font-display);
+  font-weight: 640;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+  font-size: clamp(2.1rem, 1.3rem + 3vw, 3.9rem);
+  text-wrap: balance;
+}
+.h3 {
+  font-family: var(--font-display);
+  font-weight: 620;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  font-size: clamp(1.4rem, 1.1rem + 1.1vw, 2rem);
+  text-wrap: balance;
+}
+.lead {
+  color: var(--muted);
+  font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.3rem);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.grad-text {
+  background: linear-gradient(100deg, var(--text) 10%, color-mix(in srgb, var(--text) 55%, var(--wall-a)) 50%, var(--text) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Сетка ── */
+.container {
+  width: min(1240px, 100% - 32px);
+  margin-inline: auto;
+}
+@media (min-width: 768px) {
+  .container {
+    width: min(1240px, 100% - 64px);
+  }
+}
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* ── Кнопки ── */
+.btn {
+  --b-bg: var(--chip);
+  --b-fg: var(--text);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--b-bg);
+  color: var(--b-fg);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  box-shadow: inset 0 0 0 0.5px var(--line-strong);
+  transition: transform 0.35s var(--spring), background 0.2s, box-shadow 0.2s;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+.btn:hover {
+  background: color-mix(in srgb, var(--b-bg) 80%, var(--text) 8%);
+}
+.btn:active {
+  transform: scale(0.97);
+}
+.btn-primary {
+  --b-bg: var(--accent);
+  --b-fg: var(--on-accent);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 10px 30px -10px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--accent) 88%, var(--text));
+}
+.btn svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+.btn-sm {
+  height: 36px;
+  padding: 0 14px;
+  font-size: 13.5px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: var(--chip);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 560;
+  white-space: nowrap;
+}
+.chip .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.chip.ready {
+  color: var(--ok);
+}
+.chip.beta {
+  color: var(--warn);
+}
+.chip.dev {
+  color: color-mix(in srgb, var(--muted) 85%, var(--wall-a));
+}
+
+/* Светофор окна */
+.lights {
+  display: flex;
+  gap: 8px;
+}
+.lights i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ff5f57;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.2);
+}
+.lights i:nth-child(2) {
+  background: #febc2e;
+}
+.lights i:nth-child(3) {
+  background: #28c840;
+}
+.lights.idle i {
+  background: color-mix(in srgb, var(--text) 22%, transparent);
+}
+
+/* Появление при прокрутке */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Курсор-кольцо */
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 80;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--text) 45%, transparent);
+  transform: translate3d(-100px, -100px, 0);
+  opacity: 0;
+  transition: width 0.3s var(--spring), height 0.3s var(--spring), margin 0.3s var(--spring), opacity 0.3s, background 0.3s, border-color 0.3s;
+}
+.cursor.on {
+  opacity: 0.8;
+}
+.cursor.hover {
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+  border-color: transparent;
+}
+.cursor.down {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+}
+
+/* Переходы между страницами (View Transitions API, между документами) */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-group(app-icon),
+::view-transition-group(app-title) {
+  animation-duration: 0.6s;
+  animation-timing-function: cubic-bezier(0.3, 1.15, 0.4, 1);
+}
+::view-transition-old(app-icon),
+::view-transition-new(app-icon) {
+  height: 100%;
+  object-fit: contain;
+}
+::view-transition-group(menubar),
+::view-transition-group(dock) {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  @view-transition {
+    navigation: none;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

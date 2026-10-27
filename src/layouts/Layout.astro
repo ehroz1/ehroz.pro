@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+import type { Lang } from '../content/apps';
+import { tr, path, asset } from '../i18n';
+import MenuBar from '../components/MenuBar.astro';
+import Dock from '../components/Dock.astro';
+import Spotlight from '../components/Spotlight.astro';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  slug?: string;
+  og?: string;
+  glow?: [string, string, string];
+  accent?: string;
+  onAccent?: string;
+  jsonld?: Record<string, unknown>;
+}
+const { lang, title, description, slug = '', og, glow, accent, onAccent, jsonld } = Astro.props;
+const site = Astro.site!;
+const canonical = new URL(path(lang, slug), site).href;
+const alt = (l: Lang) => new URL(path(l, slug), site).href;
+const ogImage = new URL(asset(og ?? `og/${lang}/home.png`), site).href;
+const vars = [
+  glow ? `--wall-a:${glow[0]};--wall-b:${glow[1]};--wall-c:${glow[2]}` : '',
+  accent ? `--app-accent:${accent};--app-on-accent:${onAccent ?? '#000'}` : '',
+]
+  .filter(Boolean)
+  .join(';');
+---
+
+<!doctype html>
+<html lang={lang} style={vars || undefined} data-slug={slug}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="ru" href={alt('ru')} />
+    <link rel="alternate" hreflang="en" href={alt('en')} />
+    <link rel="alternate" hreflang="x-default" href={alt('ru')} />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#08080b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)" />
+    <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={asset('favicon-32.png')} sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href={asset('apple-touch-icon.png')} />
+    <meta property="og:type" content={slug ? 'product' : 'website'} />
+    <meta property="og:site_name" content="ehroz.pro" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="sitemap" href={asset('sitemap-index.xml')} />
+    <script is:inline>
+      // Тема до первой отрисовки: auto | dark | light
+      (function () {
+        var p = 'auto';
+        try { p = localStorage.getItem('theme') || 'auto'; } catch (e) {}
+        var d = document.documentElement;
+        d.setAttribute('data-theme-pref', p);
+        if (p !== 'auto') d.setAttribute('data-theme', p);
+      })();
+    </script>
+    {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
+  </head>
+  <body>
+    <a class="skip" href="#main">{tr(lang, 'skip')}</a>
+    <div class="wallpaper" aria-hidden="true"><canvas data-wallpaper></canvas></div>
+    <div class="grain" aria-hidden="true"></div>
+    <MenuBar lang={lang} slug={slug} />
+    <main id="main">
+      <slot />
+    </main>
+    <Dock lang={lang} current={slug} />
+    <Spotlight lang={lang} />
+    <div class="cursor" aria-hidden="true"></div>
+    <script>
+      import '../scripts/site';
+    </script>
+  </body>
+</html>
