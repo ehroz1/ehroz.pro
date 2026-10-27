@@ -11,7 +11,9 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'ignore',
-  build: { format: 'directory', inlineStylesheets: 'auto' },
+  // Пробелы между строчными элементами в сценах значимы («JPG 88%»), поэтому HTML не сжимаем.
+  compressHTML: false,
+  build: { format: 'directory', inlineStylesheets: 'always' },
   prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
   integrations: [
     sitemap({

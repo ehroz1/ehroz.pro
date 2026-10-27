@@ -82,7 +82,9 @@ export function startWallpaper() {
     const cs = getComputedStyle(document.documentElement);
     const isLight = cs.colorScheme.includes('light') && !cs.colorScheme.includes('dark');
     const bg = hex(cs.getPropertyValue('--bg') || '#08080b');
-    const k = isLight ? 0.6 : 0.95;
+    // на узких экранах обои спокойнее — текст поверх них должен читаться
+    const narrow = Math.min(1, innerWidth / 1100) * 0.35 + 0.65;
+    const k = (isLight ? 0.6 : 0.95) * narrow;
     // В светлой теме цвет — это сдвиг от фона к оттенку (значения могут быть отрицательными).
     const mix = (c: string) => hex(cs.getPropertyValue(c)).map((v, i) => (isLight ? (v - bg[i]) * k : v * k)) as [number, number, number];
     gl.uniform3fv(uA, mix('--wall-a'));
@@ -93,11 +95,12 @@ export function startWallpaper() {
   };
   resize();
   colors();
-  addEventListener('resize', resize, { passive: true });
+  addEventListener('resize', () => { resize(); colors(); }, { passive: true });
   new MutationObserver(colors).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'style'] });
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', colors);
 
-  let mx = 0.5, my = 0.5, tx = 0.5, ty = 0.5;
+  // без мыши «блик» уходит за нижний край
+  let mx = 0.5, my = -0.6, tx = 0.5, ty = -0.6;
   addEventListener('pointermove', (e) => {
     tx = e.clientX / innerWidth;
     ty = 1 - e.clientY / innerHeight;

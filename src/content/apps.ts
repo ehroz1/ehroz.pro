@@ -249,7 +249,7 @@ export const apps: App[] = [
     status: 'dev',
     accent: '#ff5b2e',
     onAccent: '#ffffff',
-    glow: ['#ff5b2e', '#f3efe6', '#1d1d22'],
+    glow: ['#ff5b2e', '#6b3a2a', '#2a2a33'],
     links: [{ kind: 'releases', href: 'https://github.com/ehroz1/sukhan-releases', label: t('Следить за релизами', 'Watch for releases') }],
     features: [
       {

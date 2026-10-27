@@ -247,8 +247,8 @@ const n = app.features.length;
     height: 220px;
     margin-top: -26px;
     transform: scaleY(-1);
-    opacity: 0.22;
-    filter: blur(1.5px);
+    opacity: 0.14;
+    filter: blur(2px);
     -webkit-mask-image: linear-gradient(to top, #000, transparent 45%);
     mask-image: linear-gradient(to top, #000, transparent 45%);
     pointer-events: none;
@@ -349,6 +349,12 @@ const n = app.features.length;
     font-style: normal;
     color: var(--faint);
   }
+  .slide-text .lead {
+    color: color-mix(in srgb, var(--text) 80%, transparent);
+  }
+  .slide-text {
+    text-shadow: 0 1px 18px color-mix(in srgb, var(--bg) 70%, transparent);
+  }
   .slide-title {
     margin: 14px 0 16px;
     font-size: clamp(2rem, 1.3rem + 2.4vw, 3.4rem);
@@ -423,16 +429,12 @@ const n = app.features.length;
       @media (prefers-reduced-motion: no-preference) {
         .slide-text,
         .slide-win {
-          animation:
-            slide-in linear both,
-            slide-out linear both;
-          animation-timeline: --slide, --slide;
-          animation-range:
-            entry 20% cover 32%,
-            exit 0% exit 35%;
+          animation: slide-in linear both;
+          animation-timeline: --slide;
+          animation-range: entry 5% entry 75%;
         }
         .slide-win {
-          animation-name: win-in, win-out;
+          animation-name: win-in;
         }
       }
     }
@@ -443,22 +445,10 @@ const n = app.features.length;
       transform: translateY(60px);
     }
   }
-  @keyframes slide-out {
-    to {
-      opacity: 0;
-      transform: translateY(-40px);
-    }
-  }
   @keyframes win-in {
     from {
       opacity: 0;
       transform: translateY(80px) scale(0.92) rotateX(8deg);
-    }
-  }
-  @keyframes win-out {
-    to {
-      opacity: 0;
-      transform: scale(0.94);
     }
   }
 

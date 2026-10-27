@@ -56,7 +56,7 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
               <span class="person" />
             </div>
             <div class="caps">
-              {groups.map((g, gi) => (
+              {groups.map((_, gi) => (
                 <div data-g={gi} class:list={['grp', { on: gi === 0 }]}>
                   {words
                     .flat()
@@ -308,7 +308,10 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
   .grp {
     grid-area: 1 / 1;
     display: flex;
-    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 180px;
+    gap: 2px 6px;
     opacity: 0;
     transform: scale(0.7);
     transition: opacity 0.12s, transform 0.25s cubic-bezier(0.2, 1.6, 0.4, 1);
@@ -318,7 +321,7 @@ const shell = id === 'sukhan-karaoke' || id === 'sukhan-timeline';
     transform: none;
   }
   .w {
-    font: 900 21px/1.1 -apple-system, 'SF Pro Display', system-ui, sans-serif;
+    font: 900 18px/1.1 -apple-system, 'SF Pro Display', system-ui, sans-serif;
     text-transform: uppercase;
     color: #fff;
     -webkit-text-stroke: 4px #000;

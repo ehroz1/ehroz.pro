@@ -1,0 +1,37 @@
+# Проекты Ehroz — итог разведки
+
+Источники: репозитории аккаунта [ehroz1](https://github.com/ehroz1) (приватные и публичные), их README,
+`Cargo.toml` / `tauri.conf.json` / `Info.plist` / `package.json`, UI-код и иконки. Дата разведки: 27.10.2026.
+
+## Мои продукты — на витрине
+
+| Название | Что делает | Для кого | Платформа | Статус | Иконка (источник) | Акцент | Ключевые фичи | Ссылки |
+|---|---|---|---|---|---|---|---|---|
+| **Morfus** | Радиальный конвертер: тащишь файл, жмёшь ⌥/⌘/⌃ — вокруг курсора кольцо с форматами | Дизайнеры, монтажёры, SMM | macOS 13+, Apple Silicon и Intel (Rust) | Готово, v0.2.2 | `ehroz1/morfus` → `assets/AppIcon-1024.png` | монохром `#1d1d1f` / `#f5f5f7`, обои `#5b4a9c · #2b6f8c · #9c4a6b` (из `docs/ring.jpg`) | 3 режима (конвертация, сжатие, инструменты); результат и прогресс в кольце; второе кольцо; настройка секторов; CLI, службы Finder, `morfus://` | [релизы](https://github.com/ehroz1/morfus-releases/releases/latest) (код закрыт) |
+| **Morfu** | Конвертер в строке меню: бросил файл на «m» — забрал результат | Кому нужен конвертер «на один бросок» | macOS 13+ (Swift, Sparkle) | Готово, v3.3 | `ehroz1/morfu` → `Branding/AppIcon-1024.png` | чёрный / белый | Перетаскивание туда и обратно; экономия места по каждому файлу и статистика; островок у чёлки; растр → SVG; ⌃⌥C — сжать буфер; расшифровка речи | [релизы](https://github.com/ehroz1/morfu-releases/releases/latest) (код закрыт) |
+| **Pachaq** | Сжатие и обрезка изображений для сайтов (WebP/MozJPEG/oxipng) | Веб-разработчики, контент-менеджеры | macOS 11+ (Apple Silicon, Intel), Windows (Rust + Tauri 2) | Версия 0.1.1 собрана, публичного релиза ещё нет → «Скоро релиз» | `ehroz1/pachaq` → `assets/icon.png` | `#3B5BFF` (градиент `#4FA8FF → #5A2FD6`) | Drag & drop, ⌘V; умная обрезка 1:1…21:9; папки наблюдения → `pachaq/`; Quick Action «Сжать в Pachaq» и меню Проводника; CLI `pachaq --compress` | [pachaq-releases](https://github.com/ehroz1/pachaq-releases/releases) (пока пусто) |
+| **Sukhan** | Автосубтитры для Reels/TikTok/Shorts — мини-монтажка субтитров | Блогеры, SMM | macOS, Apple Silicon (Rust + Tauri 2 + React) | В разработке: готовы этапы 0–3 | `ehroz1/sukhan` → `src-tauri/icons/icon.png` | `#ff5b2e` на кремовом, UI — токены Morfus | Пословные таймкоды (Groq / ElevenLabs / Gemini); таймлайн с waveform; форматы 9:16, 1:1, 4:5, 16:9; рендер на Rust (60 с ролик за 8 с на M4) | [sukhan-releases](https://github.com/ehroz1/sukhan-releases) |
+| **radius** | Локальное удаление фона на Mac (BiRefNet HR-matting в Core ML) | Дизайнеры | macOS | В разработке (опубликованы только модели) | своей иконки нет — нарисована заглушка, см. DECISIONS | графит / серебро | Мягкая альфа-маска 2048×2048; Core ML fp16, без интернета | [radius-models](https://github.com/ehroz1/radius-models) |
+| **BLA-БЛА** | Расшифровка аудио и видео в браузере через 11 сервисов на своих бесплатных ключах | Журналисты, исследователи, подкастеры | Веб (React + Vite, без сервера) | Готово | `ehroz1/bla-bla-text` → `public/logo.svg` (вписан в скруглённый квадрат) | монохром shadcn, зелёный `success` | Любой медиафайл, MP3 16 кГц в браузере; авто-нарезка под лимиты; 11 сервисов с инструкциями; TXT/MD/SRT/VTT/JSON | [приложение](https://ehroz1.github.io/bla-bla-text/) · [GitHub](https://github.com/ehroz1/bla-bla-text) |
+| **Picta** | Поиск бесплатных фото, иконок и видео сразу по многим стокам | Дизайнеры, редакторы, SMM | Веб, PWA | Готово | `ehroz1/toptop-photo` → `icons/icon-512.png` | `#101114` / белый; цвета источников `#7c5cff · #06b6d4 · #ff6428` | Общая лента стоков; автоперевод запроса; плашка лицензии; иконки через Iconify; режим «Цвета»; ZIP из нескольких фото | [picta.cc](https://picta.cc) · [GitHub](https://github.com/ehroz1/toptop-photo) |
+
+## Клиентские сайты и рабочие проекты — НЕ на витрине
+
+| Репозиторий | Что это | Почему не на витрине |
+|---|---|---|
+| `card-maker-wemedia`, `card-maker-wemedia-video`, `cardmaker-wemedia` | Конструктор карточек Instagram для WE Media («для коллег») | Инструмент под бренд работодателя/клиента |
+| `edubridge` | Конструктор материалов edubridge строго по брендбуку | Под бренд клиента (WE media group) |
+| `gorod24` | Конструктор постов «Город 24» | Под бренд клиента |
+| `we-kp.picta.cc` | Конструктор коммерческих предложений WE Media | Под бренд клиента |
+| `wemedia-group-branding` | Бренд-кит WE media group | Сайт клиента |
+| `knzhanna` | Сайт-визитка Zhanna Kinzhalinova | Клиентский сайт |
+| `sky-tour` | Лендинг турагентства Sky Tour | Клиентский сайт |
+| `designer.ehroz1.flower`, `designer.ehroz1.flower.smm` | Лендинги услуг Ehroz (сайты для цветочных, SMM-дизайн) | Это реклама услуг, а не продукт; ссылка «Заказать сайт» ведёт на `dsgn.ehroz.web.picta.cc` |
+| `ddd.film` | «Киносвайп» — свайп по афише фильмов (afisha.uz) | Похоже на промо-проект под афишу; не ясно, свой ли продукт |
+| `quote-de` | Старый Telegram-бот: цитата на фото (Python) | Заброшен; **в коде открыто лежит токен бота** — см. DECISIONS |
+| `ytdlbot-ehroz`, `outbox`, `ehroz1`, `ehroz1.github.io` | Старые форки и заготовки 2021–2023 | Не продукты |
+
+## Не найдены
+
+Moss Pocket, Open Link App, Dual Game Pad, ANY CAMERA, Androooo / Androoo — таких репозиториев в аккаунте
+ehroz1 нет, и в доступных папках их тоже нет. На витрину не добавлены (не выдумываем). Как добавить — в README.

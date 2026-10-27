@@ -16,7 +16,7 @@ type Script = (c: Ctx) => Promise<void>;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ── Сценарии ── */
-const ringPos = (c: Ctx, ring: HTMLElement, i: number) => {
+const ringPos = (ring: HTMLElement, i: number) => {
   const l = ring.querySelector<HTMLElement>(`.label[data-i="${i}"]`)!;
   return [ring.offsetLeft + parseFloat(l.style.left), ring.offsetTop + parseFloat(l.style.top)] as const;
 };
@@ -55,7 +55,7 @@ const scripts: Record<string, Script> = {
     ring.classList.add('shown');
     await c.wait(700);
     for (const i of [1, 2, 3, 1]) {
-      const [x, y] = ringPos(c, ring, i);
+      const [x, y] = ringPos(ring, i);
       c.move(x + 6, y + 8);
       c.move(x - 2, y + 2, ghost);
       await c.wait(520);
