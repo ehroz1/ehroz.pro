@@ -89,15 +89,17 @@
       pctEl.textContent = `${String(Math.round(p)).padStart(3, '0')}%`;
       let idx = 0;
       bounds.forEach((b, i) => { if (b <= p + 0.05) idx = i; });
-      if (idx !== cur) {
+      const old = cur;
+      const changed = idx !== cur;
+      // до смены запоминаем, где стояли подписи — для перелёта
+      const fly = changed && old >= 0 && !ov && !reduced && Math.abs(idx - old) === 1;
+      const curR0 = fly ? curEl.getBoundingClientRect() : null;
+      const prevR0 = fly ? prevEl.getBoundingClientRect() : null;
+      const slR0 = fly && idx > old && !marks[idx].label.classList.contains('far') ? marks[idx].label.getBoundingClientRect() : null;
+      if (changed) {
         cur = idx;
         prevEl.textContent = idx > 0 ? names[idx - 1] : '';
         curEl.textContent = names[idx];
-        if (!reduced) {
-          curEl.classList.remove('swap');
-          void curEl.offsetWidth;
-          curEl.classList.add('swap');
-        }
       }
       marks.forEach((m, i) => {
         const y = bounds[i] * u + ty;
@@ -107,6 +109,34 @@
         m.line.classList.toggle('past', i <= idx);
         items[i].hidden = !(i > idx && !onRuler && y >= H - 60);
       });
+      if (!changed || reduced || ov) return;
+      const center = (r: DOMRect) => [r.left + r.width / 2, r.top + r.height / 2];
+      const opts = { duration: 420, easing: 'cubic-bezier(0.2, 0.7, 0.2, 1)' };
+      if (fly && idx > old && slR0 && curR0 && prevR0) {
+        // вперёд: вертикальная подпись с линейки поворачивается и встаёт наверх
+        const [x0, y0] = center(slR0);
+        const [x1, y1] = center(curEl.getBoundingClientRect());
+        curEl.animate([{ transform: `translate(${x0 - x1}px, ${y0 - y1}px) rotate(-90deg)` }, { transform: 'none' }], opts);
+        // прежний текущий уезжает в «предыдущий»
+        const [, py1] = center(prevEl.getBoundingClientRect());
+        const [, cy0] = center(curR0);
+        prevEl.animate([{ transform: `translateY(${cy0 - py1}px)`, opacity: 0.4 }, { transform: 'none', opacity: 1 }], opts);
+      } else if (fly && idx < old && curR0 && prevR0) {
+        // назад: подпись возвращается на линейку и снова становится вертикальной
+        const lab = marks[old].label;
+        if (!lab.classList.contains('far')) {
+          const [x0, y0] = center(curR0);
+          const [x1, y1] = center(lab.getBoundingClientRect());
+          lab.animate([{ transform: `translate(${x0 - x1}px, ${y0 - y1}px) rotate(270deg)`, opacity: 1 }, { transform: 'rotate(180deg)', opacity: 1 }], opts);
+        }
+        // «предыдущий» поднимается и становится текущим
+        const [, cy1] = center(curEl.getBoundingClientRect());
+        const [, py0] = center(prevR0);
+        curEl.animate([{ transform: `translateY(${py0 - cy1}px) scale(0.75)`, opacity: 0.5 }, { transform: 'none', opacity: 1 }], opts);
+        prevEl.animate([{ opacity: 0 }, { opacity: 1 }], opts);
+      } else {
+        curEl.animate([{ transform: 'translateY(10px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 250, easing: opts.easing });
+      }
     };
 
     let raf = 0;
@@ -245,6 +275,7 @@
   }
   .track :global(.sl.past),
   .track :global(.sl.far) { opacity: 0; }
+  .track :global(.sl.past) { transition: none; }
   .vp {
     position: absolute;
     left: 56px;
@@ -262,18 +293,24 @@
     writing-mode: horizontal-tb;
     transform: none;
     right: 66px;
-    top: calc(var(--v) * var(--u));
+    top: max(calc(var(--v) * var(--u)), 14px);
     translate: 0 -50%;
-    font-size: 13px;
+    max-width: calc(var(--panel) - 76px);
+    font-size: 11.5px;
+    line-height: 1.15;
+    text-align: right;
+    white-space: normal;
     opacity: 1;
     color: var(--text);
     background: var(--bg);
     padding: 2px 0 2px 6px;
+    transition: none;
   }
   .spy.ov .track :global(.bl) { opacity: 1; left: 30%; }
   .spy.ov .top,
   .spy.ov .next { opacity: 0; }
   .spy.ov .num { right: 34px; }
+  .spy.ov .marker { width: 60px; }
   /* метка «вы здесь» */
   .marker {
     position: absolute;
@@ -313,11 +350,7 @@
     background: linear-gradient(var(--bg) 75%, transparent);
   }
   .prev { color: var(--faint); font: 700 12px/1.1 var(--font-sans); letter-spacing: 0.03em; }
-  .cur { color: var(--text); font: 700 17px/1.08 var(--font-sans); letter-spacing: 0.01em; }
-  .cur:global(.swap) { animation: swap var(--slow) var(--ease); }
-  @keyframes swap {
-    from { opacity: 0; transform: translateY(10px); }
-  }
+  .cur { color: var(--text); font: 700 17px/1.08 var(--font-sans); letter-spacing: 0.01em; transform-origin: center; }
   .next {
     bottom: 18px;
     margin: 0;
