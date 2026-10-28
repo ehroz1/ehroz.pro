@@ -1,0 +1,9 @@
+---
+// Черновые варианты первого экрана на согласование: /lab/sheet, /lab/spread, /lab/ruler.
+import Home from '../../components/Home.astro';
+export function getStaticPaths() {
+  return (['sheet', 'spread', 'ruler'] as const).map((hero) => ({ params: { hero }, props: { hero } }));
+}
+const { hero } = Astro.props;
+---
+<Home lang="ru" hero={hero} />

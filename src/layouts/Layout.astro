@@ -16,8 +16,10 @@ interface Props {
   accent?: string;
   onAccent?: string;
   jsonld?: Record<string, unknown>;
+  /** Черновые страницы (варианты на согласование) — не индексировать. */
+  noindex?: boolean;
 }
-const { lang, title, description, slug = '', og, glow, accent, onAccent, jsonld } = Astro.props;
+const { lang, title, description, slug = '', og, glow, accent, onAccent, jsonld, noindex = false } = Astro.props;
 const site = Astro.site!;
 const canonical = new URL(path(lang, slug), site).href;
 const alt = (l: Lang) => new URL(path(l, slug), site).href;
@@ -37,6 +39,7 @@ const vars = [
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang="ru" href={alt('ru')} />
     <link rel="alternate" hreflang="en" href={alt('en')} />

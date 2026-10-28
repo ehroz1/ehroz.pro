@@ -18,7 +18,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       i18n: { defaultLocale: 'ru', locales: { ru: 'ru-RU', en: 'en-US' } },
-      filter: (page) => !page.includes('/404'),
+      filter: (page) => !page.includes('/404') && !page.includes('/lab/'),
     }),
   ],
   vite: { plugins: [tailwindcss()] },
