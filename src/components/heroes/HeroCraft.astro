@@ -11,13 +11,6 @@ import Icon from '../Icon.astro';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ru = lang === 'ru';
-const site = new URL(path(lang), Astro.site).href;
-const shareText = ru ? 'Ehroz — небольшие инструменты, которые экономят время' : 'Ehroz — small tools that save time';
-const share = [
-  ['Telegram', `https://t.me/share/url?url=${encodeURIComponent(site)}&text=${encodeURIComponent(shareText)}`],
-  ['X', `https://x.com/intent/post?url=${encodeURIComponent(site)}&text=${encodeURIComponent(shareText)}`],
-  ['LinkedIn', `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(site)}`],
-];
 const sections = ru
   ? [['apps', 'Изделия'], ['about', 'Об Ehroz'], ['contact', 'Контакты']]
   : [['apps', 'Products'], ['about', 'About'], ['contact', 'Contact']];
@@ -61,18 +54,6 @@ const sections = ru
         <a class="btn" href={`https://github.com/${CONTACTS.github}`} target="_blank" rel="noopener"><Icon name="github" />GitHub</a>
       </div>
       <p class="note">macOS · Windows · {ru ? 'веб · расширения браузера' : 'web · browser extensions'}</p>
-      <p class="rec">
-        <b>{ru ? 'С чего начать:' : 'Start here:'}</b>
-        {ru
-          ? ' Morfus — радиальный конвертер: тащите файл, жмёте ⌥ — вокруг курсора кольцо с форматами. У каждого изделия своя страница с демо и FAQ. '
-          : ' Morfus — a radial converter: drag a file, press ⌥ and a ring of formats appears around the cursor. Every product has its own page with demos and FAQ. '}
-        <a href={path(lang, 'morfus')}>{ru ? 'Открыть Morfus' : 'Open Morfus'}</a>
-      </p>
-      <div class="share" data-share>
-        <span class="sh-l">{ru ? 'Поделиться' : 'Share'}</span>
-        <button type="button" data-copy={site}><Icon name="copy" /><span data-copy-label>{ru ? 'Копировать ссылку' : 'Copy link'}</span></button>
-        {share.map(([n, u]) => <a href={u} target="_blank" rel="noopener">{n}</a>)}
-      </div>
     </div>
     <nav class="hero-index" aria-label={tr(lang, 'apps.title')}>
       <ol>
@@ -102,20 +83,6 @@ const sections = ru
 </section>
 
 <script>
-  // Копирование ссылки
-  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
-    b.addEventListener('click', async () => {
-      const label = b.querySelector('[data-copy-label]')!;
-      const was = label.textContent;
-      try {
-        await navigator.clipboard.writeText(b.dataset.copy!);
-        label.textContent = document.documentElement.lang === 'en' ? 'Copied' : 'Скопировано';
-      } catch {
-        label.textContent = b.dataset.copy!;
-      }
-      setTimeout(() => (label.textContent = was), 1600);
-    });
-  });
   // Линейка едет вместе со страницей, указатель показывает текущий раздел
   const ruler = document.querySelector<HTMLElement>('[data-ruler]');
   const cur = document.querySelector<HTMLElement>('[data-spy-cur]');
@@ -238,36 +205,12 @@ const sections = ru
   .cta { display: flex; flex-wrap: wrap; gap: 14px; }
   .cta .btn { height: 52px; padding: 0 26px; }
   .note {
-    margin: 14px 0 26px;
+    margin: 14px 0 0;
     color: var(--faint);
     font: 500 11px/1.4 var(--font-mono);
     letter-spacing: 0.12em;
     text-transform: uppercase;
   }
-  .rec { margin: 0 0 32px; color: var(--muted); font-size: 17px; line-height: 1.6; }
-  .rec b { color: var(--text); font-weight: 500; }
-  .rec a { color: var(--text); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
-  .share { display: inline-flex; flex-wrap: wrap; justify-self: start; border: 1px solid var(--line-strong); }
-  .share > * {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    height: 42px;
-    padding: 0 16px;
-    border: 0;
-    border-right: 1px solid var(--line-strong);
-    background: none;
-    color: var(--text);
-    font: 600 11px/1 var(--font-mono);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background var(--fast) var(--ease);
-  }
-  .share > *:last-child { border-right: 0; }
-  .share .sh-l { color: var(--faint); font-weight: 500; cursor: default; }
-  .share a:hover, .share button:hover { background: var(--hover); }
-  .share :global(svg) { width: 15px; height: 15px; }
 
   .hero-index { align-self: stretch; border-left: 1px solid var(--line); }
   .hero-index ol { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; height: 100%; margin: 0; padding: 0; list-style: none; }
