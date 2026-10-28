@@ -11,11 +11,12 @@ import Footer from './Footer.astro';
 import HeroSheet from './heroes/HeroSheet.astro';
 import HeroSpread from './heroes/HeroSpread.astro';
 import HeroRuler from './heroes/HeroRuler.astro';
+import HeroCraft from './heroes/HeroCraft.astro';
 
 interface Props {
   lang: Lang;
   /** Варианты первого экрана на согласование (страницы /lab/hero-*). */
-  hero?: 'sheet' | 'spread' | 'ruler';
+  hero?: 'sheet' | 'spread' | 'ruler' | 'craft';
 }
 const { lang, hero } = Astro.props;
 const ru = lang === 'ru';
@@ -43,6 +44,7 @@ const stats = [
   {hero === 'sheet' && <HeroSheet lang={lang} />}
   {hero === 'spread' && <HeroSpread lang={lang} />}
   {hero === 'ruler' && <HeroRuler lang={lang} />}
+  {hero === 'craft' && <HeroCraft lang={lang} />}
   {!hero && (
   <section class="hero container" aria-labelledby="hero-title">
     <div class="sec-bar">

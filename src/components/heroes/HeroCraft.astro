@@ -1,0 +1,283 @@
+---
+// Вариант G — по референсу (рамка-чертёж): рельсы по краям контента с крестиками на стыках,
+// линейка и указатель раздела в правом поле, крупная подпись справа сверху,
+// слева заголовок «Одиннадцать изделий. Одна мастерская.», справа сетка иконок с подписями.
+import type { Lang } from '../../content/apps';
+import { apps } from '../../content/apps';
+import { tr, path, CONTACTS } from '../../i18n';
+import AppIcon from '../AppIcon.astro';
+import Icon from '../Icon.astro';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ru = lang === 'ru';
+const words: Record<number, [string, string]> = {
+  10: ['Десять', 'Ten'], 11: ['Одиннадцать', 'Eleven'], 12: ['Двенадцать', 'Twelve'], 13: ['Тринадцать', 'Thirteen'],
+};
+const count = words[apps.length]?.[ru ? 0 : 1] ?? String(apps.length);
+const site = new URL(path(lang), Astro.site).href;
+const shareText = ru ? 'Ehroz — небольшие инструменты, которые экономят время' : 'Ehroz — small tools that save time';
+const share = [
+  ['Telegram', `https://t.me/share/url?url=${encodeURIComponent(site)}&text=${encodeURIComponent(shareText)}`],
+  ['X', `https://x.com/intent/post?url=${encodeURIComponent(site)}&text=${encodeURIComponent(shareText)}`],
+  ['LinkedIn', `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(site)}`],
+];
+const sections = ru
+  ? [['apps', 'Изделия'], ['about', 'Об Ehroz'], ['contact', 'Контакты']]
+  : [['apps', 'Products'], ['about', 'About'], ['contact', 'Contact']];
+---
+
+<!-- Рамка страницы: рельсы, линейка, указатель раздела (только на широких экранах) -->
+<div class="frame" aria-hidden="true">
+  <div class="container"><div class="rails" /></div>
+  <div class="gutter">
+    <div class="ruler" data-ruler>
+      {[...Array(80)].map((_, i) => <span style={`top:${i * 300}px`}>{i * 5}</span>)}
+    </div>
+    <div class="spy">
+      <span class="spy-cur" data-spy-cur>{ru ? 'Начало' : 'Start'}</span>
+      <ul data-spy-list>
+        {sections.map(([id, t]) => <li data-spy={id}>{t}</li>)}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<section class="hero container" aria-labelledby="hero-title" data-spy-sec={ru ? 'Начало' : 'Start'}>
+  <div class="sec-bar">
+    <span>01 / <b>{ru ? 'Мастерская Ehroz' : 'Ehroz workshop'}</b></span>
+    <span>{apps.length} {ru ? 'изделий' : 'products'} · macOS · Windows · {ru ? 'веб' : 'web'} · <em>{ru ? 'Астана' : 'Astana'}</em></span>
+  </div>
+  <p class="big-label" aria-hidden="true">{ru ? 'Мастерская' : 'Workshop'}</p>
+  <div class="grid">
+    <div class="main">
+      <h1 class="title" id="hero-title">
+        {count} {ru ? 'изделий.' : 'products.'}<br />
+        {ru ? 'Одна ' : 'One '}<span class="hl">{ru ? 'мастерская' : 'workshop'}</span>.
+      </h1>
+      <p class="lead">
+        {ru
+          ? 'Конвертеры, сжатие картинок, автосубтитры, расшифровка речи, удаление фона, поиск картинок, геймпад для игр, полка у Dock, окно для ссылок и виртуальная камера. Делаю их сам — для macOS, Windows и браузера — и пользуюсь каждый день.'
+          : 'Converters, image compression, auto captions, speech-to-text, background removal, image search, a gamepad mapper, a shelf by the Dock, a link pop-up and a virtual camera. I make them myself — for macOS, Windows and the browser — and use them every day.'}
+      </p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#apps"><Icon name="arrow" />{tr(lang, 'hero.cta')}</a>
+        <a class="btn" href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener"><Icon name="telegram" />{ru ? 'Написать в Telegram' : 'Message on Telegram'}</a>
+        <a class="btn" href={`https://github.com/${CONTACTS.github}`} target="_blank" rel="noopener"><Icon name="github" />GitHub</a>
+      </div>
+      <p class="note">macOS · Windows · {ru ? 'веб · расширения браузера' : 'web · browser extensions'}</p>
+      <p class="rec">
+        <b>{ru ? 'С чего начать:' : 'Start here:'}</b>
+        {ru
+          ? ' Morfus — радиальный конвертер: тащите файл, жмёте ⌥ — вокруг курсора кольцо с форматами. У каждого изделия своя страница с демо и FAQ. '
+          : ' Morfus — a radial converter: drag a file, press ⌥ and a ring of formats appears around the cursor. Every product has its own page with demos and FAQ. '}
+        <a href={path(lang, 'morfus')}>{ru ? 'Открыть Morfus' : 'Open Morfus'}</a>
+      </p>
+      <div class="share" data-share>
+        <span class="sh-l">{ru ? 'Поделиться' : 'Share'}</span>
+        <button type="button" data-copy={site}><Icon name="copy" /><span data-copy-label>{ru ? 'Копировать ссылку' : 'Copy link'}</span></button>
+        {share.map(([n, u]) => <a href={u} target="_blank" rel="noopener">{n}</a>)}
+      </div>
+    </div>
+    <ol class="icons">
+      {
+        apps.map((a) => (
+          <li data-tint style={`--tint-d:${a.tint.dark};--tint-l:${a.tint.light}`}>
+            <a href={path(lang, a.slug)} data-app-link={a.slug}>
+              <AppIcon slug={a.slug} name={a.name} size={96} decorative eager vt />
+              <span>{a.name}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<script>
+  // Копирование ссылки
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
+    b.addEventListener('click', async () => {
+      const label = b.querySelector('[data-copy-label]')!;
+      const was = label.textContent;
+      try {
+        await navigator.clipboard.writeText(b.dataset.copy!);
+        label.textContent = document.documentElement.lang === 'en' ? 'Copied' : 'Скопировано';
+      } catch {
+        label.textContent = b.dataset.copy!;
+      }
+      setTimeout(() => (label.textContent = was), 1600);
+    });
+  });
+  // Линейка едет вместе со страницей, указатель показывает текущий раздел
+  const ruler = document.querySelector<HTMLElement>('[data-ruler]');
+  const cur = document.querySelector<HTMLElement>('[data-spy-cur]');
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-spy]'));
+  const start = document.querySelector<HTMLElement>('[data-spy-sec]')?.dataset.spySec ?? '';
+  const secs = items.map((li) => document.querySelector<HTMLElement>(`section#${li.dataset.spy}`)).filter(Boolean) as HTMLElement[];
+  let raf = 0;
+  const tick = () => {
+    raf = 0;
+    if (ruler) ruler.style.transform = `translateY(${-scrollY}px)`;
+    let idx = -1;
+    secs.forEach((s, i) => { if (s.getBoundingClientRect().top < innerHeight * 0.45) idx = i; });
+    if (cur) cur.textContent = idx < 0 ? start : items[idx].textContent;
+    items.forEach((li, i) => (li.hidden = i <= idx));
+  };
+  addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
+  tick();
+</script>
+
+<style>
+  /* ── рамка ── */
+  .frame { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+  .frame > .container { height: 100%; }
+  .rails { height: 100%; border-left: 1px solid var(--line); border-right: 1px solid var(--line); }
+  .gutter {
+    position: absolute;
+    top: var(--menubar);
+    bottom: var(--dock-h);
+    right: 0;
+    width: calc((100vw - min(100vw, 1440px)) / 2 + var(--gutter));
+    overflow: hidden;
+  }
+  @media (max-width: 1499px) { .gutter { display: none; } }
+  .ruler {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 24000px;
+    background: repeating-linear-gradient(180deg, var(--line-strong) 0 1px, transparent 1px 60px) right / 12px 100% no-repeat;
+  }
+  .ruler span {
+    position: absolute;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    translate: 0 -50%;
+    color: var(--faint);
+    font: 500 9.5px/1 var(--font-mono);
+  }
+  .ruler span::after { content: ''; width: 24px; height: 1px; background: var(--faint); }
+  .spy {
+    position: absolute;
+    right: 56px;
+    bottom: 32px;
+    display: grid;
+    justify-items: end;
+    gap: 18px;
+  }
+  .spy-cur {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    color: var(--muted);
+    font: 700 22px/1 var(--font-sans);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .spy ul { margin: 0; padding: 0; list-style: none; text-align: right; }
+  .spy li { color: var(--faint); font: 700 15px/1.15 var(--font-sans); text-transform: uppercase; letter-spacing: 0.02em; }
+  .spy li[hidden] { display: none; }
+  .hero { position: relative; }
+  /* внутри рельс — поля, как у референса */
+  :global(main .sec-bar),
+  :global(main .sec-head.sec-head) { padding-inline: 24px; }
+  .grid { padding-inline: 24px !important; }
+
+  /* ── первый экран ── */
+  .hero { padding-top: calc(var(--menubar) + 24px); }
+  .hero .sec-bar b { color: var(--text-2, var(--text)); font-weight: 500; }
+  .hero .sec-bar em { font-style: normal; color: var(--faint); opacity: 0.6; }
+  .big-label {
+    position: absolute;
+    right: max(var(--gutter), env(safe-area-inset-right, 0px));
+    top: calc(var(--menubar) + 84px);
+    margin: 0;
+    color: var(--text);
+    font: 700 clamp(28px, 2.6vw, 44px)/1 var(--font-sans);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    translate: 8% 0;
+  }
+  .grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 48px;
+    align-items: center;
+    padding: 120px 24px 96px;
+    border-bottom: 1px solid var(--line);
+  }
+  /* крестики на стыке рельс и нижней линии */
+  .grid::before,
+  .grid::after {
+    content: '+';
+    position: absolute;
+    bottom: -9px;
+    color: var(--faint);
+    font: 300 18px/1 var(--font-mono);
+  }
+  .grid::before { left: 0; translate: -50% 0; }
+  .grid::after { right: 0; translate: 50% 0; }
+  .main { display: grid; gap: 0; max-width: 700px; }
+  .title {
+    margin: 0 0 32px;
+    font-family: var(--font-sans);
+    font-size: clamp(2.8rem, 1rem + 3.6vw, 5.2rem);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+  .lead { margin: 0 0 40px; font-size: clamp(17px, 0.6vw + 12px, 20px); line-height: 1.6; color: var(--muted); }
+  .cta { display: flex; flex-wrap: wrap; gap: 14px; }
+  .cta .btn { height: 52px; padding: 0 26px; }
+  .note {
+    margin: 14px 0 26px;
+    color: var(--faint);
+    font: 500 11px/1.4 var(--font-mono);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .rec { margin: 0 0 32px; color: var(--muted); font-size: 17px; line-height: 1.6; }
+  .rec b { color: var(--text); font-weight: 500; }
+  .rec a { color: var(--text); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .share { display: inline-flex; flex-wrap: wrap; justify-self: start; border: 1px solid var(--line-strong); }
+  .share > * {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 16px;
+    border: 0;
+    border-right: 1px solid var(--line-strong);
+    background: none;
+    color: var(--text);
+    font: 600 11px/1 var(--font-mono);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background var(--fast) var(--ease);
+  }
+  .share > *:last-child { border-right: 0; }
+  .share .sh-l { color: var(--faint); font-weight: 500; cursor: default; }
+  .share a:hover, .share button:hover { background: var(--hover); }
+  .share :global(svg) { width: 15px; height: 15px; }
+
+  .icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 34px 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .icons li { width: calc((100% - 3 * 20px) / 4); }
+  .icons a { display: grid; justify-items: center; gap: 10px; }
+  .icons :global(img) { width: 100%; max-width: 112px; height: auto; transition: translate var(--mid) var(--ease); }
+  .icons a:hover :global(img) { translate: 0 -5px; }
+  .icons span { color: var(--muted); font-size: 14.5px; text-align: center; transition: color var(--fast) var(--ease); }
+  .icons a:hover span { color: var(--text); }
+</style>
