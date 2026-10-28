@@ -70,7 +70,7 @@ const stats = [
           }
           <li class="hi-more">
             <a href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener">
-              <span class="hi-no">08</span>
+              <span class="hi-no">{String(apps.length + 1).padStart(2, '0')}</span>
               <span class="hi-plus" aria-hidden="true">+</span>
               <span class="hi-name">{ru ? 'Новые изделия' : 'More on the way'}</span>
               <span class="hi-plat">{ru ? 'Следите в Telegram' : 'Follow on Telegram'}</span>
@@ -165,12 +165,12 @@ const stats = [
   }
   @media (min-width: 1000px) {
     .hero-main {
-      grid-column: span 8;
+      grid-column: span 7;
       padding-right: 40px;
       border-right: 1px solid var(--line);
     }
     .hero-index {
-      grid-column: span 4;
+      grid-column: span 5;
       border-top: 0;
     }
   }
@@ -196,7 +196,7 @@ const stats = [
   }
   .hero-index ol {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     margin: 0;
     padding: 0;
     list-style: none;
@@ -211,7 +211,7 @@ const stats = [
     border-right: 1px solid var(--line);
   }
   @media (min-width: 1000px) {
-    .hero-index li:nth-child(2n) {
+    .hero-index li:nth-child(3n) {
       border-right: 0;
     }
   }

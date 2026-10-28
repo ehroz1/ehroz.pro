@@ -5,6 +5,7 @@ import MorfuScenes from './MorfuScenes.astro';
 import PachaqScenes from './PachaqScenes.astro';
 import SukhanScenes from './SukhanScenes.astro';
 import WebScenes from './WebScenes.astro';
+import NewScenes from './NewScenes.astro';
 import Scene from './Scene.astro';
 
 interface Props { id: string; lang: 'ru' | 'en'; label: string; fit?: boolean }
@@ -17,7 +18,8 @@ const group = id.split('-')[0];
 {group === 'pachaq' && <PachaqScenes id={id} lang={lang} label={label} />}
 {group === 'sukhan' && <SukhanScenes id={id} lang={lang} label={label} />}
 {['radius', 'bla', 'picta'].includes(group) && <WebScenes id={id} lang={lang} label={label} />}
-{!['morfus', 'morfu', 'pachaq', 'sukhan', 'radius', 'bla', 'picta'].includes(group) && (
+{['padbridge', 'moss', 'peecube', 'anycam'].includes(group) && <NewScenes id={id} lang={lang} label={label} />}
+{!['morfus', 'morfu', 'pachaq', 'sukhan', 'radius', 'bla', 'picta', 'padbridge', 'moss', 'peecube', 'anycam'].includes(group) && (
   <Scene id={id} label={label}><div style="position:absolute;inset:0;display:grid;place-items:center;color:#fff;font:600 28px/1.2 var(--font-display);text-align:center;padding:40px">{label}</div></Scene>
 )}
 </div>

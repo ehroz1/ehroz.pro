@@ -8,7 +8,7 @@
 
 export type Lang = 'ru' | 'en';
 export type L = { ru: string; en: string };
-export type Platform = 'macos' | 'windows' | 'web';
+export type Platform = 'macos' | 'windows' | 'web' | 'extension';
 export type Status = 'ready' | 'beta' | 'dev';
 
 export interface Feature {
@@ -19,7 +19,7 @@ export interface Feature {
 }
 
 export interface AppLink {
-  kind: 'download' | 'open' | 'github' | 'releases';
+  kind: 'download' | 'open' | 'github' | 'releases' | 'contact';
   href: string;
   label: L;
 }
@@ -439,6 +439,208 @@ export const apps: App[] = [
       { q: t('Есть горячие клавиши?', 'Any keyboard shortcuts?'), a: t('«/» — к поиску, Esc — очистить, D — скачать открытое фото, ← → — листать.', '“/” to search, Esc to clear, D to download the open photo, ← → to browse.') },
     ],
     requirements: [t('Любой современный браузер', 'Any modern browser'), t('Работает и на телефоне', 'Works on phones too')],
+  },
+  {
+    slug: 'padbridge',
+    name: 'PadBridge',
+    short: t('Геймпад в любой игре на Mac', 'A gamepad in any game on Mac'),
+    tagline: t('DualShock, DualSense, Xbox или Switch Pro — в любой игре, даже если она про геймпад не знает.', 'DualShock, DualSense, Xbox or Switch Pro — in any game, even one that knows nothing about gamepads.'),
+    about: t(
+      'PadBridge превращает нажатия геймпада в клавиатуру и мышь. Работает в играх с itch.io и GOG, в браузерных играх, в Windows-играх через CrossOver, Whisky и Wine, в эмуляторах и обычных программах. Сам узнаёт игру и предлагает готовую раскладку по жанру, а профили переключаются под активное приложение.',
+      'PadBridge turns gamepad input into keyboard and mouse. It works in itch.io and GOG games, browser games, Windows games via CrossOver, Whisky and Wine, emulators and regular apps. It recognises the game, offers a ready layout for its genre and switches profiles for the active app.',
+    ),
+    audience: t('Тем, кто играет на Mac и хочет держать в руках геймпад, а не клавиатуру.', 'Mac players who would rather hold a gamepad than a keyboard.'),
+    platforms: ['macos'],
+    status: 'beta',
+    version: '0.4.0',
+    accent: '#4FB4FF',
+    onAccent: '#0E0E0F',
+    glow: ['#2fc7ff', '#5b4bff', '#141a2e'],
+    tint: { dark: '#4FB4FF', light: '#1A5F9E' },
+    kind: t('Геймпад для Mac', 'Gamepad for Mac'),
+    links: [{ kind: 'contact', href: 'https://t.me/hhrrzz1', label: t('Узнать о выходе', 'Get notified') }],
+    features: [
+      {
+        scene: 'padbridge-map',
+        title: t('Кнопка → клавиша', 'Button → key'),
+        text: t('Каждую кнопку, стик и курок можно назначить на клавишу, сочетание или мышь. Стик работает как мышь, профили сами включаются под активное приложение.', 'Any button, stick or trigger can become a key, a shortcut or the mouse. A stick works as a mouse, and profiles switch for the active app.'),
+      },
+      {
+        scene: 'padbridge-newgame',
+        title: t('«Новая игра»', '“New game”'),
+        text: t('Открыли незнакомую игру — поверх неё появляется окно с раскладками по жанрам: платформер, шутер, стратегия, визуальная новелла, браузерная игра. Выбор прямо геймпадом.', 'Open an unfamiliar game and a window with genre layouts appears on top: platformer, shooter, strategy, visual novel, browser game. Pick one with the gamepad.'),
+      },
+      {
+        scene: 'padbridge-learn',
+        title: t('Научить по клавиатуре', 'Learn from your keyboard'),
+        text: t('PadBridge считает, какие клавиши вы жмёте в игре, и раскладывает их по геймпаду: движение — на левый стик, прицел — на правый, прыжок — на нижнюю кнопку.', 'PadBridge counts which keys you press in a game and lays them out on the gamepad: movement on the left stick, aim on the right, jump on the bottom button.'),
+      },
+      {
+        scene: 'padbridge-couch',
+        title: t('Режим «Диван»', 'Couch mode'),
+        text: t('Весь Мак с геймпада: курсор, клики, Mission Control, громкость, музыка и экранная клавиатура RU/EN. Плюс слои, радиальное меню и обмен профилями файлами .padprofile.', 'The whole Mac from a gamepad: cursor, clicks, Mission Control, volume, music and an RU/EN on-screen keyboard. Plus layers, a radial menu and .padprofile sharing.'),
+      },
+    ],
+    steps: [
+      t('Подключите геймпад кабелем или по Bluetooth — он сразу появится в окне.', 'Connect the gamepad by cable or Bluetooth — it shows up right away.'),
+      t('Разрешите PadBridge управлять клавиатурой и мышью в «Универсальном доступе».', 'Allow PadBridge to control the keyboard and mouse in Accessibility settings.'),
+      t('Запустите игру и выберите раскладку в окне «Новая игра» или научите свою.', 'Launch a game and pick a layout in the “New game” window, or teach your own.'),
+    ],
+    faq: [
+      { q: t('Какие геймпады подходят?', 'Which gamepads work?'), a: t('DualShock 4, DualSense, Xbox и Switch Pro — по USB и Bluetooth.', 'DualShock 4, DualSense, Xbox and Switch Pro — over USB and Bluetooth.') },
+      { q: t('Зачем ему «Универсальный доступ»?', 'Why does it need Accessibility?'), a: t('Чтобы нажимать клавиши и двигать мышь за вас. Режим «Научить» хранит только счётчики клавиш, а не то, что вы печатаете.', 'To press keys and move the mouse for you. Learn mode stores only key counters, not what you type.') },
+      { q: t('Работает с Windows-играми?', 'Does it work with Windows games?'), a: t('Да, PadBridge узнаёт .exe в Wine, CrossOver и Whisky и включает для них свой профиль.', 'Yes, PadBridge detects .exe files in Wine, CrossOver and Whisky and switches to their profile.') },
+    ],
+    requirements: [t('macOS 13 Ventura и новее', 'macOS 13 Ventura or later'), t('Геймпад DualShock 4, DualSense, Xbox или Switch Pro', 'A DualShock 4, DualSense, Xbox or Switch Pro controller')],
+  },
+  {
+    slug: 'moss-pocket',
+    name: 'Moss Pocket',
+    short: t('Папка «Загрузки» рядом с Dock', 'Your Downloads, right next to the Dock'),
+    tagline: t('Панель справа от Dock, которая выглядит как его продолжение.', 'A panel to the right of the Dock that looks like part of it.'),
+    about: t(
+      'Moss Pocket показывает содержимое папки — по умолчанию «Загрузки» — в панели справа от Dock. Файлы можно вытаскивать из неё в любые приложения, бросать в неё и отправлять в Корзину. Панель сама читает настройки Dock: размер значков, увеличение, автоскрытие — и подстраивается под них.',
+      'Moss Pocket shows a folder — Downloads by default — in a panel to the right of the Dock. Drag files out into any app, drop files in, or send them to the Trash. The panel reads your Dock settings — icon size, magnification, auto-hide — and follows them.',
+    ),
+    audience: t('Тем, кто постоянно что-то скачивает и не хочет каждый раз открывать Finder.', 'People who download all day and are tired of opening Finder.'),
+    platforms: ['macos'],
+    status: 'dev',
+    version: '0.1.0',
+    accent: '#9CCB7A',
+    onAccent: '#0E0E0F',
+    glow: ['#5e8f55', '#2b5534', '#1b2a1d'],
+    tint: { dark: '#9CCB7A', light: '#3F6B2A' },
+    kind: t('Полка у Dock', 'Shelf by the Dock'),
+    links: [{ kind: 'contact', href: 'https://t.me/hhrrzz1', label: t('Узнать о выходе', 'Get notified') }],
+    features: [
+      {
+        scene: 'moss-panel',
+        title: t('Как продолжение Dock', 'Part of the Dock'),
+        text: t('Панель стоит вплотную к Dock и повторяет его стекло и размер. Новые загрузки появляются в ней сразу.', 'The panel sits right next to the Dock and matches its glass and size. New downloads appear in it instantly.'),
+      },
+      {
+        scene: 'moss-drag',
+        title: t('Перетаскивание', 'Drag and drop'),
+        text: t('Тащите файлы из панели в Telegram, письмо или Figma, бросайте в неё вложения из Почты и картинки из браузера, ⌘⌫ — в Корзину.', 'Drag files from the panel into Telegram, mail or Figma, drop in mail attachments and images from the browser, ⌘⌫ to trash.'),
+      },
+      {
+        scene: 'moss-magnify',
+        title: t('Увеличение, как у Dock', 'Magnifies like the Dock'),
+        text: t('Если в Dock включено увеличение, значки панели увеличиваются так же, а панель отъезжает вслед за краем Dock без перекрытия.', 'If Dock magnification is on, the panel icons magnify the same way and the panel follows the Dock edge without overlapping.'),
+      },
+    ],
+    steps: [
+      t('Запустите Moss Pocket и разрешите доступ к папке «Загрузки».', 'Launch Moss Pocket and allow access to Downloads.'),
+      t('Панель встанет справа от Dock и подстроится под его размер.', 'The panel docks to the right of the Dock and matches its size.'),
+      t('Тащите файлы из панели куда угодно, Quick Look — по пробелу.', 'Drag files anywhere; Space opens Quick Look.'),
+    ],
+    faq: [
+      { q: t('Можно показывать другую папку?', 'Can it show another folder?'), a: t('Да: правый клик по панели → «Папка», в строке меню или в настройках. Папки можно закреплять.', 'Yes: right-click the panel → Folder, from the menu bar or in settings. Folders can be pinned.') },
+      { q: t('Нужен «Универсальный доступ»?', 'Does it need Accessibility?'), a: t('Не обязательно. С ним панель берёт точную рамку Dock, без него — считает её по составу Dock.', 'No. With it the panel reads the exact Dock frame; without it, it calculates the frame from the Dock’s contents.') },
+      { q: t('А если Dock сбоку?', 'What if the Dock is on the side?'), a: t('Пока панель умеет только Dock внизу; при боковом Dock она встаёт в правый нижний угол.', 'For now it supports a bottom Dock only; with a side Dock it sits in the bottom-right corner.') },
+    ],
+    requirements: [t('macOS 14 Sonoma и новее', 'macOS 14 Sonoma or later'), t('Apple Silicon и Intel', 'Apple Silicon and Intel')],
+  },
+  {
+    slug: 'peecube',
+    name: 'Peecube',
+    short: t('Ссылка — в окне поверх страницы', 'Links in a window over the page'),
+    tagline: t('Зажмите ⌥ и нажмите правой кнопкой по ссылке. Посмотрели — кликнули мимо, и вы там же, где были.', 'Hold ⌥ and right-click a link. Done reading — click outside and you’re back where you were.'),
+    about: t(
+      'Peecube открывает ссылки во всплывающем окне рядом с курсором — из браузера, Telegram и других приложений. В окне есть вкладки, блокировка рекламы и cookie-баннеров, перевод, анализ страницы, скачивание фото и видео. Для Firefox есть расширение с теми же функциями, в том числе на Android.',
+      'Peecube opens links in a pop-up window next to the cursor — from the browser, Telegram and other apps. The window has tabs, ad and cookie-banner blocking, translation, page analysis and photo and video downloads. A Firefox extension does the same, including on Android.',
+    ),
+    audience: t('Тем, кто читает ссылки из чатов и не хочет терять место на странице.', 'People who open links from chats and don’t want to lose their place.'),
+    platforms: ['macos', 'extension'],
+    status: 'beta',
+    version: '4.1',
+    accent: '#F0EAD6',
+    onAccent: '#0E0E0F',
+    glow: ['#2b2b30', '#5a5a64', '#16161a'],
+    tint: { dark: '#F0EAD6', light: '#3B3A35' },
+    kind: t('Окно для ссылок', 'Link pop-up'),
+    links: [{ kind: 'contact', href: 'https://t.me/hhrrzz1', label: t('Получить доступ', 'Get access') }],
+    features: [
+      {
+        scene: 'peecube-popup',
+        title: t('Ссылка — поверх страницы', 'A link over the page'),
+        text: t('⌥ + правый клик по ссылке в Telegram или браузере — окно открывается рядом с курсором. Esc или клик мимо — закрыть, ⌘↩ — в обычную вкладку, ⌘⇧P — закрепить.', '⌥ + right-click a link in Telegram or the browser — a window opens by the cursor. Esc or click outside to close, ⌘↩ to move it to a tab, ⌘⇧P to pin.'),
+      },
+      {
+        scene: 'peecube-analysis',
+        title: t('Шрифты, цвета, технологии', 'Fonts, colours, tech'),
+        text: t('«Анализ страницы» показывает шрифты, цвета (клик копирует), технологии сайта и вес картинок с советами, как облегчить.', 'Page analysis shows fonts, colours (click to copy), the site’s tech and image weights with tips to slim it down.'),
+      },
+      {
+        scene: 'peecube-media',
+        title: t('Все фото и видео страницы', 'Every photo and video on the page'),
+        text: t('Скачивание картинок и видео с понятными именами, HLS-видео, WebP и AVIF — сразу в PNG или JPG.', 'Download images and video with clear names, HLS streams, WebP and AVIF straight to PNG or JPG.'),
+      },
+      {
+        scene: 'peecube-features',
+        title: t('Десятки функций', 'Dozens of features'),
+        text: t('Блокировка рекламы и cookie-баннеров, автоотказ от cookie, перевод, QR-коды, скриншот всей страницы, слежение за сайтами. Включайте нужное.', 'Ad and cookie-banner blocking, automatic cookie refusal, translation, QR codes, full-page screenshots, site watching. Turn on what you need.'),
+      },
+    ],
+    steps: [
+      t('Установите Peecube и пройдите знакомство — он подскажет нужные разрешения.', 'Install Peecube and go through onboarding — it shows which permissions to grant.'),
+      t('Зажмите ⌥ и нажмите правой кнопкой по любой ссылке.', 'Hold ⌥ and right-click any link.'),
+      t('Посмотрите страницу и кликните мимо окна — вы там же, где были.', 'Read the page, click outside the window — you’re back where you were.'),
+    ],
+    faq: [
+      { q: t('Это платно?', 'Is it paid?'), a: t('Есть пробный период 14 дней со всеми функциями, дальше — ключ в меню Peecube → «Лицензия».', 'There’s a 14-day trial with every feature; after that, a key in Peecube → License.') },
+      { q: t('Работает со ссылками из Telegram?', 'Does it work with Telegram links?'), a: t('Да, это умеет приложение для Mac. Расширение для Firefox работает только внутри браузера.', 'Yes, the Mac app does. The Firefox extension works inside the browser only.') },
+      { q: t('Как обновляется?', 'How does it update?'), a: t('Сам: каждое обновление подписано автором, а Peecube проверяет, что его файлы никто не изменил.', 'By itself: every update is signed by the author, and Peecube checks that its files haven’t been changed.') },
+    ],
+    requirements: [t('macOS 13 Ventura и новее', 'macOS 13 Ventura or later'), t('Firefox на компьютере или Android — для расширения', 'Firefox on desktop or Android — for the extension')],
+  },
+  {
+    slug: 'any-camera',
+    name: 'ANY CAMERA',
+    short: t('Видео или фото вместо веб-камеры', 'A video or photo instead of your webcam'),
+    tagline: t('Сайты получают выбранное вами видео (по кругу) или фото вместо потока с веб-камеры.', 'Websites get the video (on a loop) or photo you choose instead of the webcam stream.'),
+    about: t(
+      'ANY CAMERA — виртуальная камера в виде расширения браузера. Пока подмена включена, сайт видит одну камеру «ANY CAMERA» и получает ваш файл; микрофон остаётся настоящим. Без файла сайт получает тестовую картинку — удобно проверять, как сервис работает с камерой. Одна кодовая база для Firefox на компьютере и на Android, есть версия для Chrome на Mac.',
+      'ANY CAMERA is a virtual camera as a browser extension. While it’s on, a site sees one camera called “ANY CAMERA” and gets your file; the microphone stays real. With no file, the site gets a test card — handy for checking how a service handles the camera. One codebase for Firefox on desktop and Android, plus a Chrome version for Mac.',
+    ),
+    audience: t('Разработчикам и тестировщикам сервисов с камерой, а ещё тем, кто ведёт демо и презентации.', 'Developers and testers of camera features, and anyone running demos and presentations.'),
+    platforms: ['extension'],
+    status: 'beta',
+    version: '1.0.0',
+    accent: '#FF7AA8',
+    onAccent: '#0E0E0F',
+    glow: ['#5b3cf0', '#8b2fe0', '#f0407f'],
+    tint: { dark: '#FF7AA8', light: '#B0245A' },
+    kind: t('Виртуальная камера', 'Virtual camera'),
+    links: [{ kind: 'contact', href: 'https://t.me/hhrrzz1', label: t('Получить расширение', 'Get the extension') }],
+    features: [
+      {
+        scene: 'anycam-call',
+        title: t('Любой файл — как камера', 'Any file as a camera'),
+        text: t('Сайт запрашивает камеру — и получает выбранное видео по кругу или фото. Разрешение и частота кадров берутся из запроса сайта, но не выше выбранных.', 'A site asks for the camera and gets your looping video or photo. Resolution and frame rate follow the site’s request, capped by your settings.'),
+      },
+      {
+        scene: 'anycam-popup',
+        title: t('Всё в одном окне', 'All in one pop-up'),
+        text: t('Переключатель «Подменять камеру», выбор файла, разрешение 480p / 720p / 1080p, 15 / 24 / 30 кадров и зеркало. На вкладке сайта видно, сработала ли подмена.', 'A “Replace camera” switch, file picker, 480p / 720p / 1080p, 15 / 24 / 30 fps and mirroring. The pop-up shows whether the current site is getting the replacement.'),
+      },
+      {
+        scene: 'anycam-test',
+        title: t('Тестовая картинка', 'A test card'),
+        text: t('Без файла сайт получает цветные полосы и время — сразу видно, что камера подменяется и поток идёт.', 'With no file the site gets colour bars and a clock — you see at once that the stream is replaced and running.'),
+      },
+    ],
+    steps: [
+      t('Установите расширение в Firefox или Chrome.', 'Install the extension in Firefox or Chrome.'),
+      t('Нажмите значок ANY CAMERA → «Выбрать видео или фото».', 'Click the ANY CAMERA icon → “Choose video or photo”.'),
+      t('Включите подмену и включите камеру на сайте.', 'Turn the replacement on and enable the camera on the site.'),
+    ],
+    faq: [
+      { q: t('Звук тоже подменяется?', 'Is audio replaced too?'), a: t('Нет. Видео играет без звука, а если сайт просит микрофон, используется настоящий.', 'No. Video plays muted, and if a site asks for a microphone, the real one is used.') },
+      { q: t('Какие браузеры?', 'Which browsers?'), a: t('Firefox 128+ на компьютере и Android, Chrome 111+ и другие Chromium-браузеры на Mac.', 'Firefox 128+ on desktop and Android, Chrome 111+ and other Chromium browsers on Mac.') },
+      { q: t('Какие файлы подходят?', 'Which files work?'), a: t('Видео H.264 MP4 или WebM и обычные фото. HEVC и HEIC лучше перекодировать.', 'H.264 MP4 or WebM video and regular photos. HEVC and HEIC are best converted first.') },
+    ],
+    requirements: [t('Firefox 128+ (компьютер или Android)', 'Firefox 128+ (desktop or Android)'), t('или Chrome 111+ на Mac', 'or Chrome 111+ on Mac')],
   },
 ];
 

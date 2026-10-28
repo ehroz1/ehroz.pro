@@ -98,6 +98,7 @@ export const PLATFORM: Record<Platform, L> = {
   macos: { ru: 'macOS', en: 'macOS' },
   windows: { ru: 'Windows', en: 'Windows' },
   web: { ru: 'Веб', en: 'Web' },
+  extension: { ru: 'Расширение', en: 'Extension' },
 };
 
 export const STATUS: Record<Status, L> = {

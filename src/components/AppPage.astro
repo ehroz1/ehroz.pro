@@ -18,7 +18,7 @@ const ru = lang === 'ru';
 const idx = apps.findIndex((a) => a.slug === app.slug);
 const no = String(idx + 1).padStart(2, '0');
 const others = apps.map((a, i) => ({ a, i })).filter(({ a }) => a.slug !== app.slug);
-const linkIcon = { download: 'download', open: 'external', github: 'github', releases: 'external' } as const;
+const linkIcon = { download: 'download', open: 'external', github: 'github', releases: 'external', contact: 'telegram' } as const;
 const title = `${app.name} — ${pick(lang, app.short)}`;
 const site = Astro.site!;
 const jsonld = {

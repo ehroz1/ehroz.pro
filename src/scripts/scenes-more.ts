@@ -428,3 +428,302 @@ register('picta-icons', async (c) => {
   show('colors');
   await c.wait(2800);
 });
+
+/* ── Новые изделия: PadBridge, Moss Pocket, Peecube, ANY CAMERA ── */
+// Координаты элемента внутри сцены (в единицах дизайна, без масштаба)
+const at = (root: HTMLElement, el: Element) => {
+  const inner = root.querySelector<HTMLElement>('.scene-inner')!;
+  const k = Number(root.style.getPropertyValue('--k')) || 1;
+  const a = el.getBoundingClientRect(), b = inner.getBoundingClientRect();
+  return { x: (a.left - b.left) / k, y: (a.top - b.top) / k, w: a.width / k, h: a.height / k };
+};
+const mid = (root: HTMLElement, el: Element) => {
+  const r = at(root, el);
+  return [r.x + r.w / 2, r.y + r.h / 2] as const;
+};
+
+register('padbridge-map', async (c) => {
+  const order = ['south', 'east', 'west', 'north', 'l1', 'r1', 'ls', 'rs'];
+  const pads = c.$$('.pd'), rows = c.$$('.pb-row');
+  for (const k of order) {
+    pads.forEach((p) => p.classList.toggle('hot', p.dataset.p === k));
+    rows.forEach((r) => r.classList.toggle('hot', r.dataset.r === k));
+    await c.wait(900);
+  }
+  pads.forEach((p) => p.classList.remove('hot'));
+  rows.forEach((r) => r.classList.remove('hot'));
+  await c.wait(600);
+});
+
+register('padbridge-newgame', async (c) => {
+  const ng = c.root.querySelector<HTMLElement>('.ng')!;
+  const opts = c.$$('.ng-opt'), det = c.$('det'), apply = c.$('apply'), toast = c.$('toast');
+  const texts = JSON.parse(det.dataset.texts!) as string[];
+  const sel = (i: number) => {
+    opts.forEach((o, j) => o.classList.toggle('sel', i === j));
+    det.textContent = texts[i];
+  };
+  ng.classList.remove('gone');
+  toast.classList.remove('on');
+  sel(0);
+  await c.wait(1400);
+  for (const i of [1, 2, 1, 0]) {
+    sel(i);
+    await c.wait(800);
+  }
+  await c.wait(500);
+  apply.classList.add('down');
+  await c.wait(160);
+  apply.classList.remove('down');
+  ng.classList.add('gone');
+  toast.classList.add('on');
+  await c.wait(2200);
+  toast.classList.remove('on');
+  await c.wait(400);
+});
+
+register('padbridge-learn', async (c) => {
+  const keys = c.$$('.lr-k'), maps = c.$$('.lr-m'), done = c.$('done');
+  keys.forEach((k) => (k.querySelector<HTMLElement>('i')!.style.width = '0'));
+  maps.forEach((m) => m.classList.remove('on', 'hot'));
+  done.classList.remove('on');
+  await c.wait(500);
+  for (let step = 1; step <= 5; step++) {
+    keys.forEach((k) => {
+      const i = k.querySelector<HTMLElement>('i')!;
+      i.style.width = `${(Number(i.dataset.v) * step) / 5}%`;
+    });
+    await c.wait(c.reduced ? 0 : 650);
+  }
+  for (const k of keys) {
+    const m = maps.find((x) => x.dataset.m === k.dataset.t)!;
+    m.classList.add('on', 'hot');
+    await c.wait(380);
+    m.classList.remove('hot');
+  }
+  done.classList.add('on');
+  await c.wait(2400);
+});
+
+register('padbridge-couch', async (c) => {
+  const word = JSON.parse(c.root.querySelector('script[data-word]')!.textContent!) as string;
+  const typed = c.$('typed'), keys = c.$$('.osk-k');
+  typed.textContent = '';
+  await c.wait(700);
+  for (const ch of word) {
+    const k = keys.find((x) => x.dataset.ch === ch);
+    k?.classList.add('hot');
+    await c.wait(420);
+    typed.textContent += ch;
+    k?.classList.remove('hot');
+    await c.wait(200);
+  }
+  await c.wait(2200);
+});
+
+register('moss-panel', async (c) => {
+  const files = c.$$('.mi.file[data-f]'), tip = c.$('tip'), nw = c.$('new');
+  const names = files.map((f) => f.getAttribute('title')!);
+  nw.classList.remove('in', 'done');
+  tip.classList.remove('on');
+  c.move(620, 300);
+  await c.wait(600);
+  for (const i of [0, 2, 4]) {
+    const [x, y] = mid(c.root, files[i]);
+    c.move(x, y);
+    await c.wait(900);
+    tip.textContent = names[i];
+    const t = at(c.root, files[i]);
+    tip.style.left = `${t.x + t.w / 2}px`;
+    tip.style.translate = '-50% 0';
+    tip.classList.add('on');
+    await c.wait(900);
+    tip.classList.remove('on');
+  }
+  // новая загрузка появляется в кармане сама
+  c.move(620, 300);
+  await c.wait(500);
+  nw.classList.add('in');
+  await c.wait(1600);
+  nw.classList.add('done');
+  await c.wait(1800);
+});
+
+register('moss-magnify', async (c) => {
+  const items = c.$$('.dockrow .mi');
+  const reset = () => items.forEach((m) => m.style.setProperty('--s', '1'));
+  const cur = c.$('cursor');
+  cur.style.transition = '';
+  reset();
+  c.move(160, 380);
+  await c.wait(700);
+  const base = items.map((m) => mid(c.root, m));
+  const y = base[0][1];
+  const from = base[0][0] - 20, to = base[base.length - 2][0] + 20;
+  const steps = c.reduced ? 1 : 40;
+  // во время проводки указатель идёт ровно, без задержки
+  c.move(from, y);
+  await c.wait(900);
+  cur.style.transition = 'translate 0.07s linear';
+  for (let s = 0; s <= steps; s++) {
+    const x = from + ((to - from) * s) / steps;
+    c.move(x, y);
+    items.forEach((m, i) => {
+      const d = Math.abs(base[i][0] - x);
+      m.style.setProperty('--s', String(1 + 0.6 * Math.max(0, 1 - d / 130)));
+    });
+    await c.wait(70);
+  }
+  cur.style.transition = '';
+  await c.wait(600);
+  reset();
+  c.move(560, 360);
+  await c.wait(1200);
+});
+
+register('moss-drag', async (c) => {
+  const cur = c.$('cursor'), ghost = c.$('ghost'), att = c.$('att');
+  const file = c.root.querySelector<HTMLElement>('.mi.file[data-f="0"]')!;
+  att.classList.remove('in');
+  ghost.classList.remove('on');
+  cur.classList.remove('grabbing');
+  file.style.opacity = '';
+  const f = at(c.root, file);
+  ghost.style.transition = 'none';
+  c.move(f.x, f.y, ghost);
+  void ghost.offsetWidth;
+  ghost.style.transition = '';
+  c.move(620, 300);
+  await c.wait(700);
+  c.move(f.x + f.w / 2, f.y + f.h / 2);
+  await c.wait(1000);
+  cur.classList.add('grabbing');
+  ghost.classList.add('on');
+  file.style.opacity = '0.35';
+  await c.wait(250);
+  c.move(450, 210);
+  c.move(430, 190, ghost);
+  await c.wait(1100);
+  ghost.classList.remove('on');
+  cur.classList.remove('grabbing');
+  file.style.opacity = '';
+  att.classList.add('in');
+  await c.wait(2400);
+});
+
+register('peecube-popup', async (c) => {
+  const link = c.$('link'), chip = c.$('chip'), pop = c.$('pop');
+  [link, chip, pop].forEach((e) => e.classList.remove('on', 'hot'));
+  c.move(620, 460);
+  await c.wait(600);
+  const [x, y] = mid(c.root, link);
+  c.move(x, y);
+  await c.wait(1000);
+  link.classList.add('hot');
+  chip.classList.add('on');
+  await c.wait(700);
+  pop.classList.add('on');
+  chip.classList.remove('on');
+  c.move(700, 470);
+  await c.wait(3200);
+  pop.classList.remove('on');
+  link.classList.remove('hot');
+  await c.wait(600);
+});
+
+register('peecube-analysis', async (c) => {
+  const sws = c.$$('.sws2 span[data-sw]'), copied = c.$('copied'), val = c.$('cval');
+  copied.classList.remove('on');
+  await c.wait(900);
+  for (const s of [0, 3, 1]) {
+    sws.forEach((e, i) => e.classList.toggle('hot', i === s));
+    await c.wait(500);
+    val.textContent = sws[s].querySelector('b')!.textContent;
+    copied.classList.add('on');
+    await c.wait(1300);
+    copied.classList.remove('on');
+    await c.wait(300);
+  }
+  sws.forEach((e) => e.classList.remove('hot'));
+  await c.wait(600);
+});
+
+register('peecube-media', async (c) => {
+  const rows = c.$$('.mrow');
+  rows.forEach((r) => r.classList.remove('hot', 'done'));
+  await c.wait(800);
+  for (const r of rows) {
+    r.classList.add('hot');
+    await c.wait(450);
+    r.classList.remove('hot');
+    r.classList.add('done');
+    await c.wait(150);
+  }
+  await c.wait(2000);
+});
+
+register('peecube-features', async (c) => {
+  const tgs = c.$$('.tg');
+  tgs.forEach((t) => t.classList.add('on'));
+  await c.wait(1200);
+  for (const i of [1, 4]) {
+    tgs[i].classList.remove('on');
+    await c.wait(900);
+    tgs[i].classList.add('on');
+    await c.wait(900);
+  }
+  await c.wait(800);
+});
+
+register('anycam-call', async (c) => {
+  const me = c.$('me'), name = c.$('camname'), sel = c.$('sel'), btn = c.$('cambtn');
+  me.classList.remove('on');
+  sel.classList.remove('hot');
+  btn.classList.remove('hot');
+  name.textContent = 'FaceTime HD';
+  await c.wait(1200);
+  sel.classList.add('hot');
+  await c.wait(700);
+  name.textContent = 'ANY CAMERA';
+  sel.classList.remove('hot');
+  await c.wait(600);
+  btn.classList.add('hot');
+  me.classList.add('on');
+  await c.wait(3600);
+});
+
+register('anycam-popup', async (c) => {
+  const sw = c.$('sw'), state = c.$('state'), ok = c.$('ok');
+  const res = c.$$('.seg2 span[data-res]');
+  const off = state.dataset.off ?? (state.dataset.off = state.textContent!);
+  const setRes = (i: number) => res.forEach((r, j) => r.classList.toggle('on', i === j));
+  sw.classList.remove('on');
+  ok.classList.remove('on');
+  state.textContent = off;
+  setRes(1);
+  await c.wait(1100);
+  sw.classList.add('on');
+  state.textContent = ru() ? 'Включено' : 'On';
+  await c.wait(500);
+  ok.classList.add('on');
+  await c.wait(1200);
+  setRes(2);
+  await c.wait(2600);
+});
+
+register('anycam-test', async (c) => {
+  const t = c.$('time');
+  const fmt = (ms: number) => {
+    const p = (n: number, l = 2) => String(Math.floor(n)).padStart(l, '0');
+    return `${p(ms / 3600000)}:${p((ms / 60000) % 60)}:${p((ms / 1000) % 60)}.${p(ms % 1000, 3)}`;
+  };
+  if (c.reduced) {
+    t.textContent = fmt(24000);
+    return;
+  }
+  const start = performance.now();
+  for (let i = 0; i < 300; i++) {
+    t.textContent = fmt(performance.now() - start);
+    await c.wait(33);
+  }
+});

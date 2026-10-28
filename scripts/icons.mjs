@@ -32,6 +32,11 @@ const sources = {
   picta: render(frame(`<image x="100" y="100" width="824" height="824" xlink:href="${await dataUri('picta-raw.png', 'image/png')}"/>`, '#0b0b0f')),
   'bla-bla': render(frame(`<image x="232" y="226" width="560" height="580" xlink:href="${await dataUri('bla-logo.svg', 'image/svg+xml')}"/>`, '#ffffff')),
   radius: await readFile(new URL('radius.png', SRC)).catch(() => null),
+  padbridge: await readFile(new URL('padbridge.png', SRC)),
+  'moss-pocket': await readFile(new URL('moss-pocket.png', SRC)),
+  peecube: await readFile(new URL('peecube.png', SRC)),
+  // ANY CAMERA: иконка расширения — квадрат во всю площадь, вписываем в рамку как остальные
+  'any-camera': render(frame(`<image x="100" y="100" width="824" height="824" xlink:href="${await dataUri('any-camera.svg', 'image/svg+xml')}"/>`, '#5b3cf0')),
 };
 
 if (!sources.radius) {

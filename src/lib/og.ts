@@ -57,7 +57,7 @@ export function appOg(app: App, lang: Lang): Buffer {
   const no = String(i + 1).padStart(2, '0');
   const lines = wrap(app.short[lang], 32);
   const status = { ready: { ru: 'Готово', en: 'Available' }, beta: { ru: 'Скоро релиз', en: 'Coming soon' }, dev: { ru: 'В разработке', en: 'In development' } }[app.status][lang];
-  const plats = app.platforms.map((p) => ({ macos: 'macOS', windows: 'Windows', web: lang === 'ru' ? 'Веб' : 'Web' })[p]).join(' · ');
+  const plats = app.platforms.map((p) => ({ macos: 'macOS', windows: 'Windows', web: lang === 'ru' ? 'Веб' : 'Web', extension: lang === 'ru' ? 'Расширение' : 'Extension' })[p]).join(' · ');
   const tint = app.tint.dark;
   const body = `
     <rect x="760" y="64" width="440" height="502" fill="${PLATE}"/>
