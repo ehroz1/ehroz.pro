@@ -4,17 +4,13 @@
 // слева заголовок «Одиннадцать изделий. Одна мастерская.», справа сетка иконок с подписями.
 import type { Lang } from '../../content/apps';
 import { apps } from '../../content/apps';
-import { tr, path, CONTACTS } from '../../i18n';
+import { tr, path, pick, PLATFORM, CONTACTS } from '../../i18n';
 import AppIcon from '../AppIcon.astro';
 import Icon from '../Icon.astro';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const ru = lang === 'ru';
-const words: Record<number, [string, string]> = {
-  10: ['Десять', 'Ten'], 11: ['Одиннадцать', 'Eleven'], 12: ['Двенадцать', 'Twelve'], 13: ['Тринадцать', 'Thirteen'],
-};
-const count = words[apps.length]?.[ru ? 0 : 1] ?? String(apps.length);
 const site = new URL(path(lang), Astro.site).href;
 const shareText = ru ? 'Ehroz — небольшие инструменты, которые экономят время' : 'Ehroz — small tools that save time';
 const share = [
@@ -48,17 +44,16 @@ const sections = ru
     <span>01 / <b>{ru ? 'Мастерская Ehroz' : 'Ehroz workshop'}</b></span>
     <span>{apps.length} {ru ? 'изделий' : 'products'} · macOS · Windows · {ru ? 'веб' : 'web'} · <em>{ru ? 'Астана' : 'Astana'}</em></span>
   </div>
-  <p class="big-label" aria-hidden="true">{ru ? 'Мастерская' : 'Workshop'}</p>
   <div class="grid">
     <div class="main">
       <h1 class="title" id="hero-title">
-        {count} {ru ? 'изделий.' : 'products.'}<br />
+        {ru ? 'Небольшие инструменты.' : 'Small tools.'}<br />
         {ru ? 'Одна ' : 'One '}<span class="hl">{ru ? 'мастерская' : 'workshop'}</span>.
       </h1>
       <p class="lead">
         {ru
-          ? 'Конвертеры, сжатие картинок, автосубтитры, расшифровка речи, удаление фона, поиск картинок, геймпад для игр, полка у Dock, окно для ссылок и виртуальная камера. Делаю их сам — для macOS, Windows и браузера — и пользуюсь каждый день.'
-          : 'Converters, image compression, auto captions, speech-to-text, background removal, image search, a gamepad mapper, a shelf by the Dock, a link pop-up and a virtual camera. I make them myself — for macOS, Windows and the browser — and use them every day.'}
+          ? 'Конвертеры, работа с картинками, видео и речью, утилиты для Mac и расширения для браузера. Делаю их сам, пользуюсь каждый день — и каталог постоянно пополняется.'
+          : 'Converters, tools for images, video and speech, Mac utilities and browser extensions. I make them myself, use them every day — and the catalogue keeps growing.'}
       </p>
       <div class="cta">
         <a class="btn btn-primary" href="#apps"><Icon name="arrow" />{tr(lang, 'hero.cta')}</a>
@@ -79,18 +74,30 @@ const sections = ru
         {share.map(([n, u]) => <a href={u} target="_blank" rel="noopener">{n}</a>)}
       </div>
     </div>
-    <ol class="icons">
-      {
-        apps.map((a) => (
-          <li data-tint style={`--tint-d:${a.tint.dark};--tint-l:${a.tint.light}`}>
-            <a href={path(lang, a.slug)} data-app-link={a.slug}>
-              <AppIcon slug={a.slug} name={a.name} size={96} decorative eager vt />
-              <span>{a.name}</span>
-            </a>
-          </li>
-        ))
-      }
-    </ol>
+    <nav class="hero-index" aria-label={tr(lang, 'apps.title')}>
+      <ol>
+        {
+          apps.map((a, i) => (
+            <li data-tint style={`--tint-d:${a.tint.dark};--tint-l:${a.tint.light}`}>
+              <a href={path(lang, a.slug)} data-app-link={a.slug}>
+                <AppIcon slug={a.slug} name={a.name} size={64} decorative eager vt />
+                <span class="hi-no">{String(i + 1).padStart(2, '0')}</span>
+                <span class="hi-name">{a.name}</span>
+                <span class="hi-plat">{a.platforms.map((p) => pick(lang, PLATFORM[p])).join(' · ')}</span>
+              </a>
+            </li>
+          ))
+        }
+        <li class="hi-more">
+          <a href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener">
+            <span class="hi-no">{String(apps.length + 1).padStart(2, '0')}</span>
+            <span class="hi-plus" aria-hidden="true">+</span>
+            <span class="hi-name">{ru ? 'Новые изделия' : 'More on the way'}</span>
+            <span class="hi-plat">{ru ? 'Следите в Telegram' : 'Follow on Telegram'}</span>
+          </a>
+        </li>
+      </ol>
+    </nav>
   </div>
 </section>
 
@@ -129,6 +136,16 @@ const sections = ru
 </script>
 
 <style>
+  /* цвета референса — только для тёмной темы */
+  :global(html:not([data-theme='light'])) {
+    --bg: #111315;
+    --cell: #16181b;
+    --plate: #1f2228;
+    --plate-2: #272a30;
+    --line: #2e3032;
+    --line-strong: #44474b;
+    --hover: #1a1d21;
+  }
   /* ── рамка ── */
   .frame { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
   .frame > .container { height: 100%; }
@@ -184,30 +201,17 @@ const sections = ru
   /* внутри рельс — поля, как у референса */
   :global(main .sec-bar),
   :global(main .sec-head.sec-head) { padding-inline: 24px; }
-  .grid { padding-inline: 24px !important; }
 
   /* ── первый экран ── */
   .hero { padding-top: calc(var(--menubar) + 24px); }
   .hero .sec-bar b { color: var(--text-2, var(--text)); font-weight: 500; }
   .hero .sec-bar em { font-style: normal; color: var(--faint); opacity: 0.6; }
-  .big-label {
-    position: absolute;
-    right: max(var(--gutter), env(safe-area-inset-right, 0px));
-    top: calc(var(--menubar) + 84px);
-    margin: 0;
-    color: var(--text);
-    font: 700 clamp(28px, 2.6vw, 44px)/1 var(--font-sans);
-    letter-spacing: 0.01em;
-    text-transform: uppercase;
-    translate: 8% 0;
-  }
   .grid {
     position: relative;
     display: grid;
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: 48px;
-    align-items: center;
-    padding: 120px 24px 96px;
+    align-items: start;
+    padding: 0 0 0 24px !important;
     border-bottom: 1px solid var(--line);
   }
   /* крестики на стыке рельс и нижней линии */
@@ -221,11 +225,11 @@ const sections = ru
   }
   .grid::before { left: 0; translate: -50% 0; }
   .grid::after { right: 0; translate: 50% 0; }
-  .main { display: grid; gap: 0; max-width: 700px; }
+  .main { display: grid; gap: 0; max-width: 780px; padding: 96px 48px 80px 0; }
   .title {
     margin: 0 0 32px;
     font-family: var(--font-sans);
-    font-size: clamp(2.8rem, 1rem + 3.6vw, 5.2rem);
+    font-size: clamp(2.4rem, 0.6rem + 2.7vw, 3.9rem);
     font-weight: 700;
     line-height: 0.98;
     letter-spacing: -0.045em;
@@ -265,19 +269,38 @@ const sections = ru
   .share a:hover, .share button:hover { background: var(--hover); }
   .share :global(svg) { width: 15px; height: 15px; }
 
-  .icons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 34px 20px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  .hero-index { align-self: stretch; border-left: 1px solid var(--line); }
+  .hero-index ol { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 1fr; height: 100%; margin: 0; padding: 0; list-style: none; }
+  .hero-index li:nth-last-child(-n + 3) { border-bottom: 0; }
+  .hero-index li { border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); }
+  .hero-index li:nth-child(3n) { border-right: 0; }
+  .hero-index a {
+    position: relative;
+    height: 100%;
+    align-content: center;
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    padding: 22px 8px 18px;
+    text-align: center;
+    transition: background var(--fast) var(--ease);
   }
-  .icons li { width: calc((100% - 3 * 20px) / 4); }
-  .icons a { display: grid; justify-items: center; gap: 10px; }
-  .icons :global(img) { width: 100%; max-width: 112px; height: auto; transition: translate var(--mid) var(--ease); }
-  .icons a:hover :global(img) { translate: 0 -5px; }
-  .icons span { color: var(--muted); font-size: 14.5px; text-align: center; transition: color var(--fast) var(--ease); }
-  .icons a:hover span { color: var(--text); }
+  .hero-index a:hover { background: var(--hover); }
+  .hero-index :global(img) { width: 64px; height: 64px; margin: -6px 0 2px; transition: transform var(--mid) var(--ease); }
+  .hero-index a:hover :global(img) { transform: translateY(-4px); }
+  .hi-no { position: absolute; top: 8px; left: 10px; color: var(--tint); font: 500 10px/1 var(--font-mono); }
+  .hi-plus {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin: 0 0 8px;
+    border: 1px dashed var(--line-strong);
+    color: var(--faint);
+    font: 300 28px/1 var(--font-mono);
+  }
+  .hi-more .hi-no { color: var(--faint); }
+  .hi-name { font-weight: 650; font-size: 14.5px; }
+  .hi-plat { color: var(--faint); font: 500 9.5px/1.4 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+
 </style>
