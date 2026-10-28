@@ -11,7 +11,7 @@ const fontFiles = ['medeo-sans-700', 'medeo-sans-400', 'medeo-mono-500'].map((f)
 const icon = (slug: string) => `data:image/png;base64,${readFileSync(new URL(`public/icons/${slug}-512.png`, root)).toString('base64')}`;
 const esc = (s: string) => s.replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[m]!);
 
-const BG = '#0e0e0f';
+const BG = '#111315';
 const PLATE = '#1b1b1d';
 const LINE = '#2a2a2d';
 const TEXT = '#f2f0eb';

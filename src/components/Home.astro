@@ -8,17 +8,11 @@ import AppIcon from './AppIcon.astro';
 import Avatar from './Avatar.astro';
 import Icon from './Icon.astro';
 import Footer from './Footer.astro';
-import HeroSheet from './heroes/HeroSheet.astro';
-import HeroSpread from './heroes/HeroSpread.astro';
-import HeroRuler from './heroes/HeroRuler.astro';
-import HeroCraft from './heroes/HeroCraft.astro';
 
 interface Props {
   lang: Lang;
-  /** Варианты первого экрана на согласование (страницы /lab/hero-*). */
-  hero?: 'sheet' | 'spread' | 'ruler' | 'craft';
 }
-const { lang, hero } = Astro.props;
+const { lang } = Astro.props;
 const ru = lang === 'ru';
 const platforms = new Set(apps.flatMap((a) => a.platforms)).size;
 const ready = apps.filter((a) => a.status === 'ready').length;
@@ -40,30 +34,29 @@ const stats = [
 ];
 ---
 
-<Layout lang={lang} title={tr(lang, 'meta.title')} description={tr(lang, 'meta.description')} jsonld={jsonld} noindex={!!hero}>
-  {hero === 'sheet' && <HeroSheet lang={lang} />}
-  {hero === 'spread' && <HeroSpread lang={lang} />}
-  {hero === 'ruler' && <HeroRuler lang={lang} />}
-  {hero === 'craft' && <HeroCraft lang={lang} />}
-  {!hero && (
-  <section class="hero container" aria-labelledby="hero-title">
+<Layout lang={lang} title={tr(lang, 'meta.title')} description={tr(lang, 'meta.description')} jsonld={jsonld}>
+  <section class="hero container" aria-labelledby="hero-title" data-spy={ru ? 'Мастерская' : 'Workshop'}>
     <div class="sec-bar">
-      <span>01 / {ru ? 'Мастерская Ehroz' : 'Ehroz workshop'}</span>
-      <span>{tr(lang, 'hero.eyebrow')}</span>
+      <span>01 / <b>{ru ? 'Мастерская Ehroz' : 'Ehroz workshop'}</b></span>
+      <span>{apps.length} {ru ? 'изделий' : 'products'} · macOS · Windows · {ru ? 'веб' : 'web'} · <em>{CONTACTS.city[lang]}</em></span>
     </div>
-    <div class="hero-grid">
+    <div class="hero-grid bleed">
       <div class="hero-main">
-        <h1 class="display hero-title" id="hero-title">
-          <span class="t1">{tr(lang, 'hero.title1')}</span>
-          <span class="t2">{tr(lang, 'hero.title2')} <span class="hl">{tr(lang, 'hero.title3')}</span></span>
+        <h1 class="hero-title" id="hero-title">
+          {ru ? 'Небольшие инструменты.' : 'Small tools.'}<br />
+          {ru ? 'Одна ' : 'One '}<span class="hl">{ru ? 'мастерская' : 'workshop'}</span>.
         </h1>
-        <p class="lead hero-lead">{tr(lang, 'hero.lead')}</p>
+        <p class="hero-lead">
+          {ru
+            ? 'Конвертеры, работа с картинками, видео и речью, утилиты для Mac и расширения для браузера. Делаю их сам, пользуюсь каждый день — и каталог постоянно пополняется.'
+            : 'Converters, tools for images, video and speech, Mac utilities and browser extensions. I make them myself, use them every day — and the catalogue keeps growing.'}
+        </p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href="#apps">{tr(lang, 'hero.cta')} <Icon name="arrow" /></a>
-          <a class="btn" href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener"><Icon name="telegram" />{tr(lang, 'hero.contact')}</a>
-          <button class="btn" type="button" data-open="spotlight"><Icon name="search" />⌘K {tr(lang, 'hero.spotlight')}</button>
+          <a class="btn btn-primary" href="#apps"><Icon name="arrow" />{tr(lang, 'hero.cta')}</a>
+          <a class="btn" href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener"><Icon name="telegram" />{ru ? 'Написать в Telegram' : 'Message on Telegram'}</a>
+          <a class="btn" href={`https://github.com/${CONTACTS.github}`} target="_blank" rel="noopener"><Icon name="github" />GitHub</a>
         </div>
-        <p class="hero-note">macOS · Windows · {ru ? 'Веб' : 'Web'} — {apps.length} {ru ? 'изделий' : 'products'} · {ru ? 'без cookies и трекеров' : 'no cookies, no trackers'}</p>
+        <p class="hero-note">macOS · Windows · {ru ? 'веб · расширения браузера' : 'web · browser extensions'}</p>
       </div>
       <nav class="hero-index" aria-label={tr(lang, 'apps.title')}>
         <ol>
@@ -91,9 +84,8 @@ const stats = [
       </nav>
     </div>
   </section>
-  )}
 
-  <section class="apps container" id="apps" aria-labelledby="apps-title">
+  <section class="apps container" id="apps" aria-labelledby="apps-title" data-spy={ru ? 'Изделия' : 'Products'}>
     <div class="sec-bar">
       <span>02 / {tr(lang, 'apps.title')}</span>
       <span>{ru ? 'Выберите изделие' : 'Pick a product'}</span>
@@ -102,12 +94,12 @@ const stats = [
       <h2 class="h2" id="apps-title">{tr(lang, 'apps.title')}</h2>
       <p class="lead">{tr(lang, 'apps.lead')}</p>
     </header>
-    <div class="cards">
+    <div class="cards bleed">
       {apps.map((a, i) => <AppWindow app={a} lang={lang} featured={i === 0} index={i} />)}
     </div>
   </section>
 
-  <section class="about container" id="about" aria-labelledby="about-title">
+  <section class="about container" id="about" aria-labelledby="about-title" data-spy={ru ? 'Об Ehroz' : 'About'}>
     <div class="sec-bar">
       <span>03 / {tr(lang, 'about.title')}</span>
       <span>{CONTACTS.city[lang]} · UTC+5</span>
@@ -131,7 +123,7 @@ const stats = [
     </dl>
   </section>
 
-  <section class="contact container" id="contact" aria-labelledby="contact-title">
+  <section class="contact container" id="contact" aria-labelledby="contact-title" data-spy={ru ? 'Контакты' : 'Contact'}>
     <div class="sec-bar">
       <span>04 / {tr(lang, 'cc.title')}</span>
       <span>@{CONTACTS.telegram}</span>
@@ -156,98 +148,93 @@ const stats = [
   .hero {
     padding-top: calc(var(--menubar) + 24px);
   }
+  .hero .sec-bar b { color: var(--text-2, var(--text)); font-weight: 500; }
+  .hero .sec-bar em { font-style: normal; }
   .hero-grid {
     display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+    grid-template-columns: minmax(0, 1fr);
   }
+  /* следующий раздел начинается сразу под первым экраном — общая линия */
+  .hero + section { margin-top: 0; }
   .hero-main {
-    grid-column: span 12;
     display: grid;
-    align-content: start;
-    gap: 24px;
-    padding: clamp(28px, 5vw, 64px) 0 clamp(28px, 4vw, 48px);
-    min-width: 0;
-  }
-  .hero-index {
-    grid-column: span 12;
-    border-top: 1px solid var(--line);
+    align-content: center;
+    padding: clamp(36px, 7vw, 96px) var(--rail-pad) clamp(32px, 5vw, 80px);
     min-width: 0;
   }
   @media (min-width: 1000px) {
-    .hero-main {
-      grid-column: span 7;
-      padding-right: 40px;
-      border-right: 1px solid var(--line);
-    }
-    .hero-index {
-      grid-column: span 5;
-      border-top: 0;
-    }
+    .hero-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); }
+    .hero-main { padding-right: 48px; }
   }
   .hero-title {
-    display: grid;
-    gap: 0.06em;
-    font-size: clamp(2.3rem, 0.9rem + 3.9vw, 4.6rem);
+    margin: 0 0 28px;
+    font-family: var(--font-sans);
+    font-size: clamp(2.1rem, 0.4rem + 2.6vw, 3.9rem);
+    font-weight: 700;
+    line-height: 0.98;
+    letter-spacing: -0.045em;
   }
-  .t1 {
-    font-size: 1.9em;
-    letter-spacing: -0.055em;
+  .hero-lead {
+    max-width: 640px;
+    margin: 0 0 36px;
+    color: var(--muted);
+    font-size: clamp(16px, 0.5vw + 12px, 19px);
+    line-height: 1.6;
   }
-  .hero-cta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 8px; }
+  @media (min-width: 1600px) {
+    .hero-cta .btn { height: 52px; padding: 0 26px; }
   }
   .hero-note {
+    margin: 14px 0 0;
     color: var(--faint);
-    font: 500 10.5px/1.5 var(--font-mono);
-    letter-spacing: 0.06em;
+    font: 500 11px/1.4 var(--font-mono);
+    letter-spacing: 0.12em;
     text-transform: uppercase;
+  }
+  .hero-index { border-top: 1px solid var(--line); }
+  @media (min-width: 1000px) {
+    .hero-index { border-top: 0; border-left: 1px solid var(--line); }
   }
   .hero-index ol {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    height: 100%;
     margin: 0;
     padding: 0;
     list-style: none;
   }
   @media (min-width: 560px) and (max-width: 999px) {
-    .hero-index ol {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
+    .hero-index ol { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .hero-index li:nth-child(4n) { border-right: 0; }
   }
-  .hero-index li {
-    border-bottom: 1px solid var(--line);
-    border-right: 1px solid var(--line);
+  .hero-index li { border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); }
+  @media (max-width: 559px), (min-width: 1000px) {
+    .hero-index li:nth-child(3n) { border-right: 0; }
   }
   @media (min-width: 1000px) {
-    .hero-index li:nth-child(3n) {
-      border-right: 0;
-    }
+    .hero-index li:nth-last-child(-n + 3) { border-bottom: 0; }
   }
   .hero-index a {
     position: relative;
     display: grid;
+    align-content: center;
     justify-items: center;
     gap: 2px;
-    padding: 16px 8px 14px;
+    height: 100%;
+    padding: 22px 8px 18px;
     text-align: center;
     transition: background var(--fast) var(--ease);
   }
-  .hero-index a:hover {
-    background: var(--hover);
-  }
+  .hero-index a:hover { background: var(--hover); }
   .hero-index :global(img) {
     width: 64px;
     height: 64px;
     margin: -6px 0 2px;
     transition: transform var(--mid) var(--ease);
   }
-  .hero-index a:hover :global(img) {
-    transform: translateY(-4px);
-  }
+  .hero-index a:hover :global(img) { transform: translateY(-4px); }
   .hi-no {
     position: absolute;
     top: 8px;
@@ -265,13 +252,8 @@ const stats = [
     color: var(--faint);
     font: 300 28px/1 var(--font-mono);
   }
-  .hi-more .hi-no {
-    color: var(--faint);
-  }
-  .hi-name {
-    font-weight: 650;
-    font-size: 14.5px;
-  }
+  .hi-more .hi-no { color: var(--faint); }
+  .hi-name { font-weight: 650; font-size: 14.5px; }
   .hi-plat {
     color: var(--faint);
     font: 500 9.5px/1.4 var(--font-mono);

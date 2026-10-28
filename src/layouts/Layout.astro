@@ -5,6 +5,7 @@ import { tr, path, asset } from '../i18n';
 import MenuBar from '../components/MenuBar.astro';
 import Dock from '../components/Dock.astro';
 import Spotlight from '../components/Spotlight.astro';
+import PageFrame from '../components/PageFrame.astro';
 
 interface Props {
   lang: Lang;
@@ -45,7 +46,7 @@ const vars = [
     <link rel="alternate" hreflang="en" href={alt('en')} />
     <link rel="alternate" hreflang="x-default" href={alt('ru')} />
     <meta name="color-scheme" content="dark light" />
-    <meta name="theme-color" content="#0e0e0f" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#111315" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#efebe3" media="(prefers-color-scheme: light)" />
     <link rel="preload" href={asset('fonts/MedeoSansVariable.woff2')} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
@@ -83,6 +84,7 @@ const vars = [
     <main id="main">
       <slot />
     </main>
+    <PageFrame />
     <Dock lang={lang} current={slug} />
     <Spotlight lang={lang} />
     <script>

@@ -1,0 +1,330 @@
+---
+// Рамка-чертёж страницы: рельсы по краям контента и линейка прокрутки в правом поле.
+// Линейка 0–100 — это прогресс прокрутки; синяя метка — где вы сейчас.
+// Разделы берутся из секций с атрибутом data-spy="Название":
+//   сверху — текущий (крупно) и предыдущий, на линейке — ближайшие следующие (вертикально),
+//   снизу — остальные. При наведении линейка сжимается в обзор всей страницы, клик — переход.
+---
+
+<div class="frame" aria-hidden="true">
+  <div class="container"><div class="rails"></div></div>
+</div>
+
+<aside class="spy" aria-hidden="true" data-spy-panel>
+  <div class="track" data-track>
+    <div class="ticks"></div>
+    {[...Array(21)].map((_, i) => <span class="num" style={`--v:${i * 5}`}>{i * 5}</span>)}
+    <div class="vp" data-vp></div>
+  </div>
+  <div class="marker"><i></i><span data-pct>000%</span></div>
+  <div class="top">
+    <span class="prev" data-prev></span>
+    <span class="cur" data-cur></span>
+  </div>
+  <ul class="next" data-next></ul>
+</aside>
+
+<script>
+  const panel = document.querySelector<HTMLElement>('[data-spy-panel]');
+  const secs = Array.from(document.querySelectorAll<HTMLElement>('[data-spy]'));
+  if (panel && secs.length) {
+    const track = panel.querySelector<HTMLElement>('[data-track]')!;
+    const pctEl = panel.querySelector<HTMLElement>('[data-pct]')!;
+    const prevEl = panel.querySelector<HTMLElement>('[data-prev]')!;
+    const curEl = panel.querySelector<HTMLElement>('[data-cur]')!;
+    const nextEl = panel.querySelector<HTMLElement>('[data-next]')!;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const PAD = 28;
+    const UNIT = 48;
+    const names = secs.map((s) => s.dataset.spy!);
+    // метки разделов на линейке и список «дальше»
+    const marks = names.map((n) => {
+      const line = document.createElement('i');
+      line.className = 'bl';
+      const label = document.createElement('span');
+      label.className = 'sl';
+      label.textContent = n;
+      track.append(line, label);
+      return { line, label };
+    });
+    const items = names.map((n) => {
+      const li = document.createElement('li');
+      li.textContent = n;
+      nextEl.append(li);
+      return li;
+    });
+
+    let bounds: number[] = [];
+    let max = 1;
+    let ov = false;
+    let cur = -2;
+    const measure = () => {
+      max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+      bounds = secs.map((s, i) => {
+        if (i === 0) return 0;
+        const top = s.getBoundingClientRect().top + scrollY - innerHeight * 0.4;
+        return Math.min(100, Math.max(0, (top / max) * 100));
+      });
+      marks.forEach((m, i) => {
+        m.line.style.setProperty('--v', String(bounds[i]));
+        m.label.style.setProperty('--v', String(bounds[i]));
+      });
+      update();
+    };
+    const update = () => {
+      const p = Math.min(100, Math.max(0, (scrollY / max) * 100));
+      const H = panel.clientHeight - PAD * 2;
+      const u = ov ? H / 100 : UNIT;
+      // в обычном режиме метка ходит между подписями сверху и снизу
+      const A = ov ? 0 : 84;
+      const B = ov ? 0 : 70;
+      const my = A + (p / 100) * (H - A - B);
+      const ty = ov ? 0 : my - p * u;
+      panel.style.setProperty('--u', `${u}px`);
+      panel.style.setProperty('--ty', `${ty}px`);
+      panel.style.setProperty('--my', `${my}px`);
+      const vh = Math.min(100, (innerHeight / (max + innerHeight)) * 100);
+      panel.style.setProperty('--vt', String((p / 100) * (100 - vh)));
+      panel.style.setProperty('--vh', String(vh));
+      pctEl.textContent = `${String(Math.round(p)).padStart(3, '0')}%`;
+      let idx = 0;
+      bounds.forEach((b, i) => { if (b <= p + 0.05) idx = i; });
+      if (idx !== cur) {
+        cur = idx;
+        prevEl.textContent = idx > 0 ? names[idx - 1] : '';
+        curEl.textContent = names[idx];
+        if (!reduced) {
+          curEl.classList.remove('swap');
+          void curEl.offsetWidth;
+          curEl.classList.add('swap');
+        }
+      }
+      marks.forEach((m, i) => {
+        const y = bounds[i] * u + ty;
+        const onRuler = i > idx && y > 90 && y < H - 60;
+        m.label.classList.toggle('past', i <= idx);
+        m.label.classList.toggle('far', !onRuler);
+        m.line.classList.toggle('past', i <= idx);
+        items[i].hidden = !(i > idx && !onRuler && y >= H - 60);
+      });
+    };
+
+    let raf = 0;
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); }, { passive: true });
+    // пересчёт границ — не чаще раза в 200 мс (высота страницы меняется, пока грузятся картинки)
+    let mt = 0;
+    const later = () => { clearTimeout(mt); mt = window.setTimeout(measure, 200); };
+    addEventListener('resize', later);
+    addEventListener('load', later);
+    let lastH = 0;
+    new ResizeObserver(() => {
+      const h = document.body.scrollHeight;
+      if (h !== lastH) { lastH = h; later(); }
+    }).observe(document.body);
+    requestAnimationFrame(measure);
+
+    // обзор всей страницы при наведении
+    const setOv = (v: boolean) => {
+      ov = v;
+      panel.classList.toggle('ov', v);
+      if (!reduced) {
+        panel.classList.add('anim');
+        setTimeout(() => panel.classList.remove('anim'), 260);
+      }
+      update();
+    };
+    panel.addEventListener('mouseenter', () => setOv(true));
+    panel.addEventListener('mouseleave', () => setOv(false));
+    panel.addEventListener('click', (e) => {
+      const r = track.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+      scrollTo({ top: p * max, behavior: reduced ? 'auto' : 'smooth' });
+    });
+  }
+</script>
+
+<style>
+  @property --u {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 48px;
+  }
+  @property --ty {
+    syntax: '<length>';
+    inherits: true;
+    initial-value: 0px;
+  }
+  /* рельсы */
+  .frame {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  @media (min-width: 900px) {
+    .frame { display: block; }
+  }
+  .frame > .container { height: 100%; }
+  .rails {
+    height: 100%;
+    margin-inline: calc(-1 * var(--rail-pad));
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+  }
+
+  /* линейка */
+  .spy {
+    --pad: 28px;
+    display: none;
+    position: fixed;
+    top: var(--menubar);
+    bottom: var(--dock-h);
+    right: 0;
+    z-index: 5;
+    width: var(--panel);
+    overflow: hidden;
+    cursor: default;
+    user-select: none;
+  }
+  @media (min-width: 1400px) {
+    .spy { display: block; }
+  }
+  .spy.ov { cursor: pointer; }
+  .spy.anim { transition: --u var(--slow) var(--ease), --ty var(--slow) var(--ease); }
+  .track {
+    position: absolute;
+    top: var(--pad);
+    left: 0;
+    right: 0;
+    height: calc(100 * var(--u) + 1px);
+    transform: translateY(var(--ty));
+  }
+  .ticks {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 30px;
+    background:
+      repeating-linear-gradient(to bottom, var(--muted) 0 1px, transparent 1px calc(5 * var(--u))) right top / 28px 100% no-repeat,
+      repeating-linear-gradient(to bottom, var(--line-strong) 0 1px, transparent 1px var(--u)) right top / 14px 100% no-repeat;
+  }
+  .num {
+    position: absolute;
+    right: 36px;
+    top: calc(var(--v) * var(--u));
+    translate: 0 -50%;
+    color: var(--faint);
+    font: 500 10px/1 var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  /* границы разделов */
+  .track :global(.bl) {
+    position: absolute;
+    left: 0;
+    right: 30px;
+    top: calc(var(--v) * var(--u));
+    height: 1px;
+    background: var(--line);
+    transition: opacity var(--fast) var(--ease);
+  }
+  .track :global(.bl.past) { opacity: 0; }
+  .track :global(.sl) {
+    position: absolute;
+    right: 62px;
+    top: calc(var(--v) * var(--u) + 12px);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    color: var(--muted);
+    font: 700 19px/1 var(--font-sans);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: opacity var(--fast) var(--ease);
+  }
+  .track :global(.sl.past),
+  .track :global(.sl.far) { opacity: 0; }
+  .vp {
+    position: absolute;
+    left: 56px;
+    right: 0;
+    top: calc(var(--vt) * var(--u));
+    height: calc(var(--vh) * var(--u));
+    border-block: 1px solid var(--line-strong);
+    background: color-mix(in srgb, var(--text) 7%, transparent);
+    opacity: 0;
+    transition: opacity var(--fast) var(--ease);
+  }
+  /* обзор */
+  .spy.ov .vp { opacity: 1; }
+  .spy.ov .track :global(.sl) {
+    writing-mode: horizontal-tb;
+    transform: none;
+    right: 66px;
+    top: calc(var(--v) * var(--u));
+    translate: 0 -50%;
+    font-size: 13px;
+    opacity: 1;
+    color: var(--text);
+    background: var(--bg);
+    padding: 2px 0 2px 6px;
+  }
+  .spy.ov .track :global(.bl) { opacity: 1; left: 30%; }
+  .spy.ov .top,
+  .spy.ov .next { opacity: 0; }
+  .spy.ov .num { right: 34px; }
+  /* метка «вы здесь» */
+  .marker {
+    position: absolute;
+    right: 0;
+    top: calc(var(--pad) + var(--my));
+    width: 112px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .marker span {
+    position: absolute;
+    right: 0;
+    top: 4px;
+    padding: 2px 4px;
+    background: var(--bg);
+    color: var(--accent);
+    font: 500 10.5px/1 var(--font-mono);
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+  }
+  /* текущий раздел и следующие */
+  .top,
+  .next {
+    position: absolute;
+    left: 4px;
+    right: 66px;
+    display: grid;
+    justify-items: end;
+    text-align: right;
+    text-transform: uppercase;
+    transition: opacity var(--fast) var(--ease);
+  }
+  .top {
+    top: 18px;
+    gap: 6px;
+    padding-bottom: 14px;
+    background: linear-gradient(var(--bg) 75%, transparent);
+  }
+  .prev { color: var(--faint); font: 700 12px/1.1 var(--font-sans); letter-spacing: 0.03em; }
+  .cur { color: var(--text); font: 700 17px/1.08 var(--font-sans); letter-spacing: 0.01em; }
+  .cur:global(.swap) { animation: swap var(--slow) var(--ease); }
+  @keyframes swap {
+    from { opacity: 0; transform: translateY(10px); }
+  }
+  .next {
+    bottom: 18px;
+    margin: 0;
+    padding: 14px 0 0;
+    list-style: none;
+    background: linear-gradient(transparent, var(--bg) 25%);
+  }
+  .next :global(li) { color: var(--faint); font: 700 14px/1.2 var(--font-sans); letter-spacing: 0.02em; }
+  .next :global(li[hidden]) { display: none; }
+</style>

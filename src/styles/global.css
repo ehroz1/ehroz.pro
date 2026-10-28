@@ -35,12 +35,12 @@
 /* Тёмная — основная */
 :root {
   color-scheme: dark;
-  --bg: #0e0e0f;
-  --cell: #141415;
-  --plate: #1b1b1d;
-  --plate-2: #232326;
-  --line: #2a2a2d;
-  --line-strong: #3d3d41;
+  --bg: #111315;
+  --cell: #16181b;
+  --plate: #1f2228;
+  --plate-2: #272a30;
+  --line: #2e3032;
+  --line-strong: #44474b;
   --text: #f2f0eb;
   --text-2: #c9c6bf;
   --muted: #a3a09a;
@@ -51,7 +51,7 @@
   --on-btn: #0e0e0f;
   --ok: #3ccb8a;
   --warn: #f2cc4e;
-  --hover: #1d1d20;
+  --hover: #1a1d21;
   --menubar: 40px;
   --dock-h: 76px;
   --fast: 150ms;
@@ -59,10 +59,19 @@
   --slow: 250ms;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --gutter: 16px;
+  /* рамка-чертёж: поле между рельсой и текстом, ширина правой линейки */
+  --rail-pad: 0px;
+  --panel: 0px;
 }
 @media (min-width: 900px) {
   :root {
     --gutter: 40px;
+    --rail-pad: 24px;
+  }
+}
+@media (min-width: 1400px) {
+  :root {
+    --panel: 200px;
   }
 }
 
@@ -180,6 +189,18 @@ img {
   padding-left: max(var(--gutter), env(safe-area-inset-left, 0px));
   padding-right: max(var(--gutter), env(safe-area-inset-right, 0px));
 }
+/* С линейкой справа контент сужается симметрично, поля даёт сама панель */
+@media (min-width: 1400px) {
+  main .container,
+  .frame > .container {
+    max-width: min(1440px, calc(100vw - 2 * var(--panel)));
+    padding-inline: var(--rail-pad);
+  }
+}
+/* Блок от рельсы до рельсы (сетки карточек, линии разделов) */
+.bleed {
+  margin-inline: calc(-1 * var(--rail-pad));
+}
 .grid-12 {
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
@@ -187,12 +208,28 @@ img {
 
 /* Полоса-заголовок раздела: «02 / ПРИЛОЖЕНИЯ ……… ВЫБЕРИТЕ ИЗДЕЛИЕ» */
 .sec-bar {
+  position: relative;
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  padding: 12px 0;
+  margin-inline: calc(-1 * var(--rail-pad));
+  padding: 12px var(--rail-pad);
   border-top: 1px solid var(--line);
   color: var(--faint);
+}
+/* крестики на стыке линии раздела и рельс */
+@media (min-width: 900px) {
+  .sec-bar::before,
+  .sec-bar::after {
+    content: '+';
+    position: absolute;
+    top: -1px;
+    color: var(--faint);
+    font: 300 17px/1 var(--font-mono);
+    translate: -50% -50%;
+  }
+  .sec-bar::before { left: 0; }
+  .sec-bar::after { left: 100%; }
 }
 .mono,
 .sec-bar {

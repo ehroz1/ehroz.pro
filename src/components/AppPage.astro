@@ -40,12 +40,12 @@ const pad = (v: number) => String(v).padStart(2, '0');
 
 <Layout lang={lang} title={title} description={pick(lang, app.about).slice(0, 158)} slug={app.slug} og={`og/${lang}/${app.slug}.png`} jsonld={jsonld}>
   <div class="app-page" data-tint style={`--tint-d:${app.tint.dark};--tint-l:${app.tint.light}`}>
-    <section class="ap-hero container" aria-labelledby="ap-name">
+    <section class="ap-hero container" aria-labelledby="ap-name" data-spy={app.name}>
       <div class="sec-bar">
         <a class="back" href={`${path(lang)}#apps`}><Icon name="arrow-left" size={13} />{tr(lang, 'page.back')}</a>
-        <span>№ {no} / {pick(lang, app.kind)}</span>
+        <span>{no} / {pick(lang, app.kind)}</span>
       </div>
-      <div class="ap-grid">
+      <div class="ap-grid bleed">
         <div class="ap-pass">
           <div class="ap-no"><span class="tag-no">{no}</span><span class="pixel ap-no-big">№ {no}</span></div>
           <h1 class="display ap-name" id="ap-name">{app.name}</h1>
@@ -78,7 +78,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
       </div>
     </section>
 
-    <section class="ap-about container" aria-label={tr(lang, 'page.for')}>
+    <section class="ap-about container" aria-label={tr(lang, 'page.for')} data-spy={ru ? 'Описание' : 'About'}>
       <div class="sec-bar"><span>A / {ru ? 'Описание' : 'Description'}</span><span>{tr(lang, 'page.for')}</span></div>
       <div class="about-grid">
         <p class="ap-about-text">{pick(lang, app.about)}</p>
@@ -86,7 +86,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
       </div>
     </section>
 
-    <section class="features container" aria-labelledby="feat-title">
+    <section class="features container" aria-labelledby="feat-title" data-spy={tr(lang, 'page.features')}>
       <div class="sec-bar"><span>B / {tr(lang, 'page.features')}</span><span>{pad(n)} {ru ? 'функции' : 'features'}</span></div>
       <h2 class="sr-only" id="feat-title">{tr(lang, 'page.features')}</h2>
       {
@@ -111,7 +111,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
       }
     </section>
 
-    <section class="how container" aria-labelledby="how-title">
+    <section class="how container" aria-labelledby="how-title" data-spy={tr(lang, 'page.how')}>
       <div class="sec-bar"><span>C / {tr(lang, 'page.how')}</span><span>03 {ru ? 'шага' : 'steps'}</span></div>
       <h2 class="h2" id="how-title">{tr(lang, 'page.how')}</h2>
       <ol class="steps">
@@ -126,7 +126,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
       </ol>
     </section>
 
-    <section class="faq-req container">
+    <section class="faq-req container" data-spy={tr(lang, 'page.faq')}>
       <div class="sec-bar"><span>D / {tr(lang, 'page.faq')}</span><span>E / {tr(lang, 'page.req')}</span></div>
       <div class="fr-grid">
         <div class="faq">
@@ -161,15 +161,15 @@ const pad = (v: number) => String(v).padStart(2, '0');
       </div>
     </section>
 
-    <section class="others container" aria-labelledby="others-title">
+    <section class="others container" aria-labelledby="others-title" data-spy={tr(lang, 'page.other')}>
       <div class="sec-bar"><span>F / {tr(lang, 'page.other')}</span><span>{pad(others.length)}</span></div>
       <h2 class="h2" id="others-title">{tr(lang, 'page.other')}</h2>
-      <div class="o-grid">
+      <div class="o-grid bleed">
         {others.map(({ a, i }) => <AppWindow app={a} lang={lang} index={i} compact />)}
       </div>
     </section>
 
-    <section class="ap-contact container">
+    <section class="ap-contact container" data-spy={tr(lang, 'cc.title')}>
       <div class="sec-bar"><span>G / {tr(lang, 'cc.title')}</span><span>@{CONTACTS.telegram}</span></div>
       <div class="c-grid">
         <div>
@@ -204,8 +204,8 @@ const pad = (v: number) => String(v).padStart(2, '0');
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
   }
+  .ap-hero + section { margin-top: 0; }
   @media (min-width: 960px) {
     .ap-grid {
       grid-template-columns: 7fr 5fr;
@@ -215,7 +215,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
     display: grid;
     align-content: start;
     gap: 22px;
-    padding: clamp(24px, 4vw, 56px) 0 32px;
+    padding: clamp(24px, 4vw, 56px) 0 32px var(--rail-pad);
     min-width: 0;
   }
   @media (min-width: 960px) {
