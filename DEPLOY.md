@@ -2,6 +2,20 @@
 
 Сайт — статический (Astro): `npm run build` собирает всё в папку `dist/`. Подойдёт любой хостинг.
 
+## Как вносить правки и ничего не сломать
+
+Продакшн: **https://ehroz.pro** (Vercel, ветка `main`). Каждый merge в `main` обновляет сайт за 1–2 минуты.
+
+1. Создайте ветку от `main` (например `fix-hero-text`) и внесите правки.
+2. Перед пушем: `npm run build` — если сборка проходит локально, на Vercel она тоже пройдёт.
+3. Запушьте ветку — Vercel сам соберёт **Preview** на отдельном адресе (`*.vercel.app`), `ehroz.pro` он не трогает.
+4. Проверьте preview (телефон + компьютер), откройте Pull Request в `main`.
+5. Красная сборка в PR = не мержить. Всё хорошо — Merge.
+
+Откат: Vercel → Deployments → прошлый рабочий деплой → **Promote to Production**.
+
+Не трогайте без нужды: `vercel.json`, `astro.config.mjs`, DNS на Porkbun, домены в Vercel.
+
 ## Сейчас: GitHub Pages (бесплатный адрес)
 
 Workflow `.github/workflows/deploy.yml` при каждом пуше в `main` (и в рабочую ветку) собирает сайт и
