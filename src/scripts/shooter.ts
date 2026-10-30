@@ -62,11 +62,11 @@ export function startShooter(lang: 'ru' | 'en') {
   collect();
   const total = targets.length;
 
-  const ship = { x: W / 2, y: H - 90, vx: 0, vy: 0 };
+  const ship = { x: W / 2, y: H / 2, vx: 0, vy: 0 };
   const keys = new Set<string>();
   let bullets: Bullet[] = [];
   let parts: Particle[] = [];
-  let stars = Array.from({ length: 60 }, () => ({ x: Math.random() * W, y: Math.random() * H, s: Math.random() * 2 + 0.5 }));
+  const stars = Array.from({ length: 60 }, () => ({ x: Math.random() * W, y: Math.random() * H, s: Math.random() * 2 + 0.5 }));
   let score = 0, cool = 0, touch: { x: number; y: number } | null = null, shake = 0;
 
   const onKey = (e: KeyboardEvent) => {
@@ -89,8 +89,6 @@ export function startShooter(lang: 'ru' | 'en') {
   cv.addEventListener('pointerup', onPtr);
   cv.addEventListener('pointercancel', onPtr);
   close.addEventListener('click', () => stop());
-  const onScroll = () => collect();
-  addEventListener('scroll', onScroll, { passive: true });
 
   const boom = (x: number, y: number, n: number, c: string) => {
     for (let i = 0; i < n; i++) {
@@ -133,6 +131,21 @@ export function startShooter(lang: 'ru' | 'en') {
     }
     ship.x = Math.max(20, Math.min(W - 20, ship.x + ship.vx));
     ship.y = Math.max(30, Math.min(H - 30, ship.y + ship.vy));
+    // у края экрана страница прокручивается — можно пролететь весь сайт
+    const EDGE = H * 0.25;
+    let dy = 0;
+    if (ship.y < EDGE) dy = -((EDGE - ship.y) / EDGE) * 18;
+    else if (ship.y > H - EDGE) dy = ((ship.y - (H - EDGE)) / EDGE) * 18;
+    if (dy) {
+      const before = scrollY;
+      scrollTo({ top: before + dy, behavior: 'instant' as ScrollBehavior });
+      const moved = scrollY - before;
+      if (moved) {
+        for (const st of stars) st.y = (st.y - moved * 0.5 + H) % H;
+        for (const p of parts) p.y -= moved;
+        for (const b of bullets) b.y -= moved;
+      }
+    }
     if (cool > 0) cool--;
     if (keys.has(' ') && cool === 0) {
       bullets.push({ x: ship.x - 9, y: ship.y - 10, vy: -13 }, { x: ship.x + 9, y: ship.y - 10, vy: -13 });
@@ -210,7 +223,6 @@ export function startShooter(lang: 'ru' | 'en') {
     removeEventListener('keydown', onKey, true);
     removeEventListener('keyup', onKey, true);
     removeEventListener('resize', resize);
-    removeEventListener('scroll', onScroll);
     cv.remove(); hud.remove(); close.remove();
     for (const k of killed) {
       k.el.style.visibility = k.v;
