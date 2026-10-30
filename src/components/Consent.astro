@@ -1,0 +1,35 @@
+---
+// Плашка согласия на аналитику. Рендерится, только если в src/analytics.config.ts задан хотя бы один ID.
+import type { Lang } from '../content/apps';
+import { ANALYTICS } from '../analytics.config';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const ru = lang === 'ru';
+---
+<div class="consent" id="consent" role="region" aria-label={ru ? 'Согласие на аналитику' : 'Analytics consent'} data-ga4={ANALYTICS.ga4} data-metrika={ANALYTICS.metrika} hidden>
+  <p>
+    {ru
+      ? 'Можно включить анонимную статистику (Google Analytics, Яндекс Метрика)? Она ставит cookies и помогает понять, что на сайте полезно. Без согласия ничего не загружается.'
+      : 'May I turn on anonymous analytics (Google Analytics, Yandex Metrica)? It sets cookies and shows what’s useful on the site. Nothing loads without your consent.'}
+  </p>
+  <div class="consent-actions">
+    <button class="btn btn-sm" type="button" data-consent="no">{ru ? 'Не надо' : 'No thanks'}</button>
+    <button class="btn btn-sm btn-primary" type="button" data-consent="yes">{ru ? 'Разрешить' : 'Allow'}</button>
+  </div>
+</div>
+<script>
+  import '../scripts/analytics';
+</script>
+<style>
+  .consent {
+    position: fixed; z-index: 60; left: 16px; bottom: 96px; max-width: 420px;
+    display: grid; gap: 12px; padding: 16px;
+    background: var(--surface, var(--bg)); color: var(--text);
+    border: 1px solid var(--line-strong); box-shadow: 0 12px 40px rgb(0 0 0 / 0.18);
+    font-size: 14px; line-height: 1.45;
+  }
+  .consent[hidden] { display: none; }
+  .consent p { margin: 0; }
+  .consent-actions { display: flex; gap: 8px; justify-content: flex-end; }
+  @media (max-width: 520px) { .consent { right: 16px; max-width: none; } }
+</style>

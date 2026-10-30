@@ -6,6 +6,8 @@ import MenuBar from '../components/MenuBar.astro';
 import Dock from '../components/Dock.astro';
 import Spotlight from '../components/Spotlight.astro';
 import PageFrame from '../components/PageFrame.astro';
+import Consent from '../components/Consent.astro';
+import { analyticsEnabled } from '../analytics.config';
 
 interface Props {
   lang: Lang;
@@ -94,13 +96,14 @@ const vars = [
     <meta name="twitter:image:alt" content={imageAlt} />
     <link rel="sitemap" href={asset('sitemap-index.xml')} />
     <script is:inline>
-      // Тема до первой отрисовки: auto | dark | light
+      // Тема (auto | dark | light) и отключённые анимации — до первой отрисовки
       (function () {
         var p = 'auto';
         try { p = localStorage.getItem('theme') || 'auto'; } catch (e) {}
         var d = document.documentElement;
         d.setAttribute('data-theme-pref', p);
         if (p !== 'auto') d.setAttribute('data-theme', p);
+        try { if (localStorage.getItem('motion') === 'reduce') d.setAttribute('data-motion', 'reduce'); } catch (e) {}
       })();
     </script>
     {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
@@ -114,6 +117,7 @@ const vars = [
     <PageFrame />
     <Dock lang={lang} current={slug} />
     <Spotlight lang={lang} />
+    {analyticsEnabled() && site.origin === PRODUCTION_ORIGIN && <Consent lang={lang} />}
     <script>
       import '../scripts/site';
     </script>

@@ -79,6 +79,34 @@ for (const file of pages) {
   if (!/<link rel="icon"/.test(html)) err('нет favicon');
   if (!/<html lang="(ru|en)"/.test(html)) err('нет lang у <html>');
 
+  // JSON-LD: валидный JSON, один граф, у узлов @type, @id без повторов; FAQ и хлебные крошки — видны на странице.
+  const ld = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  if (!is404 && ld.length !== 1) err(`блоков JSON-LD: ${ld.length} (нужен один граф)`);
+  for (const [, raw] of ld) {
+    let data;
+    try { data = JSON.parse(raw); } catch (e) { err(`JSON-LD не парсится: ${e.message}`); continue; }
+    if (data['@context'] !== 'https://schema.org') err('JSON-LD: нет @context https://schema.org');
+    const nodes = data['@graph'] ?? [data];
+    const ids = nodes.map((n) => n['@id']).filter(Boolean);
+    if (new Set(ids).size !== ids.length) err('JSON-LD: повторяются @id');
+    const known = new Set(ids);
+    const text = html.replace(/<script[\s\S]*?<\/script>/g, '').replace(/<[^>]+>/g, ' ').replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/\s+/g, ' ');
+    const norm = (t) => t.replace(/\s+/g, ' ').trim();
+    for (const n of nodes) {
+      if (!n['@type']) err('JSON-LD: узел без @type');
+      for (const key of ['isPartOf', 'author', 'publisher', 'breadcrumb', 'about', 'mainEntity']) {
+        const ref = n[key]?.['@id'];
+        if (ref && !known.has(ref)) err(`JSON-LD: ${n['@type']}.${key} ссылается на отсутствующий ${ref}`);
+      }
+      if (/"(aggregateRating|review)":/.test(JSON.stringify(n))) err('JSON-LD: рейтинги/отзывы без реальных данных запрещены');
+      if (n['@type'] === 'FAQPage') for (const q of n.mainEntity) {
+        if (!text.includes(norm(q.name))) err(`JSON-LD FAQ: вопроса нет на странице: ${q.name}`);
+      }
+      if (n['@type'] === 'BreadcrumbList' && !html.includes('class="crumbs"')) err('JSON-LD: хлебные крошки не видны на странице');
+      if (/Page$/.test(n['@type']) && n['@type'] !== 'FAQPage' && !n.dateModified) err(`JSON-LD: у ${n['@type']} нет dateModified`);
+    }
+  }
+
   // Заголовки: ровно один h1, он первый, уровни не перескакивают (h2 → h4).
   const levels = [...html.matchAll(/<h([1-6])[\s>]/g)].map((m) => +m[1]);
   const h1 = levels.filter((l) => l === 1).length;

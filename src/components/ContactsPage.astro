@@ -1,0 +1,99 @@
+---
+import Layout from '../layouts/Layout.astro';
+import type { Lang } from '../content/apps';
+import { homeUpdated } from '../content/apps';
+import { tr, path, pick, asset, CONTACTS, SITE_NAME } from '../i18n';
+import { graph, webpage, breadcrumbs, website, person, schemaIds } from '../lib/schema';
+import Icon from './Icon.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const ru = lang === 'ru';
+const c = CONTACTS;
+const site = Astro.site!;
+const url = new URL(path(lang, 'contacts'), site).href;
+const title = tr(lang, 'contacts.page.title');
+const description = tr(lang, 'contacts.page.desc');
+const updated = homeUpdated();
+const crumbs = [
+  { name: SITE_NAME, url: path(lang) },
+  { name: tr(lang, 'contacts.page.h1'), url: path(lang, 'contacts') },
+];
+const jsonld = graph(
+  webpage({
+    site, lang, url, type: 'ContactPage', name: title, description, updated, breadcrumb: true,
+    image: new URL(asset(`og/${lang}/home.png`), site).href, imageAlt: title,
+    about: schemaIds(site).person,
+  }),
+  breadcrumbs(site, url, crumbs),
+  website(site),
+  person(site, lang),
+);
+const channels = [
+  { name: 'Telegram', icon: 'telegram', href: `https://t.me/${c.telegram}`, value: `@${c.telegram}`, ext: true },
+  { name: 'Email', icon: 'mail', href: `mailto:${c.email}`, value: c.email, ext: false },
+  { name: 'GitHub', icon: 'github', href: `https://github.com/${c.github}`, value: c.github, ext: true },
+  { name: 'Instagram', icon: 'instagram', href: `https://instagram.com/${c.instagram}`, value: `@${c.instagram}`, ext: true },
+  { name: 'Behance', icon: 'behance', href: `https://www.behance.net/${c.behance}`, value: c.behance, ext: true },
+];
+---
+
+<Layout lang={lang} title={title} description={description} slug="contacts" og={`og/${lang}/home.png`} ogAlt={title} updated={updated} jsonld={jsonld}>
+  <section class="info container" aria-labelledby="contacts-h1" data-spy={tr(lang, 'contacts.page.h1')}>
+    <div class="sec-bar">
+      <nav class="crumbs" aria-label={ru ? 'Навигационная цепочка' : 'Breadcrumb'}>
+        <ol>
+          <li><a href={path(lang)}>{SITE_NAME}</a></li>
+          <li><span aria-current="page">{tr(lang, 'contacts.page.h1')}</span></li>
+        </ol>
+      </nav>
+      <span>@{c.telegram}</span>
+    </div>
+    <div class="info-head">
+      <h1 class="display" id="contacts-h1">{tr(lang, 'contacts.page.h1')}</h1>
+      <p class="lead">{tr(lang, 'contact.title')} {tr(lang, 'contact.lead')}</p>
+      <div class="cta">
+        <a class="btn btn-primary" href={`https://t.me/${c.telegram}`} target="_blank" rel="noopener"><Icon name="telegram" />{tr(lang, 'contacts.page.fast')}</a>
+        <a class="btn" href={c.order} target="_blank" rel="noopener"><Icon name="briefcase" />{tr(lang, 'contact.order')}</a>
+      </div>
+    </div>
+
+    <h2 class="h3">{tr(lang, 'contacts.page.write')}</h2>
+    <ul class="channels">
+      {channels.map((ch) => (
+        <li>
+          <a href={ch.href} {...(ch.ext ? { target: '_blank', rel: 'noopener me' } : {})}>
+            <Icon name={ch.icon as any} /><span class="n">{ch.name}</span><span class="v">{ch.value}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="note">{tr(lang, 'contacts.page.apps')}</p>
+
+    <h2 class="h3">{tr(lang, 'contacts.page.where')}</h2>
+    <p>{pick(lang, c.city)}, {ru ? 'Казахстан' : 'Kazakhstan'} · UTC+5</p>
+    <p class="next"><a href={path(lang, 'about')}>{tr(lang, 'about.page.h1')} →</a></p>
+  </section>
+  <Footer lang={lang} />
+</Layout>
+
+<style>
+  .info { padding-top: calc(var(--menubar) + 24px); padding-bottom: 64px; }
+  .info-head { display: grid; gap: 16px; justify-items: start; padding: 40px 0; border-top: 1px solid var(--line); }
+  .info-head .lead { max-width: 62ch; }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; }
+  .info h2 { margin: 40px 0 16px; }
+  .channels { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); max-width: 720px; }
+  .channels a { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); color: inherit; }
+  .channels .v { margin-left: auto; color: var(--text-2); font: 400 13px/1.3 var(--font-mono); overflow-wrap: anywhere; text-align: right; }
+  .channels a:hover .n, .channels a:focus-visible .n, .next a:hover { color: var(--accent); }
+  .note { margin-top: 16px; color: var(--text-2); max-width: 62ch; }
+  .next { margin-top: 32px; }
+  .crumbs ol { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .crumbs li + li::before { content: '/'; margin-right: 6px; color: var(--muted); }
+  .crumbs a { color: var(--text-2); }
+  .crumbs a:hover, .crumbs a:focus-visible { color: var(--accent); }
+</style>

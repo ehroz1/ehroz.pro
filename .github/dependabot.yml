@@ -1,0 +1,19 @@
+# Обновления зависимостей: раз в неделю Dependabot открывает PR. Vercel соберёт превью —
+# если сборка зелёная и сайт выглядит как раньше, PR можно мержить.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      astro:
+        patterns: ['astro', '@astrojs/*']
+      minor-and-patch:
+        update-types: ['minor', 'patch']
+    open-pull-requests-limit: 5
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

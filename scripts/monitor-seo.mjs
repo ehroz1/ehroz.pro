@@ -1,7 +1,7 @@
 // Мониторинг индексации живого сайта. Раз в неделю запускается в GitHub Actions
 // (.github/workflows/seo-monitor.yml); при ошибке GitHub пришлёт письмо владельцу репозитория.
 // Вручную: node scripts/monitor-seo.mjs   (SITE=http://localhost:4321 — проверить локальный preview)
-// Что проверяет: robots.txt, sitemap, что число страниц в sitemap не упало, что каждая страница
+// Что проверяет: robots.txt, sitemap, внешние ссылки (404/410), что число страниц в sitemap не упало, что каждая страница
 // отдаёт 200 без редиректа, не закрыта noindex и ссылается canonical сама на себя; редиректы http/www.
 const ORIGIN = 'https://ehroz.pro';
 const SITE = (process.env.SITE || ORIGIN).replace(/\/$/, '');
@@ -37,16 +37,35 @@ else {
 }
 if (urls.length < MIN_URLS) errors.push(`в sitemap ${urls.length} адресов — меньше порога ${MIN_URLS}`);
 
+const external = new Map(); // внешняя ссылка → страница, где она стоит
 for (const url of urls) {
   const r = await get(local(url));
   if (!r) continue;
   if (r.status !== 200) { errors.push(`${url}: статус ${r.status}${r.headers.get('location') ? ' → ' + r.headers.get('location') : ''}`); continue; }
   const html = await r.text();
+  for (const [, href] of html.matchAll(/<a [^>]*href="(https?:\/\/[^"]+)"/g)) {
+    if (!href.startsWith(ORIGIN) && !external.has(href)) external.set(href, url);
+  }
   if (/noindex/i.test(r.headers.get('x-robots-tag') || '')) errors.push(`${url}: заголовок X-Robots-Tag: noindex`);
   if (/<meta name="robots" content="[^"]*noindex/.test(html)) errors.push(`${url}: meta robots noindex`);
   const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
   if (canonical !== url) errors.push(`${url}: canonical ${canonical ?? 'отсутствует'}`);
 }
+
+// Внешние ссылки: битыми считаем только 404/410 (соцсети часто отвечают ботам 403/429 — это не поломка).
+const warnings = [];
+for (const [href, page] of external) {
+  let r;
+  try {
+    r = await fetch(href, { redirect: 'follow', headers: { 'User-Agent': 'Mozilla/5.0 (ehroz-seo-monitor)' }, signal: AbortSignal.timeout(15000) });
+  } catch (e) {
+    warnings.push(`${href}: не открылся (${e.message})`);
+    continue;
+  }
+  if (r.status === 404 || r.status === 410) errors.push(`битая внешняя ссылка ${href} (статус ${r.status}) на ${page}`);
+  else if (r.status >= 400) warnings.push(`${href}: ${r.status}`);
+}
+if (warnings.length) console.log('Внешние ссылки, ответившие ошибкой (проверьте вручную):\n' + warnings.map((w) => '  ? ' + w).join('\n'));
 
 const nf = await get(`${SITE}/seo-monitor-missing-page/`);
 if (nf && nf.status !== 404) errors.push(`несуществующая страница отдаёт ${nf.status} вместо 404`);
@@ -67,4 +86,4 @@ if (errors.length) {
   console.error(`SEO-мониторинг ${SITE}: ${errors.length} проблем\n` + errors.map((e) => '  ✗ ' + e).join('\n'));
   process.exit(1);
 }
-console.log(`SEO-мониторинг ${SITE}: ${urls.length} страниц в sitemap, всё в порядке`);
+console.log(`SEO-мониторинг ${SITE}: ${urls.length} страниц в sitemap, ${external.size} внешних ссылок, всё в порядке`);

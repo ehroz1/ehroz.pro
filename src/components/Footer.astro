@@ -3,6 +3,7 @@ import type { Lang } from '../content/apps';
 import { apps } from '../content/apps';
 import { tr, path, CONTACTS } from '../i18n';
 import Mark from './Mark.astro';
+import { analyticsEnabled } from '../analytics.config';
 
 interface Props {
   lang: Lang;
@@ -17,9 +18,10 @@ const c = CONTACTS;
   <div class="foot-grid">
     <div class="foot-brand">
       <a href={path(lang)} class="foot-logo"><Mark size={18} /> ehroz.pro</a>
-      <p>{tr(lang, 'foot.made')}</p>
+      <p>{analyticsEnabled() ? tr(lang, 'foot.consent') : tr(lang, 'foot.made')}</p>
+      {analyticsEnabled() && <p><a href="#" data-consent-open>{tr(lang, 'foot.cookies')}</a></p>}
     </div>
-    <nav aria-label={tr(lang, 'menu.apps')}>
+    <nav aria-label={lang === 'ru' ? 'Приложения в подвале' : 'Footer: apps'}>
       <h2>{tr(lang, 'menu.apps')}</h2>
       <ul>
         {
@@ -47,6 +49,8 @@ const c = CONTACTS;
     <nav aria-label="ehroz.pro">
       <h2>ehroz.pro</h2>
       <ul>
+        <li><a href={path(lang, 'about')}>{tr(lang, 'about.page.h1')}</a></li>
+        <li><a href={path(lang, 'contacts')}>{tr(lang, 'contacts.page.h1')}</a></li>
         <li><a href={c.order} target="_blank" rel="noopener">{tr(lang, 'contact.order')}</a></li>
         <li><a href={path(other)} hreflang={other} lang={other}>{other === 'en' ? 'English' : 'Русский'}</a></li>
       </ul>

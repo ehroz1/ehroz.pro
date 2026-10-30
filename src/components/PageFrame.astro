@@ -33,7 +33,7 @@
     const prevEl = panel.querySelector<HTMLElement>('[data-prev]')!;
     const curEl = panel.querySelector<HTMLElement>('[data-cur]')!;
     const nextEl = panel.querySelector<HTMLElement>('[data-next]')!;
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduced = (matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'reduce');
     const PAD = 28;
     const UNIT = 48;
     const names = secs.map((s) => s.dataset.spy!);

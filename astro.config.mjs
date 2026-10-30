@@ -2,6 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { apps, homeUpdated } from './src/content/apps.ts';
+import csp from './src/lib/csp.ts';
 
 // SITE_URL / SITE_BASE задаются при сборке для GitHub Pages (ehroz1.github.io/ehroz.pro).
 // На Vercel и Cloudflare Pages с доменом ehroz.pro ничего задавать не нужно.
@@ -35,6 +36,7 @@ export default defineConfig({
         return item;
       },
     }),
+    csp(),
   ],
   vite: { plugins: [tailwindcss()] },
 });
