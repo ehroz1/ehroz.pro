@@ -280,7 +280,14 @@ $('[data-logo]')?.addEventListener('dblclick', (e) => {
   e.preventDefault();
   startGame();
 });
-$$('[data-game-start]').forEach((b) => b.addEventListener('click', () => startGame()));
+// Кнопка в подвале работает только на тач-экранах; на компьютере — Konami-код
+const touchOnly = matchMedia('(hover: none), (pointer: coarse)');
+$$<HTMLButtonElement>('[data-game-start]').forEach((b) => {
+  const sync = () => (b.tabIndex = touchOnly.matches ? 0 : -1);
+  sync();
+  touchOnly.addEventListener('change', sync);
+  b.addEventListener('click', () => touchOnly.matches && startGame());
+});
 function startGame() {
   import('./shooter').then((m) => m.startShooter(lang));
 }
