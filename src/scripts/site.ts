@@ -265,7 +265,7 @@ window.addEventListener('pagereveal', (e: Event) => {
   else if (card && document.documentElement.dataset.slug !== slug) card.style.viewTransitionName = '';
 });
 
-/* ── Пасхалка: Konami-код или двойной щелчок по логотипу → дождь из иконок ── */
+/* ── Пасхалка: Konami-код, двойной щелчок по логотипу или кнопка в подвале → космический шутер ── */
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 let kpos = 0;
 document.addEventListener('keydown', (e) => {
@@ -273,67 +273,16 @@ document.addEventListener('keydown', (e) => {
   kpos = k === KONAMI[kpos] ? kpos + 1 : k === KONAMI[0] ? 1 : 0;
   if (kpos === KONAMI.length) {
     kpos = 0;
-    party();
+    startGame();
   }
 });
 $('[data-logo]')?.addEventListener('dblclick', (e) => {
   e.preventDefault();
-  party();
+  startGame();
 });
-let partying = false;
-function party() {
-  if (partying) return;
-  partying = true;
-  const srcs = $$<HTMLImageElement>('.dock img[data-icon]').map((i) => i.currentSrc || i.src);
-  if (!srcs.length) return;
-  const layer = document.createElement('div');
-  layer.setAttribute('aria-hidden', 'true');
-  layer.style.cssText = 'position:fixed;inset:0;z-index:90;pointer-events:none;overflow:hidden';
-  document.body.append(layer);
-  $$('.dock-item').forEach((it, i) => setTimeout(() => {
-    it.classList.remove('bounce');
-    void it.offsetWidth;
-    it.classList.add('bounce');
-  }, i * 60));
-  document.querySelector('.mb-logo .mark')?.animate([{ transform: 'rotate(0)' }, { transform: 'rotate(720deg)' }], { duration: 1400, easing: 'cubic-bezier(.2,1.3,.4,1)' });
-  const N = reduced ? 0 : 42;
-  const W = innerWidth,
-    H = innerHeight;
-  type P = { el: HTMLImageElement; x: number; y: number; vx: number; vy: number; r: number; vr: number; s: number };
-  const ps: P[] = [];
-  for (let i = 0; i < N; i++) {
-    const el = document.createElement('img');
-    el.src = srcs[i % srcs.length];
-    const s = 44 + Math.random() * 46;
-    el.width = el.height = s;
-    el.style.cssText = `position:absolute;left:0;top:0;width:${s}px;height:${s}px;will-change:transform`;
-    layer.append(el);
-    ps.push({ el, x: Math.random() * W, y: -s - Math.random() * H * 0.8, vx: (Math.random() - 0.5) * 2, vy: Math.random() * 2, r: Math.random() * 360, vr: (Math.random() - 0.5) * 8, s });
-  }
-  const t0 = performance.now();
-  const step = (now: number) => {
-    for (const p of ps) {
-      p.vy += 0.35;
-      p.x += p.vx;
-      p.y += p.vy;
-      p.r += p.vr;
-      if (p.y > H - p.s - 6 && p.vy > 0) {
-        p.y = H - p.s - 6;
-        p.vy *= -0.45;
-        p.vx *= 0.9;
-        p.vr *= 0.8;
-      }
-      p.el.style.transform = `translate3d(${p.x}px, ${p.y}px, 0) rotate(${p.r}deg)`;
-    }
-    const age = now - t0;
-    if (age > 3600) layer.style.opacity = String(Math.max(0, 1 - (age - 3600) / 700));
-    if (age < 4300) requestAnimationFrame(step);
-    else {
-      layer.remove();
-      partying = false;
-    }
-  };
-  requestAnimationFrame(step);
+$$('[data-game-start]').forEach((b) => b.addEventListener('click', () => startGame()));
+function startGame() {
+  import('./shooter').then((m) => m.startShooter(lang));
 }
 
 /* ── Сцены ── */
