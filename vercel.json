@@ -4,13 +4,26 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "trailingSlash": true,
+  "cleanUrls": true,
+  "redirects": [
+    { "source": "/:path*", "has": [{ "type": "host", "value": "www.ehroz.pro" }], "destination": "https://ehroz.pro/:path*", "statusCode": 301 },
+    { "source": "/index.html", "destination": "/", "statusCode": 301 },
+    { "source": "/en/index.html", "destination": "/en/", "statusCode": 301 },
+    { "source": "/ru", "destination": "/", "statusCode": 301 },
+    { "source": "/ru/:path*", "destination": "/:path*", "statusCode": 301 }
+  ],
   "headers": [
+    { "source": "/(.*)", "missing": [{ "type": "host", "value": "ehroz.pro" }], "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }] },
     { "source": "/_astro/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] },
     { "source": "/icons/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }] },
     { "source": "/(.*)", "headers": [
       { "key": "X-Content-Type-Options", "value": "nosniff" },
       { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-      { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+      { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()" },
+      { "key": "Content-Security-Policy", "value": "frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'; upgrade-insecure-requests" },
+      { "key": "X-Frame-Options", "value": "DENY" },
+      { "key": "Cross-Origin-Opener-Policy", "value": "same-origin" },
+      { "key": "Strict-Transport-Security", "value": "max-age=63072000" }
     ] }
   ]
 }

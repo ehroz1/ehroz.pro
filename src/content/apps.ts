@@ -36,6 +36,9 @@ export interface App {
   audience: L;
   platforms: Platform[];
   status: Status;
+  /** Дата последнего изменения содержимого страницы (YYYY-MM-DD). Обновляйте при правке текстов —
+   *  попадает в sitemap (lastmod) и в разметку schema.org (dateModified). */
+  updated: string;
   version?: string;
   /** Цвет кнопок и подсветки на странице. */
   accent: string;
@@ -71,6 +74,7 @@ export const apps: App[] = [
     audience: t('Дизайнерам, монтажёрам, SMM и всем, кто каждый день гоняет файлы между форматами.', 'Designers, editors, social media teams — anyone who shuffles files between formats every day.'),
     platforms: ['macos'],
     status: 'ready',
+    updated: '2026-10-27',
     version: '0.2.2',
     accent: '#f5f5f7',
     onAccent: '#1d1d1f',
@@ -148,6 +152,7 @@ export const apps: App[] = [
     audience: t('Тем, кому нужен конвертер «на один бросок» без лишних окон.', 'People who want a one-drop converter without extra windows.'),
     platforms: ['macos'],
     status: 'ready',
+    updated: '2026-10-27',
     version: '3.3',
     accent: '#ffffff',
     onAccent: '#000000',
@@ -204,6 +209,7 @@ export const apps: App[] = [
     audience: t('Веб-разработчикам, контент-менеджерам и всем, кто выкладывает картинки на сайт.', 'Web developers, content managers and anyone publishing images online.'),
     platforms: ['macos', 'windows'],
     status: 'beta',
+    updated: '2026-10-27',
     version: '0.1.1',
     accent: '#3a55f0',
     onAccent: '#ffffff',
@@ -257,6 +263,7 @@ export const apps: App[] = [
     audience: t('Блогерам и SMM-специалистам, которые делают короткие вертикальные ролики.', 'Creators and social media teams making short vertical videos.'),
     platforms: ['macos'],
     status: 'dev',
+    updated: '2026-10-27',
     accent: '#F2CC4E',
     onAccent: '#0E0E0F',
     glow: ['#ff5b2e', '#6b3a2a', '#2a2a33'],
@@ -309,6 +316,7 @@ export const apps: App[] = [
     audience: t('Дизайнерам и всем, кто вырезает объекты с фото.', 'Designers and anyone cutting objects out of photos.'),
     platforms: ['macos'],
     status: 'dev',
+    updated: '2026-10-27',
     accent: '#d4d7e0',
     onAccent: '#101114',
     glow: ['#3a3f4b', '#7c8394', '#1b1e25'],
@@ -350,6 +358,7 @@ export const apps: App[] = [
     audience: t('Журналистам, исследователям, авторам подкастов — всем, кому нужен текст из записи.', 'Journalists, researchers, podcasters — anyone who needs text from a recording.'),
     platforms: ['web'],
     status: 'ready',
+    updated: '2026-10-27',
     accent: '#ededed',
     onAccent: '#171717',
     glow: ['#3d3d3d', '#1f8a5b', '#5c5c5c'],
@@ -401,6 +410,7 @@ export const apps: App[] = [
     audience: t('Дизайнерам, редакторам и SMM, которым нужна картинка «на сейчас».', 'Designers, editors and social media teams who need an image right now.'),
     platforms: ['web'],
     status: 'ready',
+    updated: '2026-10-27',
     accent: '#ffffff',
     onAccent: '#101114',
     glow: ['#7c5cff', '#06b6d4', '#ff6428'],
@@ -452,6 +462,7 @@ export const apps: App[] = [
     audience: t('Тем, кто играет на Mac и хочет держать в руках геймпад, а не клавиатуру.', 'Mac players who would rather hold a gamepad than a keyboard.'),
     platforms: ['macos'],
     status: 'beta',
+    updated: '2026-10-28',
     version: '0.4.0',
     accent: '#4FB4FF',
     onAccent: '#0E0E0F',
@@ -505,6 +516,7 @@ export const apps: App[] = [
     audience: t('Тем, кто постоянно что-то скачивает и не хочет каждый раз открывать Finder.', 'People who download all day and are tired of opening Finder.'),
     platforms: ['macos'],
     status: 'dev',
+    updated: '2026-10-28',
     version: '0.1.0',
     accent: '#9CCB7A',
     onAccent: '#0E0E0F',
@@ -553,6 +565,7 @@ export const apps: App[] = [
     audience: t('Тем, кто читает ссылки из чатов и не хочет терять место на странице.', 'People who open links from chats and don’t want to lose their place.'),
     platforms: ['macos', 'extension'],
     status: 'beta',
+    updated: '2026-10-28',
     version: '4.1',
     accent: '#F0EAD6',
     onAccent: '#0E0E0F',
@@ -606,6 +619,7 @@ export const apps: App[] = [
     audience: t('Разработчикам и тестировщикам сервисов с камерой, а ещё тем, кто ведёт демо и презентации.', 'Developers and testers of camera features, and anyone running demos and presentations.'),
     platforms: ['extension'],
     status: 'beta',
+    updated: '2026-10-28',
     version: '1.0.0',
     accent: '#FF7AA8',
     onAccent: '#0E0E0F',
@@ -643,5 +657,9 @@ export const apps: App[] = [
     requirements: [t('Firefox 128+ (компьютер или Android)', 'Firefox 128+ (desktop or Android)'), t('или Chrome 111+ на Mac', 'or Chrome 111+ on Mac')],
   },
 ];
+
+/** Дата последнего изменения главной (герой, тексты). Итоговая дата главной — самая поздняя из этой и дат приложений. */
+export const HOME_UPDATED = '2026-10-28';
+export const homeUpdated = () => [HOME_UPDATED, ...apps.map((a) => a.updated)].sort().at(-1)!;
 
 export const appBySlug = (slug: string) => apps.find((a) => a.slug === slug);

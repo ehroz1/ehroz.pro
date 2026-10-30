@@ -2,6 +2,30 @@ import type { Lang, L, Platform, Status } from './content/apps';
 
 export const LANGS: Lang[] = ['ru', 'en'];
 
+/** Основной домен: https, без www, со слешем в конце адресов. Только он открыт для индексации. */
+export const PRODUCTION_ORIGIN = 'https://ehroz.pro';
+
+/** Название сайта/бренда в метаданных (og:site_name, application-name, schema.org WebSite). */
+export const SITE_NAME = 'Ehroz';
+
+/**
+ * Коды подтверждения прав в панелях вебмастеров (только сам код из content="…").
+ * Удобнее подтверждать через DNS — тогда здесь ничего не нужно. См. DEPLOY.md → «Поисковые системы».
+ */
+export const SEARCH_VERIFICATION = {
+  google: '', // Google Search Console → HTML-тег → google-site-verification
+  yandex: '', // Яндекс Вебмастер → Мета-тег → yandex-verification
+  bing: '', // Bing Webmaster Tools → HTML Meta Tag → msvalidate.01
+};
+
+/** Обрезает текст для meta description по границе слова (по умолчанию до 160 символов). */
+export function clip(text: string, max = 160): string {
+  const t = text.replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max - 1);
+  return cut.slice(0, cut.lastIndexOf(' ')).replace(/[\s,;:—–-]+$/, '') + '…';
+}
+
 /** Контакты — правьте здесь. */
 export const CONTACTS = {
   name: { ru: 'Эхроз', en: 'Ehroz' } as L,
@@ -54,6 +78,9 @@ const S = {
   'menu.theme': { ru: 'Тема', en: 'Theme' },
   'menu.lang': { ru: 'Language: English', en: 'Язык: русский' },
   'menu.search': { ru: 'Поиск приложений (⌘K)', en: 'Search apps (⌘K)' },
+  'menu.motion': { ru: 'Анимации', en: 'Animations' },
+  'motion.auto': { ru: 'Анимации вкл.', en: 'Animations on' },
+  'motion.off': { ru: 'Без анимаций', en: 'No animations' },
   'theme.auto': { ru: 'Как в системе', en: 'System' },
   'theme.dark': { ru: 'Тёмная', en: 'Dark' },
   'theme.light': { ru: 'Светлая', en: 'Light' },
@@ -86,9 +113,48 @@ const S = {
   'page.step': { ru: 'Шаг', en: 'Step' },
   'foot.egg': { ru: 'Секрет: введи код или нажми — и разнеси этот сайт', en: 'Secret: enter the code or tap — and blow this site up' },
   'foot.egg.btn': { ru: 'Играть', en: 'Play' },
-    'foot.made': { ru: 'Сделано в Астане. Без cookies и трекеров.', en: 'Made in Astana. No cookies, no trackers.' },
+  'foot.made': { ru: 'Сделано в Астане. Без cookies и трекеров.', en: 'Made in Astana. No cookies, no trackers.' },
+  'foot.consent': { ru: 'Сделано в Астане. Аналитика — только с вашего согласия.', en: 'Made in Astana. Analytics only with your consent.' },
+  'foot.cookies': { ru: 'Настройки cookies', en: 'Cookie settings' },
   'nf.title': { ru: 'Такого окна нет', en: 'No such window' },
   'nf.text': { ru: 'Похоже, ссылка устарела. Загляните в Dock.', en: 'Looks like the link is outdated. Check the Dock.' },
+  'nf.apps': { ru: 'Все приложения', en: 'All apps' },
+  'nf.home': { ru: 'На главную', en: 'Home' },
+  'about.page.title': { ru: 'Об Ehroz — дизайнер и разработчик из Астаны', en: 'About Ehroz — designer & developer from Astana' },
+  'about.page.desc': {
+    ru: 'Эхроз — дизайнер и разработчик из Астаны. Делает небольшие приложения для macOS, Windows и браузера и сайты под задачи бизнеса.',
+    en: 'Ehroz is a designer and developer from Astana who makes small apps for macOS, Windows and the browser, and websites for businesses.',
+  },
+  'about.page.h1': { ru: 'Об Ehroz', en: 'About Ehroz' },
+  'about.page.facts': { ru: 'Коротко', en: 'In short' },
+  'about.page.apps': { ru: 'Что я сделал', en: 'What I’ve made' },
+  'about.page.profiles': { ru: 'Где меня найти', en: 'Where to find me' },
+  'about.page.how': { ru: 'Как я работаю', en: 'How I work' },
+  'about.page.how1': {
+    ru: 'Делаю то, чем пользуюсь сам: каждое приложение начиналось с моей рутинной задачи.',
+    en: 'I build what I use myself: every app started as a chore of my own.',
+  },
+  'about.page.how2': {
+    ru: 'Дизайн и код — сам, от иконки до релиза. Исходники части проектов открыты на GitHub.',
+    en: 'Design and code are mine, from the icon to the release. Some projects are open source on GitHub.',
+  },
+  'about.page.how3': {
+    ru: 'Сайт без cookies и трекеров по умолчанию: статистика включается только с вашего согласия.',
+    en: 'The site has no cookies or trackers by default: analytics only runs with your consent.',
+  },
+  'contacts.page.title': { ru: 'Контакты — связаться с Ehroz', en: 'Contacts — get in touch with Ehroz' },
+  'contacts.page.desc': {
+    ru: 'Как связаться с Эхрозом: Telegram, email, GitHub, Instagram и Behance. Заказ сайта или инструмента, вопросы по приложениям.',
+    en: 'How to reach Ehroz: Telegram, email, GitHub, Instagram and Behance. Order a website or a tool, or ask about the apps.',
+  },
+  'contacts.page.h1': { ru: 'Контакты', en: 'Contacts' },
+  'contacts.page.fast': { ru: 'Быстрее всего — Telegram', en: 'Fastest: Telegram' },
+  'contacts.page.write': { ru: 'Написать', en: 'Message' },
+  'contacts.page.where': { ru: 'Где я', en: 'Where I am' },
+  'contacts.page.apps': {
+    ru: 'Вопрос по приложению? Укажите его название и версию — так отвечу точнее.',
+    en: 'A question about an app? Mention its name and version so I can answer precisely.',
+  },
   'skip': { ru: 'Перейти к содержимому', en: 'Skip to content' },
 } satisfies Record<string, L>;
 

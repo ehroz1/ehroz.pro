@@ -1,11 +1,13 @@
 ---
 import '../styles/global.css';
 import type { Lang } from '../content/apps';
-import { tr, path, asset } from '../i18n';
+import { tr, path, asset, PRODUCTION_ORIGIN, SITE_NAME, SEARCH_VERIFICATION } from '../i18n';
 import MenuBar from '../components/MenuBar.astro';
 import Dock from '../components/Dock.astro';
 import Spotlight from '../components/Spotlight.astro';
 import PageFrame from '../components/PageFrame.astro';
+import Consent from '../components/Consent.astro';
+import { analyticsEnabled } from '../analytics.config';
 
 interface Props {
   lang: Lang;
@@ -13,17 +15,27 @@ interface Props {
   description: string;
   slug?: string;
   og?: string;
+  /** Подпись к обложке (og:image:alt). По умолчанию — заголовок страницы. */
+  ogAlt?: string;
+  /** Дата изменения содержимого (YYYY-MM-DD) → og:updated_time. */
+  updated?: string;
   glow?: [string, string, string];
   accent?: string;
   onAccent?: string;
   jsonld?: Record<string, unknown>;
-  /** Черновые страницы (варианты на согласование) — не индексировать. */
+  /** Не индексировать: 404, черновики, служебные страницы. Убирает canonical и hreflang. */
   noindex?: boolean;
 }
-const { lang, title, description, slug = '', og, glow, accent, onAccent, jsonld, noindex = false } = Astro.props;
+const { lang, title, description, slug = '', og, ogAlt, updated, glow, accent, onAccent, jsonld, noindex = false } = Astro.props;
 const site = Astro.site!;
+// Индексируем только боевой домен. Зеркала (GitHub Pages, *.vercel.app) и черновики закрыты от поиска,
+// чтобы не плодить дубли.
+const indexable = site.origin === PRODUCTION_ORIGIN && !noindex;
 const canonical = new URL(path(lang, slug), site).href;
 const alt = (l: Lang) => new URL(path(l, slug), site).href;
+const otherLang: Lang = lang === 'ru' ? 'en' : 'ru';
+const locale = (l: Lang) => (l === 'ru' ? 'ru_RU' : 'en_US');
+const imageAlt = ogAlt ?? title;
 const ogImage = new URL(asset(og ?? `og/${lang}/home.png`), site).href;
 const vars = [
   glow ? `--wall-a:${glow[0]};--wall-b:${glow[1]};--wall-c:${glow[2]}` : '',
@@ -40,11 +52,23 @@ const vars = [
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
-    <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="ru" href={alt('ru')} />
-    <link rel="alternate" hreflang="en" href={alt('en')} />
-    <link rel="alternate" hreflang="x-default" href={alt('ru')} />
+    {indexable ? (
+      <>
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <link rel="canonical" href={canonical} />
+        <link rel="alternate" hreflang="ru" href={alt('ru')} />
+        <link rel="alternate" hreflang="en" href={alt('en')} />
+        <link rel="alternate" hreflang="x-default" href={alt('ru')} />
+      </>
+    ) : (
+      <meta name="robots" content="noindex, follow" />
+    )}
+    {indexable && SEARCH_VERIFICATION.google && <meta name="google-site-verification" content={SEARCH_VERIFICATION.google} />}
+    {indexable && SEARCH_VERIFICATION.yandex && <meta name="yandex-verification" content={SEARCH_VERIFICATION.yandex} />}
+    {indexable && SEARCH_VERIFICATION.bing && <meta name="msvalidate.01" content={SEARCH_VERIFICATION.bing} />}
+    <meta name="application-name" content={SITE_NAME} />
+    <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
+    <meta name="author" content={SITE_NAME} />
     <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#111315" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)" />
@@ -52,28 +76,34 @@ const vars = [
     <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
     <link rel="icon" href={asset('favicon-32.png')} sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href={asset('apple-touch-icon.png')} />
-    <meta property="og:type" content={slug ? 'product' : 'website'} />
-    <meta property="og:site_name" content="ehroz.pro" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    {indexable && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content={lang === 'ru' ? 'ru_RU' : 'en_US'} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta property="og:locale" content={locale(lang)} />
+    {indexable && <meta property="og:locale:alternate" content={locale(otherLang)} />}
+    {updated && <meta property="og:updated_time" content={updated} />}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
     <link rel="sitemap" href={asset('sitemap-index.xml')} />
     <script is:inline>
-      // Тема до первой отрисовки: auto | dark | light
+      // Тема (auto | dark | light) и отключённые анимации — до первой отрисовки
       (function () {
         var p = 'auto';
         try { p = localStorage.getItem('theme') || 'auto'; } catch (e) {}
         var d = document.documentElement;
         d.setAttribute('data-theme-pref', p);
         if (p !== 'auto') d.setAttribute('data-theme', p);
+        try { if (localStorage.getItem('motion') === 'reduce') d.setAttribute('data-motion', 'reduce'); } catch (e) {}
       })();
     </script>
     {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
@@ -87,6 +117,7 @@ const vars = [
     <PageFrame />
     <Dock lang={lang} current={slug} />
     <Spotlight lang={lang} />
+    {analyticsEnabled() && site.origin === PRODUCTION_ORIGIN && <Consent lang={lang} />}
     <script>
       import '../scripts/site';
     </script>

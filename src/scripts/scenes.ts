@@ -13,7 +13,7 @@ type Ctx = {
 };
 type Script = (c: Ctx) => Promise<void>;
 
-const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduced = (matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'reduce');
 
 /* ── Сценарии ── */
 const ringPos = (ring: HTMLElement, i: number) => {

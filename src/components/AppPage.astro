@@ -2,7 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import type { App, Lang } from '../content/apps';
 import { apps } from '../content/apps';
-import { tr, path, pick, PLATFORM, STATUS, CONTACTS } from '../i18n';
+import { tr, path, pick, clip, asset, PLATFORM, STATUS, CONTACTS, SITE_NAME } from '../i18n';
+import { graph, webpage, breadcrumbs, application, faq, website, person } from '../lib/schema';
 import AppIcon from './AppIcon.astro';
 import AppWindow from './AppWindow.astro';
 import Icon from './Icon.astro';
@@ -19,30 +20,46 @@ const idx = apps.findIndex((a) => a.slug === app.slug);
 const no = String(idx + 1).padStart(2, '0');
 const others = apps.map((a, i) => ({ a, i })).filter(({ a }) => a.slug !== app.slug);
 const linkIcon = { download: 'download', open: 'external', github: 'github', releases: 'external', contact: 'telegram' } as const;
-const title = `${app.name} — ${pick(lang, app.short)}`;
+// Бренд в конце заголовка, если влезает в ~60 символов (столько показывает выдача).
+const baseTitle = `${app.name} — ${pick(lang, app.short)}`;
+const title = baseTitle.length + SITE_NAME.length + 3 <= 60 ? `${baseTitle} · ${SITE_NAME}` : baseTitle;
 const site = Astro.site!;
-const jsonld = {
-  '@context': 'https://schema.org',
-  '@type': app.platforms.includes('web') ? 'WebApplication' : 'SoftwareApplication',
-  name: app.name,
-  description: pick(lang, app.about),
-  applicationCategory: 'UtilitiesApplication',
-  operatingSystem: app.platforms.map((p) => PLATFORM[p].en).join(', '),
-  ...(app.version ? { softwareVersion: app.version } : {}),
-  url: new URL(path(lang, app.slug), site).href,
-  image: new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/icons/${app.slug}-512.png`, site).href,
-  author: { '@type': 'Person', name: 'Ehroz', url: new URL(path(lang), site).href },
-  ...(app.status === 'ready' ? { offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } } : {}),
-};
+const url = new URL(path(lang, app.slug), site).href;
+const description = clip(pick(lang, app.about));
+const ogPath = `og/${lang}/${app.slug}.png`;
+const crumbs = [
+  { name: SITE_NAME, url: path(lang) },
+  { name: tr(lang, 'page.back'), url: `${path(lang)}#apps` },
+  { name: app.name, url: path(lang, app.slug) },
+];
+const jsonld = graph(
+  webpage({
+    site, lang, url, name: title, description, updated: app.updated, breadcrumb: true,
+    image: new URL(asset(ogPath), site).href, imageAlt: baseTitle,
+    about: `${url}#app`, mainEntity: `${url}#app`,
+  }),
+  breadcrumbs(site, url, crumbs),
+  application(site, lang, app, url),
+  faq(url, lang, app),
+  website(site),
+  person(site, lang),
+);
+const updatedText = new Date(app.updated).toLocaleDateString(ru ? 'ru-RU' : 'en-US', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 const n = app.features.length;
 const pad = (v: number) => String(v).padStart(2, '0');
 ---
 
-<Layout lang={lang} title={title} description={pick(lang, app.about).slice(0, 158)} slug={app.slug} og={`og/${lang}/${app.slug}.png`} jsonld={jsonld}>
+<Layout lang={lang} title={title} description={description} slug={app.slug} og={ogPath} ogAlt={baseTitle} updated={app.updated} jsonld={jsonld}>
   <div class="app-page" data-tint style={`--tint-d:${app.tint.dark};--tint-l:${app.tint.light}`}>
     <section class="ap-hero container" aria-labelledby="ap-name" data-spy={app.name}>
       <div class="sec-bar">
-        <a class="back" href={`${path(lang)}#apps`}><Icon name="arrow-left" size={13} />{tr(lang, 'page.back')}</a>
+        <nav class="crumbs" aria-label={ru ? 'Навигационная цепочка' : 'Breadcrumb'}>
+          <ol>
+            <li><a href={path(lang)}>{SITE_NAME}</a></li>
+            <li><a href={`${path(lang)}#apps`}>{tr(lang, 'page.back')}</a></li>
+            <li><span aria-current="page">{app.name}</span></li>
+          </ol>
+        </nav>
         <span>{no} / {pick(lang, app.kind)}</span>
       </div>
       <div class="ap-grid bleed">
@@ -53,7 +70,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
           <div class="ap-cta">
             {
               app.links.map((l, i) => (
-                <a class:list={['btn', { 'btn-primary': i === 0 }]} href={l.href} target="_blank" rel="noopener">
+                <a class:list={['btn', { 'btn-primary': i === 0 }]} href={l.href} target="_blank" rel="noopener" data-kind={l.kind}>
                   <Icon name={linkIcon[l.kind]} />
                   {pick(lang, l.label)}
                 </a>
@@ -68,6 +85,8 @@ const pad = (v: number) => String(v).padStart(2, '0');
             <div><dt>{ru ? 'Платформа' : 'Platform'}</dt><dd>{app.platforms.map((p) => pick(lang, PLATFORM[p])).join(' · ')}</dd></div>
             {app.version && <div><dt>{tr(lang, 'page.version')}</dt><dd>{app.version}</dd></div>}
             {app.openSource && <div><dt>{ru ? 'Код' : 'Code'}</dt><dd>{tr(lang, 'page.source')}</dd></div>}
+            <div><dt>{ru ? 'Автор' : 'Author'}</dt><dd><a href={path(lang, 'about')} rel="author">{pick(lang, CONTACTS.name)}</a></dd></div>
+            <div><dt>{ru ? 'Обновлено' : 'Updated'}</dt><dd><time datetime={app.updated}>{updatedText}</time></dd></div>
           </dl>
         </div>
         <div class="ap-plate">
@@ -190,15 +209,29 @@ const pad = (v: number) => String(v).padStart(2, '0');
   .ap-hero {
     padding-top: calc(var(--menubar) + 24px);
   }
-  .back {
-    display: inline-flex;
-    align-items: center;
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
     gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .crumbs li + li::before {
+    content: '/';
+    margin-right: 6px;
+    color: var(--muted);
+  }
+  .crumbs a {
     color: var(--text-2);
     transition: color var(--fast) var(--ease);
   }
-  .back:hover {
+  .crumbs a:hover,
+  .crumbs a:focus-visible {
     color: var(--accent);
+  }
+  .crumbs [aria-current] {
+    color: var(--text);
   }
   .ap-grid {
     display: grid;

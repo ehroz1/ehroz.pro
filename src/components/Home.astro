@@ -1,8 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import type { Lang } from '../content/apps';
-import { apps } from '../content/apps';
-import { tr, path, pick, CONTACTS, PLATFORM } from '../i18n';
+import { apps, homeUpdated } from '../content/apps';
+import { tr, path, pick, asset, CONTACTS, PLATFORM } from '../i18n';
+import { graph, webpage, appList, website, person, schemaIds } from '../lib/schema';
 import AppWindow from './AppWindow.astro';
 import AppIcon from './AppIcon.astro';
 import Avatar from './Avatar.astro';
@@ -16,16 +17,18 @@ const { lang } = Astro.props;
 const ru = lang === 'ru';
 const platforms = new Set(apps.flatMap((a) => a.platforms)).size;
 const ready = apps.filter((a) => a.status === 'ready').length;
-const jsonld = {
-  '@context': 'https://schema.org',
-  '@type': 'Person',
-  name: 'Ehroz',
-  jobTitle: 'Designer & Developer',
-  url: new URL(path(lang), Astro.site).href,
-  email: `mailto:${CONTACTS.email}`,
-  address: { '@type': 'PostalAddress', addressLocality: 'Astana', addressCountry: 'KZ' },
-  sameAs: [`https://t.me/${CONTACTS.telegram}`, `https://instagram.com/${CONTACTS.instagram}`, `https://github.com/${CONTACTS.github}`],
-};
+const site = Astro.site!;
+const homeUrl = new URL(path(lang), site).href;
+const jsonld = graph(
+  webpage({
+    site, lang, url: homeUrl, type: 'CollectionPage', name: tr(lang, 'meta.title'), description: tr(lang, 'meta.description'),
+    updated: homeUpdated(), image: new URL(asset(`og/${lang}/home.png`), site).href, imageAlt: tr(lang, 'meta.title'),
+    about: schemaIds(site).person, mainEntity: `${homeUrl}#apps`,
+  }),
+  appList(site, lang, apps, homeUrl),
+  website(site),
+  person(site, lang),
+);
 const stats = [
   [String(apps.length).padStart(2, '0'), ru ? 'продуктов' : 'products'],
   [String(ready).padStart(2, '0'), ru ? 'уже доступны' : 'available now'],
@@ -34,7 +37,7 @@ const stats = [
 ];
 ---
 
-<Layout lang={lang} title={tr(lang, 'meta.title')} description={tr(lang, 'meta.description')} jsonld={jsonld}>
+<Layout lang={lang} title={tr(lang, 'meta.title')} description={tr(lang, 'meta.description')} jsonld={jsonld} updated={homeUpdated()}>
   <section class="hero container" aria-labelledby="hero-title" data-spy={ru ? 'Мастерская' : 'Workshop'}>
     <div class="sec-bar">
       <span>01 / <b>{ru ? 'Мастерская Ehroz' : 'Ehroz workshop'}</b></span>
@@ -58,7 +61,7 @@ const stats = [
         </div>
         <p class="hero-note">macOS · Windows · {ru ? 'веб · расширения браузера' : 'web · browser extensions'}</p>
       </div>
-      <nav class="hero-index" aria-label={tr(lang, 'apps.title')}>
+      <nav class="hero-index" aria-label={ru ? 'Каталог приложений' : 'App index'}>
         <ol>
           {
             apps.map((a, i) => (
@@ -109,7 +112,7 @@ const stats = [
         <Avatar size={72} />
         <h2 class="h3" id="about-title">Ehroz · designer &amp; developer</h2>
       </div>
-      <p class="about-text">{tr(lang, 'about.text')}</p>
+      <p class="about-text">{tr(lang, 'about.text')} <a href={path(lang, 'about')}>{tr(lang, 'about.mac.more').replace('…', '')} →</a></p>
     </div>
     <dl class="stats">
       {
@@ -137,6 +140,7 @@ const stats = [
         <a class="btn btn-primary" href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener"><Icon name="telegram" />@{CONTACTS.telegram}</a>
         <a class="btn" href={CONTACTS.order} target="_blank" rel="noopener"><Icon name="briefcase" />{tr(lang, 'contact.order')}</a>
         <a class="btn" href={`mailto:${CONTACTS.email}`}><Icon name="mail" />Email</a>
+        <a class="btn" href={path(lang, 'contacts')}>{tr(lang, 'contacts.page.h1')}</a>
       </div>
     </div>
   </section>

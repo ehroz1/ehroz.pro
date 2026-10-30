@@ -1,0 +1,23 @@
+# Доступность сайта: каждый час открывает главную, страницу приложения и sitemap.
+# Если сайт лежит или отдаёт ошибку 5xx — job падает, GitHub присылает письмо.
+name: Uptime
+
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check pages
+        run: |
+          fail=0
+          for u in https://ehroz.pro/ https://ehroz.pro/en/ https://ehroz.pro/morfus/ https://ehroz.pro/sitemap-index.xml; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 --retry 2 --retry-delay 10 "$u")
+            echo "$code $u"
+            [ "$code" = "200" ] || fail=1
+          done
+          exit $fail

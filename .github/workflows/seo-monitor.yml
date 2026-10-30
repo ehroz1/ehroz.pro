@@ -1,0 +1,19 @@
+# Еженедельная проверка индексации живого ehroz.pro: robots.txt, sitemap, статусы, noindex, canonical,
+# редиректы. Если что-то сломалось или страниц в sitemap стало резко меньше — job падает,
+# и GitHub присылает письмо владельцу репозитория.
+name: SEO monitor
+
+on:
+  schedule:
+    - cron: '17 4 * * 1' # понедельник, 09:17 по Астане
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/monitor-seo.mjs

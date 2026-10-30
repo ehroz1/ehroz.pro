@@ -482,6 +482,20 @@ a:hover .go,
     navigation: none;
   }
 }
+/* Анимации выключены вручную (панель «Связаться» → Анимации). */
+html[data-motion='reduce'] *,
+html[data-motion='reduce'] *::before,
+html[data-motion='reduce'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+html[data-motion='reduce']::view-transition-group(*),
+html[data-motion='reduce']::view-transition-old(*),
+html[data-motion='reduce']::view-transition-new(*) {
+  animation: none !important;
+}
 
 .sr-only {
   position: absolute;

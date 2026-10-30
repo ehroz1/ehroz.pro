@@ -1,9 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { tr, path } from '../i18n';
+import { apps } from '../content/apps';
 import Icon from '../components/Icon.astro';
+import AppIcon from '../components/AppIcon.astro';
 ---
-<Layout lang="ru" title="404 — ehroz.pro" description={tr('ru', 'nf.text')}>
+<Layout lang="ru" title="404 — ehroz.pro" description={tr('ru', 'nf.text')} noindex>
   <section class="nf container" data-spy="404">
     <div class="sec-bar"><span>404 / {tr('ru', 'nf.title')}</span><span>{tr('en', 'nf.title')}</span></div>
     <div class="nf-body">
@@ -13,13 +15,41 @@ import Icon from '../components/Icon.astro';
       <p class="nf-code pixel">404</p>
       <h1 class="h2">{tr('ru', 'nf.title')}</h1>
       <p class="lead">{tr('ru', 'nf.text')}<br />{tr('en', 'nf.text')}</p>
-      <a class="btn btn-primary" href={path('ru')}><Icon name="home" />ehroz.pro</a>
+      <div class="nf-actions">
+        <a class="btn btn-primary" href={path('ru')}><Icon name="home" />{tr('ru', 'nf.home')}</a>
+        <a class="btn" href={path('en')} hreflang="en" lang="en">{tr('en', 'nf.home')}</a>
+      </div>
     </div>
+    <nav class="nf-apps" aria-labelledby="nf-apps-title">
+      <h2 id="nf-apps-title" class="sec-bar"><span>{tr('ru', 'nf.apps')}</span><span>{tr('en', 'nf.apps')}</span></h2>
+      <ul>
+        {apps.map((a) => (
+          <li>
+            <a href={path('ru', a.slug)}>
+              <AppIcon slug={a.slug} name={a.name} size={40} decorative />
+              <span class="nf-text">
+                <span class="nf-name">{a.name}</span>
+                <span class="nf-short">{a.short.ru}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
   </section>
 </Layout>
 <style>
-  .nf { padding-top: calc(var(--menubar) + 24px); }
-  .nf-body { position: relative; display: grid; gap: 18px; justify-items: start; padding: 48px 0 64px; border-top: 1px solid var(--line); }
+  .nf { padding-top: calc(var(--menubar) + 24px); padding-bottom: 120px; }
+  .nf-body { position: relative; display: grid; gap: 18px; justify-items: start; padding: 48px 0 48px; border-top: 1px solid var(--line); }
   .nf-pattern { display: grid; gap: 6px; width: 100%; color: var(--line-strong); margin-bottom: 12px; }
   .nf-code { font-size: clamp(96px, 18vw, 200px); line-height: 0.9; color: var(--accent); }
+  .nf-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .nf-apps h2 { font: inherit; margin: 0; }
+  .nf-apps ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); column-gap: 24px; border-top: 1px solid var(--line); }
+  .nf-apps a { display: grid; grid-template-columns: 40px 1fr; column-gap: 12px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--line); color: inherit; text-decoration: none; }
+  .nf-apps a:hover .nf-name, .nf-apps a:focus-visible .nf-name { color: var(--accent); }
+  .nf-apps img { width: 40px; height: 40px; }
+  .nf-text { display: grid; gap: 2px; min-width: 0; }
+  .nf-name { font-weight: 600; }
+  .nf-short { font-size: 13px; opacity: 0.7; }
 </style>

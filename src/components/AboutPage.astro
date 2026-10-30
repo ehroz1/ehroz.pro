@@ -1,0 +1,136 @@
+---
+import Layout from '../layouts/Layout.astro';
+import type { Lang } from '../content/apps';
+import { apps, homeUpdated } from '../content/apps';
+import { tr, path, pick, asset, CONTACTS, SITE_NAME, STATUS, PLATFORM } from '../i18n';
+import { graph, webpage, breadcrumbs, website, person, schemaIds } from '../lib/schema';
+import Icon from './Icon.astro';
+import AppIcon from './AppIcon.astro';
+import Avatar from './Avatar.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const ru = lang === 'ru';
+const c = CONTACTS;
+const site = Astro.site!;
+const url = new URL(path(lang, 'about'), site).href;
+const title = tr(lang, 'about.page.title');
+const description = tr(lang, 'about.page.desc');
+const crumbs = [
+  { name: SITE_NAME, url: path(lang) },
+  { name: tr(lang, 'about.page.h1'), url: path(lang, 'about') },
+];
+const updated = homeUpdated();
+const jsonld = graph(
+  webpage({
+    site, lang, url, type: 'ProfilePage', name: title, description, updated, breadcrumb: true,
+    image: new URL(asset(`og/${lang}/home.png`), site).href, imageAlt: title,
+    about: schemaIds(site).person, mainEntity: schemaIds(site).person,
+  }),
+  breadcrumbs(site, url, crumbs),
+  website(site),
+  person(site, lang),
+);
+const platforms = [...new Set(apps.flatMap((a) => a.platforms))].map((p) => pick(lang, PLATFORM[p])).join(', ');
+const facts: [string, string][] = [
+  [ru ? 'Имя' : 'Name', `${pick(lang, c.name)} (${ru ? 'Ehroz' : 'Эхроз'})`],
+  [ru ? 'Чем занимаюсь' : 'What I do', ru ? 'дизайн интерфейсов и разработка приложений и сайтов' : 'interface design, apps and websites'],
+  [ru ? 'Город' : 'City', `${pick(lang, c.city)}, ${ru ? 'Казахстан' : 'Kazakhstan'} · UTC+5`],
+  [ru ? 'Платформы' : 'Platforms', platforms],
+  [ru ? 'Приложений на сайте' : 'Apps on this site', String(apps.length)],
+];
+const profiles = [
+  { name: 'Telegram', icon: 'telegram', href: `https://t.me/${c.telegram}`, handle: `@${c.telegram}` },
+  { name: 'GitHub', icon: 'github', href: `https://github.com/${c.github}`, handle: c.github },
+  { name: 'Instagram', icon: 'instagram', href: `https://instagram.com/${c.instagram}`, handle: `@${c.instagram}` },
+  { name: 'Behance', icon: 'behance', href: `https://www.behance.net/${c.behance}`, handle: c.behance },
+];
+---
+
+<Layout lang={lang} title={title} description={description} slug="about" og={`og/${lang}/home.png`} ogAlt={title} updated={updated} jsonld={jsonld}>
+  <section class="info container" aria-labelledby="about-h1" data-spy={tr(lang, 'about.page.h1')}>
+    <div class="sec-bar">
+      <nav class="crumbs" aria-label={ru ? 'Навигационная цепочка' : 'Breadcrumb'}>
+        <ol>
+          <li><a href={path(lang)}>{SITE_NAME}</a></li>
+          <li><span aria-current="page">{tr(lang, 'about.page.h1')}</span></li>
+        </ol>
+      </nav>
+      <span>{c.role}</span>
+    </div>
+    <div class="info-head">
+      <Avatar size={72} />
+      <div>
+        <h1 class="display" id="about-h1">{tr(lang, 'about.page.h1')}</h1>
+        <p class="lead">{tr(lang, 'about.text')}</p>
+      </div>
+    </div>
+
+    <h2 class="h3">{tr(lang, 'about.page.facts')}</h2>
+    <dl class="facts">
+      {facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+    </dl>
+
+    <h2 class="h3">{tr(lang, 'about.page.how')}</h2>
+    <ul class="how">
+      <li>{tr(lang, 'about.page.how1')}</li>
+      <li>{tr(lang, 'about.page.how2')}</li>
+      <li>{tr(lang, 'about.page.how3')}</li>
+    </ul>
+
+    <h2 class="h3">{tr(lang, 'about.page.apps')}</h2>
+    <ul class="apps">
+      {apps.map((a) => (
+        <li>
+          <a href={path(lang, a.slug)}>
+            <AppIcon slug={a.slug} name={a.name} size={40} decorative />
+            <span class="t"><b>{a.name}</b><span>{pick(lang, a.short)}</span></span>
+            <span class="st">{pick(lang, STATUS[a.status])}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <h2 class="h3">{tr(lang, 'about.page.profiles')}</h2>
+    <ul class="profiles">
+      {profiles.map((p) => (
+        <li><a href={p.href} target="_blank" rel="noopener me"><Icon name={p.icon as any} />{p.name}<span>{p.handle}</span></a></li>
+      ))}
+    </ul>
+    <p class="next"><a class="btn btn-primary" href={path(lang, 'contacts')}><Icon name="mail" />{tr(lang, 'contacts.page.h1')}</a></p>
+  </section>
+  <Footer lang={lang} />
+</Layout>
+
+<style>
+  .info { padding-top: calc(var(--menubar) + 24px); padding-bottom: 64px; }
+  .info-head { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: start; padding: 40px 0; border-top: 1px solid var(--line); }
+  .info-head .lead { max-width: 62ch; margin-top: 16px; }
+  .info h2 { margin: 40px 0 16px; }
+  .facts { display: grid; margin: 0; border-top: 1px solid var(--line); }
+  .facts div { display: grid; grid-template-columns: minmax(120px, 220px) 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .facts dt { color: var(--muted); font: 400 12px/1.6 var(--font-mono); text-transform: uppercase; letter-spacing: 0.04em; }
+  .facts dd { margin: 0; }
+  .how { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; max-width: 70ch; }
+  .apps, .profiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); column-gap: 24px; border-top: 1px solid var(--line); }
+  .apps a { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); color: inherit; }
+  .apps img { width: 40px; height: 40px; }
+  .apps .t { display: grid; gap: 2px; min-width: 0; }
+  .apps .t span { font-size: 13px; color: var(--text-2); }
+  .apps .st { font: 400 11px/1 var(--font-mono); color: var(--muted); text-transform: uppercase; }
+  .apps a:hover b, .apps a:focus-visible b, .profiles a:hover, .profiles a:focus-visible { color: var(--accent); }
+  .profiles a { display: flex; align-items: center; gap: 10px; padding: 14px 0; border-bottom: 1px solid var(--line); color: inherit; }
+  .profiles a span { margin-left: auto; color: var(--muted); font: 400 12px/1 var(--font-mono); }
+  .next { margin-top: 32px; }
+  .crumbs ol { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .crumbs li + li::before { content: '/'; margin-right: 6px; color: var(--muted); }
+  .crumbs a { color: var(--text-2); }
+  .crumbs a:hover, .crumbs a:focus-visible { color: var(--accent); }
+  @media (max-width: 640px) {
+    .info-head { grid-template-columns: 1fr; }
+    .facts div { grid-template-columns: 1fr; gap: 4px; }
+  }
+</style>

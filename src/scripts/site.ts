@@ -3,7 +3,7 @@ import './scenes-more';
 
 const $ = <T extends Element = HTMLElement>(s: string, root: ParentNode = document) => root.querySelector<T>(s);
 const $$ = <T extends Element = HTMLElement>(s: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(s));
-const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduced = (matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'reduce');
 const lang = document.documentElement.lang === 'en' ? 'en' : 'ru';
 
 /* ── Тема ── */
@@ -27,6 +27,17 @@ $$('[data-theme-toggle]').forEach((b) =>
   }),
 );
 $$('[data-set-theme]').forEach((b) => b.addEventListener('click', () => setTheme(b.dataset.setTheme as Pref)));
+
+// Анимации: «вкл.» (как в системе) или «без анимаций». Сцены и обои читают настройку при загрузке — перезагружаем.
+const motion = document.documentElement.dataset.motion === 'reduce' ? 'reduce' : 'auto';
+$$('[data-set-motion]').forEach((b) => {
+  b.setAttribute('aria-pressed', String(b.dataset.setMotion === motion));
+  b.addEventListener('click', () => {
+    if (b.dataset.setMotion === motion) return;
+    try { localStorage.setItem('motion', b.dataset.setMotion!); } catch {}
+    location.reload();
+  });
+});
 
 /* ── Часы: Астана, UTC+5 (без опоры на базу часовых поясов браузера — она могла устареть) ── */
 const clocks = $$('[data-clock]');
