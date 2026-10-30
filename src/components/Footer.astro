@@ -20,11 +20,6 @@ const c = CONTACTS;
       <a href={path(lang)} class="foot-logo"><Mark size={18} /> ehroz.pro</a>
       <p>{analyticsEnabled() ? tr(lang, 'foot.consent') : tr(lang, 'foot.made')}</p>
       {analyticsEnabled() && <p><a href="#" data-consent-open>{tr(lang, 'foot.cookies')}</a></p>}
-      <button type="button" class="foot-egg" data-game-start>
-        <span class="keys" aria-hidden="true"><kbd>↑</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>↓</kbd><kbd>←</kbd><kbd>→</kbd><kbd>←</kbd><kbd>→</kbd><kbd>B</kbd><kbd>A</kbd></span>
-        <span class="egg-text">{tr(lang, 'foot.egg')}</span>
-        <span class="egg-play">▶ {tr(lang, 'foot.egg.btn')}</span>
-      </button>
     </div>
     <nav aria-label={lang === 'ru' ? 'Приложения в подвале' : 'Footer: apps'}>
       <h2>{tr(lang, 'menu.apps')}</h2>
@@ -63,6 +58,7 @@ const c = CONTACTS;
   </div>
   <div class="foot-bottom">
     <span>© 2026 Ehroz</span>
+    <button type="button" class="foot-egg" data-game-start title={tr(lang, 'foot.egg')}>↑↑↓↓←→←→BA</button>
     <span>{c.city[lang]} · UTC+5</span>
   </div>
 </footer>
@@ -109,65 +105,20 @@ const c = CONTACTS;
     font-size: 14px;
   }
   .foot-egg {
-    display: grid;
-    gap: 10px;
-    margin-top: 18px;
-    padding: 14px 16px;
-    max-width: 440px;
-    width: 100%;
-    text-align: left;
-    color: var(--text-2);
-    background: color-mix(in srgb, var(--accent) 8%, transparent);
-    border: 1px dashed color-mix(in srgb, var(--accent) 60%, transparent);
-    border-radius: 12px;
-    cursor: pointer;
+    padding: 0;
+    color: inherit;
     font: inherit;
-    transition: background var(--fast) var(--ease), transform var(--fast) var(--ease);
+    letter-spacing: 0.2em;
+    background: none;
+    border: 0;
+    opacity: 0.35;
+    cursor: default;
+    transition: opacity var(--fast) var(--ease), color var(--fast) var(--ease);
   }
-  .foot-egg:hover {
-    background: color-mix(in srgb, var(--accent) 16%, transparent);
-    transform: translateY(-2px);
-  }
-  .foot-egg .keys {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-  .foot-egg kbd {
-    min-width: 24px;
-    padding: 4px 6px;
-    text-align: center;
+  .foot-egg:hover,
+  .foot-egg:focus-visible {
+    opacity: 1;
     color: var(--accent);
-    font: 600 12px/1 var(--font-mono);
-    border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
-    border-bottom-width: 3px;
-    border-radius: 6px;
-    animation: kglow 2.4s ease-in-out infinite;
-  }
-  .foot-egg kbd:nth-child(2) { animation-delay: 0.12s; }
-  .foot-egg kbd:nth-child(3) { animation-delay: 0.24s; }
-  .foot-egg kbd:nth-child(4) { animation-delay: 0.36s; }
-  .foot-egg kbd:nth-child(5) { animation-delay: 0.48s; }
-  .foot-egg kbd:nth-child(6) { animation-delay: 0.6s; }
-  .foot-egg kbd:nth-child(7) { animation-delay: 0.72s; }
-  .foot-egg kbd:nth-child(8) { animation-delay: 0.84s; }
-  .foot-egg kbd:nth-child(9) { animation-delay: 0.96s; }
-  .foot-egg kbd:nth-child(10) { animation-delay: 1.08s; }
-  @keyframes kglow {
-    0%, 70%, 100% { background: transparent; }
-    10% { background: color-mix(in srgb, var(--accent) 30%, transparent); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .foot-egg kbd { animation: none; }
-  }
-  .foot-egg .egg-text {
-    font-size: 13px;
-  }
-  .foot-egg .egg-play {
-    color: var(--accent);
-    font: 600 11px/1 var(--font-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
   }
   h2 {
     margin-bottom: 12px;
