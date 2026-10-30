@@ -115,6 +115,12 @@ const c = CONTACTS;
     cursor: default;
     transition: opacity var(--fast) var(--ease), color var(--fast) var(--ease);
   }
+  /* на компьютере подсказка только текст — запуск Konami-кодом; кликается лишь на тач-экранах */
+  @media (hover: hover) and (pointer: fine) {
+    .foot-egg {
+      pointer-events: none;
+    }
+  }
   .foot-egg:hover,
   .foot-egg:focus-visible {
     opacity: 1;
