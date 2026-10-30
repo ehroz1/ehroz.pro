@@ -1,0 +1,1043 @@
+# Ehroz — apps and tools (ehroz.pro)
+
+Author: Ehroz (Эхроз), designer & developer, Astana, Kazakhstan.
+
+# English
+
+## Morfus — Radial file converter for macOS
+
+URL: https://ehroz1.github.io/ehroz.pro/en/morfus/
+Platforms: macOS · Status: Available · Version: 0.2.2 · Updated: 2026-10-27
+
+Grab a file, press a key, drop it on a sector.
+
+Morfus opens a round menu right around your cursor while you drag a file. Convert, compress and tools for photos, video, audio, PDF, SVG, documents and archives — all local on your Mac, with the result saved next to the original.
+
+### Who it’s for
+
+Designers, editors, social media teams — anyone who shuffles files between formats every day.
+
+### What it does
+
+- **A ring around your cursor.** Start dragging a file and press ⌥. A ring of formats for that file type appears around the cursor — move into a sector and let go.
+- **Three modes, three keys.** ⌥ converts, ⌘ compresses (light / medium / strong, “no more than 25 MB”), ⌃ opens tools: remove background, recognise text, merge PDFs. Another key switches mode on the fly.
+- **The result, right in the ring.** Quick jobs show progress and the outcome in the centre of the ring: “4.2 MB → 1.1 MB · −74%”. Long ones move to a small indicator in the corner.
+- **Make the ring yours.** Every mode and file type has its own set of sectors: add, remove, reorder by dragging. Favourites, a second ring with options, your own colour.
+- **Or without the ring.** Finder services, ⌥⌘M for the selection, morfus:// links and a command line — the same actions for scripts and Shortcuts.
+
+### How it works
+
+1. Download the zip, move Morfus.app to Applications and open it with right-click → Open.
+2. Go through onboarding: file types and mode keys. For video and PDF, Morfus installs ffmpeg, Ghostscript and qpdf itself.
+3. Drag any file, press ⌥, ⌘ or ⌃ and drop on a sector. The result lands next to the original.
+
+### FAQ
+
+**Are my files uploaded anywhere?**
+
+No. Everything runs on your Mac: built-in libraries, Apple Vision and tools like ffmpeg.
+
+**How do updates work?**
+
+Morfus checks for new versions and shows “Update Morfus” in its menu. The download is verified by SHA-256 and signature.
+
+**macOS won’t open the app**
+
+Right-click Morfus.app → Open → Open. Or System Settings → Privacy & Security → Open Anyway.
+
+**Can I move settings to another Mac?**
+
+Yes: Help → Transfer settings saves everything into a single .morfus file.
+
+### Requirements
+
+- macOS 13 Ventura or later
+- Apple Silicon and Intel
+- Free ffmpeg, Ghostscript and qpdf for video, audio and PDF (installed from Morfus)
+
+- Download for Mac: https://github.com/ehroz1/morfus-releases/releases/latest
+- All releases: https://github.com/ehroz1/morfus-releases/releases
+
+## Morfu — Menu bar converter for macOS
+
+URL: https://ehroz1.github.io/ehroz.pro/en/morfu/
+Platforms: macOS · Status: Available · Version: 3.3 · Updated: 2026-10-27
+
+Drop a file on the “m”, grab the result.
+
+Morfu lives in the menu bar. Drop a video, photo, PDF, SVG or document on its icon, get the format you need and see how much space you saved. Everything stays local; drag the result out or paste it from the clipboard.
+
+### Who it’s for
+
+People who want a one-drop converter without extra windows.
+
+### What it does
+
+- **Drag in, drag out.** Drop files on the “m” in the menu bar — the panel shows the queue, and you drag the result straight into a chat.
+- **See what you saved.** For every file: “12.4 MB → 3.1 MB · −75%”. Plus stats for the month and all time.
+- **An island at the notch.** Drag a file to the MacBook notch — it opens into an island with progress and results.
+- **Raster → SVG.** “SVG b/w” for logos and signatures, “SVG colour” for illustrations. Colours / Detail / Smoothing sliders with a live preview.
+
+### How it works
+
+1. Download the zip, move Morfu.app to Applications, first launch — right-click → Open.
+2. Install the tools with one command: brew install ffmpeg webp mupdf-tools potrace pngquant.
+3. Drop files on the “m” or press ⌘V in the panel. Morfu keeps itself up to date.
+
+### FAQ
+
+**How is Morfu different from Morfus?**
+
+Morfu is a Swift menu bar panel. Morfus is the next generation in Rust: a round menu at the cursor and many more actions.
+
+**Does it need the internet?**
+
+No. Even speech-to-TXT/SRT uses the built-in macOS recogniser.
+
+**Can it compress a screenshot in the clipboard?**
+
+Yes: ⌃⌥C converts the clipboard contents and puts them back.
+
+### Requirements
+
+- macOS 13 Ventura or later
+- Homebrew with ffmpeg, webp, mupdf-tools, potrace, pngquant
+- Media Engine on Apple Silicon makes video 2–3× faster
+
+- Download for Mac: https://github.com/ehroz1/morfu-releases/releases/latest
+- All releases: https://github.com/ehroz1/morfu-releases/releases
+
+## Pachaq — Image compression and cropping for the web
+
+URL: https://ehroz1.github.io/ehroz.pro/en/pachaq/
+Platforms: macOS, Windows · Status: Coming soon · Version: 0.1.1 · Updated: 2026-10-27
+
+Drop images, get light WebP, JPEG and PNG.
+
+Pachaq compresses and crops images for websites: WebP via libwebp, JPEG via MozJPEG, PNG via oxipng. Resizing, smart cropping to any ratio, watch folders and a tray mode. Built with Rust and Tauri for Mac and Windows.
+
+### Who it’s for
+
+Web developers, content managers and anyone publishing images online.
+
+### What it does
+
+- **Drop and done.** Files and whole folders, or paste with ⌘V. Pick the format on top: WebP, JPEG, PNG or “As is”. Each file shows how much it shrank.
+- **Smart crop.** 1:1, 4:3, 3:2, 16:9, 4:5, 9:16, 21:9 or custom. Pachaq finds the interesting part — detail, saturation, skin tones — or you move the frame yourself.
+- **Watch folders.** Pick a folder — new images are compressed into a pachaq/ subfolder right away. Pachaq runs from the tray and starts with your system.
+- **From Finder and Explorer.** A Finder Quick Action, an Explorer context menu item and a CLI: pachaq --compress <files|folders>.
+
+### How it works
+
+1. Download the installer for Mac or Windows from the releases page.
+2. Choose the format and crop in the top bar.
+3. Drop images or a folder — compressed files appear next to them.
+
+### FAQ
+
+**Which formats can it read?**
+
+JPEG, PNG, WebP, HEIC/HEIF and TIFF. On Windows, HEIC needs the “HEIF Image Extensions” add-on.
+
+**Does it update itself?**
+
+Yes, Pachaq offers an update on launch when a new version is out.
+
+**Where are the settings?**
+
+⌘, in the app. They live in settings.json in the app folder.
+
+### Requirements
+
+- macOS 11 or later — Apple Silicon and Intel
+- Windows 10 and 11
+
+- Releases page: https://github.com/ehroz1/pachaq-releases/releases
+
+## Sukhan — Auto captions for Reels, TikTok and Shorts
+
+URL: https://ehroz1.github.io/ehroz.pro/en/sukhan/
+Platforms: macOS · Status: In development · Updated: 2026-10-27
+
+Captions for vertical video — automatic and good-looking.
+
+Sukhan is a tiny editor for captions. It transcribes speech with word-level timing (Russian with English terms, English, Kazakh), lets you fix text on the timeline or right in the preview, and the preview matches the export pixel for pixel. In development.
+
+### Who it’s for
+
+Creators and social media teams making short vertical videos.
+
+### What it does
+
+- **Word by word.** Word-level timing from Groq Whisper, ElevenLabs Scribe or Google Gemini — on free tiers, with your keys in the macOS Keychain.
+- **A real timeline.** Waveform and zoom, drag phrases and word edges, split and join, nudge the track by 50 ms, ⌘Z.
+- **9:16, 1:1, 4:5, 16:9.** If the ratio is different — crop by dragging right in the preview, or fit with a blurred background.
+- **A fast renderer.** One Rust engine for preview and export. On Apple M4, a one-minute 1080×1920 clip with captions exports in 8 seconds.
+
+### How it works
+
+1. Drop a video into the window — MP4, MOV, MKV, WEBM, M4V or audio.
+2. Pick a provider and language — Sukhan transcribes word by word.
+3. Fix the text on the timeline and save a .subproj project.
+
+### FAQ
+
+**When is it out?**
+
+Stages 0–3 are done: renderer, player, frame formats, recognition, editor and projects. Next: styling, presets and export.
+
+**Do I need to install anything?**
+
+No, FFmpeg is bundled with the app.
+
+**Where are API keys stored?**
+
+In the macOS Keychain, not in files.
+
+### Requirements
+
+- macOS on Apple Silicon (M1 or later)
+- A free Groq, ElevenLabs or Gemini key
+
+- Watch for releases: https://github.com/ehroz1/sukhan-releases
+
+## radius — Local background removal on Mac
+
+URL: https://ehroz1.github.io/ehroz.pro/en/radius/
+Platforms: macOS · Status: In development · Updated: 2026-10-27
+
+Backgrounds removed on your Mac, nothing uploaded.
+
+radius is local background removal for macOS. It runs BiRefNet HR-matting converted to Core ML: a 2048×2048 image in, a soft-edged alpha matte out. In development; the models are already published.
+
+### Who it’s for
+
+Designers and anyone cutting objects out of photos.
+
+### What it does
+
+- **A soft alpha matte.** Not a hard cut but a matte from 0 to 1: hair and translucent edges stay natural.
+- **On-device only.** Core ML in fp16 with normalisation and sigmoid baked in — the photo never leaves your Mac.
+
+### How it works
+
+1. Open a photo.
+2. The model builds a 2048×2048 alpha matte.
+3. Save a PNG with a transparent background.
+
+### FAQ
+
+**Which model is inside?**
+
+BiRefNet HR-matting (MIT), converted to Core ML with coremltools 9.
+
+**When does the app ship?**
+
+Still in development. The models are already in a public repository.
+
+### Requirements
+
+- macOS
+- Core ML
+
+- Core ML models: https://github.com/ehroz1/radius-models
+
+## BLA-БЛА — Audio & video transcription in the browser
+
+URL: https://ehroz1.github.io/ehroz.pro/en/bla-bla/
+Platforms: Web · Status: Available · Updated: 2026-10-27
+
+11 speech-to-text services — one interface, your own free keys.
+
+BLA-БЛА turns audio and video into timestamped text. Files are prepared right in the browser, long recordings are split to each service’s limits and stitched back. Tuned for mixed Russian–English speech and Kazakh. No server; keys stay in your browser.
+
+### Who it’s for
+
+Journalists, researchers, podcasters — anyone who needs text from a recording.
+
+### What it does
+
+- **Any file.** mp3, m4a, wav, ogg, flac, mp4, mov, webm, mkv… Only the audio is used, squeezed into 16 kHz mono MP3 — about 0.35 MB per minute.
+- **Pick from 11 services.** Groq Whisper, Gemini, ElevenLabs Scribe, Speechmatics, Deepgram and more. Each card shows the free tier, quality per language and how to get a key, step by step.
+- **Text you can take with you.** Edit in place, copy, or download TXT, Markdown, SRT, VTT or JSON. The last 30 transcripts stay in history.
+
+### How it works
+
+1. Open BLA-БЛА and drop an audio or video file.
+2. Pick a service and paste a free key — the card shows where to get one.
+3. Press Transcribe and download the text or subtitles.
+
+### FAQ
+
+**Is it free?**
+
+The site is. Most services have a free tier or sign-up credits; Groq is the quickest start.
+
+**Where does my audio go?**
+
+Only to the service you choose. BLA-БЛА has no server of its own.
+
+**Does it work offline?**
+
+There is a single-file bla-bla.html that opens from disk, but the speech services still need the internet.
+
+### Requirements
+
+- Any modern browser on desktop or mobile
+- A key for one of the speech services
+
+- Open app: https://ehroz1.github.io/bla-bla-text/
+- GitHub: https://github.com/ehroz1/bla-bla-text
+
+## Picta — Search photos, icons and video everywhere at once
+
+URL: https://ehroz1.github.io/ehroz.pro/en/picta/
+Platforms: Web · Status: Available · Updated: 2026-10-27
+
+One query — Pixabay, Pexels, Unsplash, Wikimedia and more.
+
+Picta searches several free stock sites at once and merges everything into one feed. Russian queries are translated to English automatically, duplicates are removed and every image has a clear licence badge. Plus icon search via Iconify and video.
+
+### Who it’s for
+
+Designers, editors and social media teams who need an image right now.
+
+### What it does
+
+- **Every stock site in one feed.** Pixabay, Pexels, Unsplash, Wikimedia Commons, Openverse and more. A Russian query is searched in English, and you can see how.
+- **The licence, front and centre.** “CC0”, “Pixabay License”, “CC BY-SA” with “OK for commercial use” and “Attribution required” — no trip to the source site.
+- **Icons and colours.** Icons mode — over 200,000 icons from ~200 open sets, as SVG or PNG in any colour. Colours mode — a palette for any word.
+
+### How it works
+
+1. Open picta.cc — nothing to install.
+2. Type a query in any language and switch off sources you don’t need.
+3. Download a photo, pick several into a ZIP, or copy the image to the clipboard.
+
+### FAQ
+
+**Are the photos free to use?**
+
+The sources are free, but licences differ — Picta shows them on every image.
+
+**Can I install it as an app?**
+
+Yes, it’s a PWA: Install in the browser or Add to Home Screen on a phone.
+
+**Any keyboard shortcuts?**
+
+“/” to search, Esc to clear, D to download the open photo, ← → to browse.
+
+### Requirements
+
+- Any modern browser
+- Works on phones too
+
+- Open picta.cc: https://picta.cc
+- GitHub: https://github.com/ehroz1/toptop-photo
+
+## PadBridge — A gamepad in any game on Mac
+
+URL: https://ehroz1.github.io/ehroz.pro/en/padbridge/
+Platforms: macOS · Status: Coming soon · Version: 0.4.0 · Updated: 2026-10-28
+
+DualShock, DualSense, Xbox or Switch Pro — in any game, even one that knows nothing about gamepads.
+
+PadBridge turns gamepad input into keyboard and mouse. It works in itch.io and GOG games, browser games, Windows games via CrossOver, Whisky and Wine, emulators and regular apps. It recognises the game, offers a ready layout for its genre and switches profiles for the active app.
+
+### Who it’s for
+
+Mac players who would rather hold a gamepad than a keyboard.
+
+### What it does
+
+- **Button → key.** Any button, stick or trigger can become a key, a shortcut or the mouse. A stick works as a mouse, and profiles switch for the active app.
+- **“New game”.** Open an unfamiliar game and a window with genre layouts appears on top: platformer, shooter, strategy, visual novel, browser game. Pick one with the gamepad.
+- **Learn from your keyboard.** PadBridge counts which keys you press in a game and lays them out on the gamepad: movement on the left stick, aim on the right, jump on the bottom button.
+- **Couch mode.** The whole Mac from a gamepad: cursor, clicks, Mission Control, volume, music and an RU/EN on-screen keyboard. Plus layers, a radial menu and .padprofile sharing.
+
+### How it works
+
+1. Connect the gamepad by cable or Bluetooth — it shows up right away.
+2. Allow PadBridge to control the keyboard and mouse in Accessibility settings.
+3. Launch a game and pick a layout in the “New game” window, or teach your own.
+
+### FAQ
+
+**Which gamepads work?**
+
+DualShock 4, DualSense, Xbox and Switch Pro — over USB and Bluetooth.
+
+**Why does it need Accessibility?**
+
+To press keys and move the mouse for you. Learn mode stores only key counters, not what you type.
+
+**Does it work with Windows games?**
+
+Yes, PadBridge detects .exe files in Wine, CrossOver and Whisky and switches to their profile.
+
+### Requirements
+
+- macOS 13 Ventura or later
+- A DualShock 4, DualSense, Xbox or Switch Pro controller
+
+- Get notified: https://t.me/hhrrzz1
+
+## Moss Pocket — Your Downloads, right next to the Dock
+
+URL: https://ehroz1.github.io/ehroz.pro/en/moss-pocket/
+Platforms: macOS · Status: In development · Version: 0.1.0 · Updated: 2026-10-28
+
+A panel to the right of the Dock that looks like part of it.
+
+Moss Pocket shows a folder — Downloads by default — in a panel to the right of the Dock. Drag files out into any app, drop files in, or send them to the Trash. The panel reads your Dock settings — icon size, magnification, auto-hide — and follows them.
+
+### Who it’s for
+
+People who download all day and are tired of opening Finder.
+
+### What it does
+
+- **Part of the Dock.** The panel sits right next to the Dock and matches its glass and size. New downloads appear in it instantly.
+- **Drag and drop.** Drag files from the panel into Telegram, mail or Figma, drop in mail attachments and images from the browser, ⌘⌫ to trash.
+- **Magnifies like the Dock.** If Dock magnification is on, the panel icons magnify the same way and the panel follows the Dock edge without overlapping.
+
+### How it works
+
+1. Launch Moss Pocket and allow access to Downloads.
+2. The panel docks to the right of the Dock and matches its size.
+3. Drag files anywhere; Space opens Quick Look.
+
+### FAQ
+
+**Can it show another folder?**
+
+Yes: right-click the panel → Folder, from the menu bar or in settings. Folders can be pinned.
+
+**Does it need Accessibility?**
+
+No. With it the panel reads the exact Dock frame; without it, it calculates the frame from the Dock’s contents.
+
+**What if the Dock is on the side?**
+
+For now it supports a bottom Dock only; with a side Dock it sits in the bottom-right corner.
+
+### Requirements
+
+- macOS 14 Sonoma or later
+- Apple Silicon and Intel
+
+- Get notified: https://t.me/hhrrzz1
+
+## Peecube — Links in a window over the page
+
+URL: https://ehroz1.github.io/ehroz.pro/en/peecube/
+Platforms: macOS, Extension · Status: Coming soon · Version: 4.1 · Updated: 2026-10-28
+
+Hold ⌥ and right-click a link. Done reading — click outside and you’re back where you were.
+
+Peecube opens links in a pop-up window next to the cursor — from the browser, Telegram and other apps. The window has tabs, ad and cookie-banner blocking, translation, page analysis and photo and video downloads. A Firefox extension does the same, including on Android.
+
+### Who it’s for
+
+People who open links from chats and don’t want to lose their place.
+
+### What it does
+
+- **A link over the page.** ⌥ + right-click a link in Telegram or the browser — a window opens by the cursor. Esc or click outside to close, ⌘↩ to move it to a tab, ⌘⇧P to pin.
+- **Fonts, colours, tech.** Page analysis shows fonts, colours (click to copy), the site’s tech and image weights with tips to slim it down.
+- **Every photo and video on the page.** Download images and video with clear names, HLS streams, WebP and AVIF straight to PNG or JPG.
+- **Dozens of features.** Ad and cookie-banner blocking, automatic cookie refusal, translation, QR codes, full-page screenshots, site watching. Turn on what you need.
+
+### How it works
+
+1. Install Peecube and go through onboarding — it shows which permissions to grant.
+2. Hold ⌥ and right-click any link.
+3. Read the page, click outside the window — you’re back where you were.
+
+### FAQ
+
+**Is it paid?**
+
+There’s a 14-day trial with every feature; after that, a key in Peecube → License.
+
+**Does it work with Telegram links?**
+
+Yes, the Mac app does. The Firefox extension works inside the browser only.
+
+**How does it update?**
+
+By itself: every update is signed by the author, and Peecube checks that its files haven’t been changed.
+
+### Requirements
+
+- macOS 13 Ventura or later
+- Firefox on desktop or Android — for the extension
+
+- Get access: https://t.me/hhrrzz1
+
+## ANY CAMERA — A video or photo instead of your webcam
+
+URL: https://ehroz1.github.io/ehroz.pro/en/any-camera/
+Platforms: Extension · Status: Coming soon · Version: 1.0.0 · Updated: 2026-10-28
+
+Websites get the video (on a loop) or photo you choose instead of the webcam stream.
+
+ANY CAMERA is a virtual camera as a browser extension. While it’s on, a site sees one camera called “ANY CAMERA” and gets your file; the microphone stays real. With no file, the site gets a test card — handy for checking how a service handles the camera. One codebase for Firefox on desktop and Android, plus a Chrome version for Mac.
+
+### Who it’s for
+
+Developers and testers of camera features, and anyone running demos and presentations.
+
+### What it does
+
+- **Any file as a camera.** A site asks for the camera and gets your looping video or photo. Resolution and frame rate follow the site’s request, capped by your settings.
+- **All in one pop-up.** A “Replace camera” switch, file picker, 480p / 720p / 1080p, 15 / 24 / 30 fps and mirroring. The pop-up shows whether the current site is getting the replacement.
+- **A test card.** With no file the site gets colour bars and a clock — you see at once that the stream is replaced and running.
+
+### How it works
+
+1. Install the extension in Firefox or Chrome.
+2. Click the ANY CAMERA icon → “Choose video or photo”.
+3. Turn the replacement on and enable the camera on the site.
+
+### FAQ
+
+**Is audio replaced too?**
+
+No. Video plays muted, and if a site asks for a microphone, the real one is used.
+
+**Which browsers?**
+
+Firefox 128+ on desktop and Android, Chrome 111+ and other Chromium browsers on Mac.
+
+**Which files work?**
+
+H.264 MP4 or WebM video and regular photos. HEVC and HEIC are best converted first.
+
+### Requirements
+
+- Firefox 128+ (desktop or Android)
+- or Chrome 111+ on Mac
+
+- Get the extension: https://t.me/hhrrzz1
+
+# Русский
+
+## Morfus — Радиальный конвертер файлов для macOS
+
+URL: https://ehroz1.github.io/ehroz.pro/morfus/
+Платформы: macOS · Статус: Готово · Версия: 0.2.2 · Обновлено: 2026-10-27
+
+Зажми файл, нажми клавишу — брось в нужный сектор.
+
+Morfus открывает круглое меню прямо вокруг курсора, пока вы тащите файл. Конвертация, сжатие и инструменты для фото, видео, аудио, PDF, SVG, документов и архивов — всё локально на Mac, результат появляется рядом с исходником.
+
+### Для кого
+
+Дизайнерам, монтажёрам, SMM и всем, кто каждый день гоняет файлы между форматами.
+
+### Что умеет
+
+- **Кольцо вокруг курсора.** Начните тащить файл и нажмите ⌥. Вокруг курсора появится кольцо с форматами для этого типа файла — ведите в сектор и отпустите.
+- **Три режима — три клавиши.** ⌥ — конвертация, ⌘ — сжатие («Слегка / Средне / Сильно», «не больше 25 МБ»), ⌃ — инструменты: убрать фон, распознать текст, склеить PDF. Другая клавиша переключает режим на лету.
+- **Результат прямо в кольце.** Короткие задачи показывают прогресс и итог в центре кольца: «4,2 МБ → 1,1 МБ · −74%». Долгие уходят в индикатор в углу экрана.
+- **Кольцо под себя.** Для каждого режима и типа файла — свой набор секторов: добавляйте, убирайте, меняйте порядок перетаскиванием. Избранное, второе кольцо с вариантами, свой цвет.
+- **И без кольца.** Службы Finder, ⌥⌘M для выделенного, ссылки morfus:// и командная строка — те же действия для скриптов и Быстрых команд.
+
+### Как это работает
+
+1. Скачайте архив, перенесите Morfus.app в «Программы» и откройте правым щелчком → «Открыть».
+2. Пройдите знакомство: типы файлов, клавиши режимов. Для видео и PDF Morfus сам поставит ffmpeg, Ghostscript и qpdf.
+3. Тащите любой файл, жмите ⌥, ⌘ или ⌃ и бросайте в сектор. Готовый файл — рядом с исходником.
+
+### Вопросы
+
+**Файлы куда-то загружаются?**
+
+Нет. Всё обрабатывается на Mac: встроенные библиотеки, Vision от Apple и программы вроде ffmpeg.
+
+**Как обновляться?**
+
+Morfus сам проверяет новые версии, в меню значка появляется «Обновить Morfus». Архив сверяется по SHA-256 и подписи.
+
+**macOS не даёт открыть приложение**
+
+Правый щелчок по Morfus.app → «Открыть» → «Открыть». Или «Настройки → Конфиденциальность и безопасность → Всё равно открыть».
+
+**Можно перенести настройки на другой Mac?**
+
+Да: «Справка → Перенос настроек» сохраняет всё в один файл .morfus.
+
+### Требования
+
+- macOS 13 Ventura и новее
+- Apple Silicon и Intel
+- Для видео, звука и PDF — бесплатные ffmpeg, Ghostscript, qpdf (ставятся из Morfus)
+
+- Скачать для Mac: https://github.com/ehroz1/morfus-releases/releases/latest
+- Все версии: https://github.com/ehroz1/morfus-releases/releases
+
+## Morfu — Конвертер в строке меню macOS
+
+URL: https://ehroz1.github.io/ehroz.pro/morfu/
+Платформы: macOS · Статус: Готово · Версия: 3.3 · Обновлено: 2026-10-27
+
+Бросил файл на «m» — забрал результат.
+
+Morfu живёт в строке меню. Бросьте на иконку видео, фото, PDF, SVG или документ — получите нужный формат и сразу увидите, сколько места сэкономлено. Всё локально, готовый файл вытаскивается мышкой или уже лежит в буфере.
+
+### Для кого
+
+Тем, кому нужен конвертер «на один бросок» без лишних окон.
+
+### Что умеет
+
+- **Перетаскивание туда и обратно.** Бросьте файлы на «m» в строке меню — панель покажет очередь, а готовый файл вытаскивается мышкой прямо в мессенджер.
+- **Видно, сколько сэкономлено.** Для каждого файла: «12,4 МБ → 3,1 МБ · −75%». Плюс статистика за месяц и за всё время.
+- **Островок у «чёлки».** Тащите файл к чёлке MacBook — она раскрывается островком с прогрессом и результатами.
+- **Растр → SVG.** «SVG ч/б» для логотипов и подписей, «SVG цвет» для иллюстраций. Ползунки «Цвета / Детали / Сглаживание» с живым превью.
+
+### Как это работает
+
+1. Скачайте архив, перенесите Morfu.app в «Программы», первый запуск — правый клик → «Открыть».
+2. Поставьте утилиты одной командой: brew install ffmpeg webp mupdf-tools potrace pngquant.
+3. Бросайте файлы на «m» или жмите ⌘V в панели. Дальше Morfu обновляется сам.
+
+### Вопросы
+
+**Чем Morfu отличается от Morfus?**
+
+Morfu — панель в строке меню на Swift. Morfus — следующее поколение на Rust: круглое меню у курсора и больше действий.
+
+**Нужен интернет?**
+
+Нет. Даже расшифровка речи в TXT и SRT идёт встроенным распознавателем macOS.
+
+**Можно сжать скриншот сразу в буфере?**
+
+Да: ⌃⌥C — содержимое буфера конвертируется и возвращается в буфер.
+
+### Требования
+
+- macOS 13 Ventura и новее
+- Homebrew и утилиты ffmpeg, webp, mupdf-tools, potrace, pngquant
+- Media Engine на Apple Silicon ускоряет видео в 2–3 раза
+
+- Скачать для Mac: https://github.com/ehroz1/morfu-releases/releases/latest
+- Все версии: https://github.com/ehroz1/morfu-releases/releases
+
+## Pachaq — Сжатие и обрезка картинок для сайтов
+
+URL: https://ehroz1.github.io/ehroz.pro/pachaq/
+Платформы: macOS, Windows · Статус: Скоро релиз · Версия: 0.1.1 · Обновлено: 2026-10-27
+
+Перетащите картинки — получите лёгкие WebP, JPEG и PNG.
+
+Pachaq сжимает и обрезает изображения для сайтов: WebP через libwebp, JPEG через MozJPEG, PNG через oxipng. Ресайз, умная обрезка под нужное соотношение, папки наблюдения и работа из трея. Написан на Rust и Tauri, работает на Mac и Windows.
+
+### Для кого
+
+Веб-разработчикам, контент-менеджерам и всем, кто выкладывает картинки на сайт.
+
+### Что умеет
+
+- **Бросил — сжал.** Файлы и целые папки, вставка из буфера ⌘V. Формат выбирается сверху: WebP, JPEG, PNG или «Как есть». Рядом с каждым файлом — сколько процентов ушло.
+- **Умная обрезка.** 1:1, 4:3, 3:2, 16:9, 4:5, 9:16, 21:9 или своё. Pachaq ищет самое интересное в кадре — детали, насыщенность, тон кожи — или вы двигаете рамку вручную.
+- **Папки наблюдения.** Укажите папку — новые картинки сразу сжимаются в подпапку pachaq/. Pachaq работает в фоне из трея и стартует вместе с системой.
+- **Из Finder и Проводника.** Быстрое действие в Finder, пункт в контекстном меню Проводника и командная строка: pachaq --compress <файлы|папки>.
+
+### Как это работает
+
+1. Скачайте установщик для Mac или Windows со страницы релизов.
+2. Выберите формат и обрезку в верхней панели.
+3. Перетащите картинки или папку — сжатые файлы появятся рядом.
+
+### Вопросы
+
+**Какие форматы читает?**
+
+JPEG, PNG, WebP, HEIC/HEIF и TIFF. На Windows для HEIC нужно расширение «HEIF Image Extensions».
+
+**Обновляется сам?**
+
+Да, установленный Pachaq предлагает обновиться при запуске, если вышла новая версия.
+
+**Где настройки?**
+
+⌘, в приложении. Хранятся в settings.json в папке приложения.
+
+### Требования
+
+- macOS 11 и новее — Apple Silicon и Intel
+- Windows 10 и 11
+
+- Страница релизов: https://github.com/ehroz1/pachaq-releases/releases
+
+## Sukhan — Автосубтитры для Reels, TikTok и Shorts
+
+URL: https://ehroz1.github.io/ehroz.pro/sukhan/
+Платформы: macOS · Статус: В разработке · Обновлено: 2026-10-27
+
+Субтитры для вертикальных видео — сами и красиво.
+
+Sukhan — мини-монтажка для субтитров. Распознаёт речь с пословными таймкодами (русский с английскими терминами, английский, казахский), даёт поправить текст на таймлайне и прямо в превью, а превью совпадает с экспортом пиксель в пиксель. Сейчас в разработке.
+
+### Для кого
+
+Блогерам и SMM-специалистам, которые делают короткие вертикальные ролики.
+
+### Что умеет
+
+- **Слово за словом.** Пословные таймкоды от Groq Whisper, ElevenLabs Scribe или Google Gemini — на бесплатных тарифах, со своими ключами в Связке ключей.
+- **Таймлайн как в монтажке.** Waveform и масштаб, перетаскивание фраз и границ слов, разбить и склеить, сдвиг дорожки на 50 мс, ⌘Z.
+- **9:16, 1:1, 4:5, 16:9.** Если пропорции другие — «Кадрировать» перетаскиванием прямо в превью или «Вписать с размытым фоном».
+- **Быстрый рендер.** Один движок на Rust для превью и экспорта. На Apple M4 минутный ролик 1080×1920 с субтитрами экспортируется за 8 секунд.
+
+### Как это работает
+
+1. Перетащите видео в окно — MP4, MOV, MKV, WEBM, M4V или звук.
+2. Выберите провайдера и язык — Sukhan распознает речь по словам.
+3. Поправьте текст на таймлайне и сохраните проект .subproj.
+
+### Вопросы
+
+**Когда выйдет?**
+
+Готовы этапы 0–3: движок рендера, плеер, форматы кадра, распознавание, редактор и проекты. Дальше — оформление, пресеты и экспорт.
+
+**Нужно что-то ставить?**
+
+Нет, FFmpeg встроен в приложение.
+
+**Где хранятся ключи API?**
+
+В Связке ключей macOS, не в файлах.
+
+### Требования
+
+- macOS на Apple Silicon (M1 и новее)
+- Бесплатный ключ Groq, ElevenLabs или Gemini
+
+- Следить за релизами: https://github.com/ehroz1/sukhan-releases
+
+## radius — Локальное удаление фона на Mac
+
+URL: https://ehroz1.github.io/ehroz.pro/radius/
+Платформы: macOS · Статус: В разработке · Обновлено: 2026-10-27
+
+Фон убирается на вашем Mac, без загрузки в облако.
+
+radius — локальное удаление фона для macOS. Работает на модели BiRefNet HR-matting, переведённой в Core ML: на вход картинка 2048×2048, на выходе — альфа-маска с мягкими краями. В разработке; модели уже опубликованы.
+
+### Для кого
+
+Дизайнерам и всем, кто вырезает объекты с фото.
+
+### Что умеет
+
+- **Мягкая альфа-маска.** Не «ножницы», а маска с прозрачностью от 0 до 1: волосы и полупрозрачные края остаются живыми.
+- **Только на устройстве.** Core ML в формате fp16: нормализация и сигмоида встроены в модель, фото не покидает Mac.
+
+### Как это работает
+
+1. Откройте фото.
+2. Модель строит альфа-маску 2048×2048.
+3. Сохраните PNG с прозрачным фоном.
+
+### Вопросы
+
+**Какая модель внутри?**
+
+BiRefNet HR-matting (MIT), переведённая в Core ML через coremltools 9.
+
+**Когда выйдет приложение?**
+
+Пока в разработке. Модели уже лежат в открытом репозитории.
+
+### Требования
+
+- macOS
+- Core ML
+
+- Модели Core ML: https://github.com/ehroz1/radius-models
+
+## BLA-БЛА — Расшифровка аудио и видео в браузере
+
+URL: https://ehroz1.github.io/ehroz.pro/bla-bla/
+Платформы: Веб · Статус: Готово · Обновлено: 2026-10-27
+
+11 сервисов распознавания речи — один интерфейс и свои бесплатные ключи.
+
+BLA-БЛА превращает аудио и видео в текст с таймкодами. Файл готовится прямо в браузере, длинные записи режутся под лимиты сервиса и склеиваются обратно. Настроена на смешанную русско-английскую речь и казахский. Сервера нет, ключи остаются в браузере.
+
+### Для кого
+
+Журналистам, исследователям, авторам подкастов — всем, кому нужен текст из записи.
+
+### Что умеет
+
+- **Любой файл.** mp3, m4a, wav, ogg, flac, mp4, mov, webm, mkv… Из видео берётся только звук и сжимается в MP3 16 кГц моно — около 0,35 МБ в минуту.
+- **11 сервисов на выбор.** Groq Whisper, Gemini, ElevenLabs Scribe, Speechmatics, Deepgram и другие. У каждого — бесплатный лимит, качество по языкам и пошаговая инструкция, как получить ключ.
+- **Текст, который можно забрать.** Правка прямо на странице, копирование и скачивание в TXT, Markdown, SRT, VTT или JSON. Последние 30 расшифровок — в истории.
+
+### Как это работает
+
+1. Откройте BLA-БЛА и перетащите аудио или видео.
+2. Выберите сервис и вставьте бесплатный ключ — карточка подскажет, где его взять.
+3. Нажмите «Расшифровать» и скачайте текст или субтитры.
+
+### Вопросы
+
+**Это бесплатно?**
+
+Сам сайт — да. У большинства сервисов есть бесплатный тариф или стартовые кредиты; быстрее всего начать с Groq.
+
+**Куда уходит запись?**
+
+Только в выбранный вами сервис. Своего сервера у BLA-БЛА нет.
+
+**Работает офлайн?**
+
+Есть версия одним файлом bla-bla.html — открывается с диска, но сами сервисы распознавания требуют интернета.
+
+### Требования
+
+- Любой современный браузер на компьютере или телефоне
+- Ключ одного из сервисов распознавания
+
+- Открыть: https://ehroz1.github.io/bla-bla-text/
+- GitHub: https://github.com/ehroz1/bla-bla-text
+
+## Picta — Поиск фото, иконок и видео сразу везде
+
+URL: https://ehroz1.github.io/ehroz.pro/picta/
+Платформы: Веб · Статус: Готово · Обновлено: 2026-10-27
+
+Один запрос — Pixabay, Pexels, Unsplash, Wikimedia и ещё десяток источников.
+
+Picta ищет бесплатные фото сразу по нескольким фотостокам и сводит всё в одну ленту. Русский запрос сам переводится на английский, дубли убираются, у каждой картинки понятная плашка лицензии. Отдельно — поиск иконок через Iconify и видео.
+
+### Для кого
+
+Дизайнерам, редакторам и SMM, которым нужна картинка «на сейчас».
+
+### Что умеет
+
+- **Все стоки в одной ленте.** Pixabay, Pexels, Unsplash, Wikimedia Commons, Openverse и другие. Запрос «кот» ищется как «cat», а под строкой видно, как именно.
+- **Лицензия — сразу на виду.** «CC0», «Pixabay License», «CC BY-SA» с пометками «Можно для коммерции» и «Нужна атрибуция» — без похода на сайт источника.
+- **Иконки и цвета.** Режим «Иконки» — больше 200 000 иконок из ~200 открытых наборов, SVG или PNG в любом цвете. Режим «Цвета» — палитра для слова.
+
+### Как это работает
+
+1. Откройте picta.cc — ставить ничего не нужно.
+2. Введите запрос на любом языке, отключите лишние источники.
+3. Скачайте фото, выделите несколько в ZIP или скопируйте картинку в буфер.
+
+### Вопросы
+
+**Фото можно использовать бесплатно?**
+
+Источники бесплатные, но лицензии разные — Picta показывает их на каждой картинке.
+
+**Можно поставить как приложение?**
+
+Да, это PWA: «Установить» в браузере или «На экран Домой» на телефоне.
+
+**Есть горячие клавиши?**
+
+«/» — к поиску, Esc — очистить, D — скачать открытое фото, ← → — листать.
+
+### Требования
+
+- Любой современный браузер
+- Работает и на телефоне
+
+- Открыть picta.cc: https://picta.cc
+- GitHub: https://github.com/ehroz1/toptop-photo
+
+## PadBridge — Геймпад в любой игре на Mac
+
+URL: https://ehroz1.github.io/ehroz.pro/padbridge/
+Платформы: macOS · Статус: Скоро релиз · Версия: 0.4.0 · Обновлено: 2026-10-28
+
+DualShock, DualSense, Xbox или Switch Pro — в любой игре, даже если она про геймпад не знает.
+
+PadBridge превращает нажатия геймпада в клавиатуру и мышь. Работает в играх с itch.io и GOG, в браузерных играх, в Windows-играх через CrossOver, Whisky и Wine, в эмуляторах и обычных программах. Сам узнаёт игру и предлагает готовую раскладку по жанру, а профили переключаются под активное приложение.
+
+### Для кого
+
+Тем, кто играет на Mac и хочет держать в руках геймпад, а не клавиатуру.
+
+### Что умеет
+
+- **Кнопка → клавиша.** Каждую кнопку, стик и курок можно назначить на клавишу, сочетание или мышь. Стик работает как мышь, профили сами включаются под активное приложение.
+- **«Новая игра».** Открыли незнакомую игру — поверх неё появляется окно с раскладками по жанрам: платформер, шутер, стратегия, визуальная новелла, браузерная игра. Выбор прямо геймпадом.
+- **Научить по клавиатуре.** PadBridge считает, какие клавиши вы жмёте в игре, и раскладывает их по геймпаду: движение — на левый стик, прицел — на правый, прыжок — на нижнюю кнопку.
+- **Режим «Диван».** Весь Мак с геймпада: курсор, клики, Mission Control, громкость, музыка и экранная клавиатура RU/EN. Плюс слои, радиальное меню и обмен профилями файлами .padprofile.
+
+### Как это работает
+
+1. Подключите геймпад кабелем или по Bluetooth — он сразу появится в окне.
+2. Разрешите PadBridge управлять клавиатурой и мышью в «Универсальном доступе».
+3. Запустите игру и выберите раскладку в окне «Новая игра» или научите свою.
+
+### Вопросы
+
+**Какие геймпады подходят?**
+
+DualShock 4, DualSense, Xbox и Switch Pro — по USB и Bluetooth.
+
+**Зачем ему «Универсальный доступ»?**
+
+Чтобы нажимать клавиши и двигать мышь за вас. Режим «Научить» хранит только счётчики клавиш, а не то, что вы печатаете.
+
+**Работает с Windows-играми?**
+
+Да, PadBridge узнаёт .exe в Wine, CrossOver и Whisky и включает для них свой профиль.
+
+### Требования
+
+- macOS 13 Ventura и новее
+- Геймпад DualShock 4, DualSense, Xbox или Switch Pro
+
+- Узнать о выходе: https://t.me/hhrrzz1
+
+## Moss Pocket — Папка «Загрузки» рядом с Dock
+
+URL: https://ehroz1.github.io/ehroz.pro/moss-pocket/
+Платформы: macOS · Статус: В разработке · Версия: 0.1.0 · Обновлено: 2026-10-28
+
+Панель справа от Dock, которая выглядит как его продолжение.
+
+Moss Pocket показывает содержимое папки — по умолчанию «Загрузки» — в панели справа от Dock. Файлы можно вытаскивать из неё в любые приложения, бросать в неё и отправлять в Корзину. Панель сама читает настройки Dock: размер значков, увеличение, автоскрытие — и подстраивается под них.
+
+### Для кого
+
+Тем, кто постоянно что-то скачивает и не хочет каждый раз открывать Finder.
+
+### Что умеет
+
+- **Как продолжение Dock.** Панель стоит вплотную к Dock и повторяет его стекло и размер. Новые загрузки появляются в ней сразу.
+- **Перетаскивание.** Тащите файлы из панели в Telegram, письмо или Figma, бросайте в неё вложения из Почты и картинки из браузера, ⌘⌫ — в Корзину.
+- **Увеличение, как у Dock.** Если в Dock включено увеличение, значки панели увеличиваются так же, а панель отъезжает вслед за краем Dock без перекрытия.
+
+### Как это работает
+
+1. Запустите Moss Pocket и разрешите доступ к папке «Загрузки».
+2. Панель встанет справа от Dock и подстроится под его размер.
+3. Тащите файлы из панели куда угодно, Quick Look — по пробелу.
+
+### Вопросы
+
+**Можно показывать другую папку?**
+
+Да: правый клик по панели → «Папка», в строке меню или в настройках. Папки можно закреплять.
+
+**Нужен «Универсальный доступ»?**
+
+Не обязательно. С ним панель берёт точную рамку Dock, без него — считает её по составу Dock.
+
+**А если Dock сбоку?**
+
+Пока панель умеет только Dock внизу; при боковом Dock она встаёт в правый нижний угол.
+
+### Требования
+
+- macOS 14 Sonoma и новее
+- Apple Silicon и Intel
+
+- Узнать о выходе: https://t.me/hhrrzz1
+
+## Peecube — Ссылка — в окне поверх страницы
+
+URL: https://ehroz1.github.io/ehroz.pro/peecube/
+Платформы: macOS, Расширение · Статус: Скоро релиз · Версия: 4.1 · Обновлено: 2026-10-28
+
+Зажмите ⌥ и нажмите правой кнопкой по ссылке. Посмотрели — кликнули мимо, и вы там же, где были.
+
+Peecube открывает ссылки во всплывающем окне рядом с курсором — из браузера, Telegram и других приложений. В окне есть вкладки, блокировка рекламы и cookie-баннеров, перевод, анализ страницы, скачивание фото и видео. Для Firefox есть расширение с теми же функциями, в том числе на Android.
+
+### Для кого
+
+Тем, кто читает ссылки из чатов и не хочет терять место на странице.
+
+### Что умеет
+
+- **Ссылка — поверх страницы.** ⌥ + правый клик по ссылке в Telegram или браузере — окно открывается рядом с курсором. Esc или клик мимо — закрыть, ⌘↩ — в обычную вкладку, ⌘⇧P — закрепить.
+- **Шрифты, цвета, технологии.** «Анализ страницы» показывает шрифты, цвета (клик копирует), технологии сайта и вес картинок с советами, как облегчить.
+- **Все фото и видео страницы.** Скачивание картинок и видео с понятными именами, HLS-видео, WebP и AVIF — сразу в PNG или JPG.
+- **Десятки функций.** Блокировка рекламы и cookie-баннеров, автоотказ от cookie, перевод, QR-коды, скриншот всей страницы, слежение за сайтами. Включайте нужное.
+
+### Как это работает
+
+1. Установите Peecube и пройдите знакомство — он подскажет нужные разрешения.
+2. Зажмите ⌥ и нажмите правой кнопкой по любой ссылке.
+3. Посмотрите страницу и кликните мимо окна — вы там же, где были.
+
+### Вопросы
+
+**Это платно?**
+
+Есть пробный период 14 дней со всеми функциями, дальше — ключ в меню Peecube → «Лицензия».
+
+**Работает со ссылками из Telegram?**
+
+Да, это умеет приложение для Mac. Расширение для Firefox работает только внутри браузера.
+
+**Как обновляется?**
+
+Сам: каждое обновление подписано автором, а Peecube проверяет, что его файлы никто не изменил.
+
+### Требования
+
+- macOS 13 Ventura и новее
+- Firefox на компьютере или Android — для расширения
+
+- Получить доступ: https://t.me/hhrrzz1
+
+## ANY CAMERA — Видео или фото вместо веб-камеры
+
+URL: https://ehroz1.github.io/ehroz.pro/any-camera/
+Платформы: Расширение · Статус: Скоро релиз · Версия: 1.0.0 · Обновлено: 2026-10-28
+
+Сайты получают выбранное вами видео (по кругу) или фото вместо потока с веб-камеры.
+
+ANY CAMERA — виртуальная камера в виде расширения браузера. Пока подмена включена, сайт видит одну камеру «ANY CAMERA» и получает ваш файл; микрофон остаётся настоящим. Без файла сайт получает тестовую картинку — удобно проверять, как сервис работает с камерой. Одна кодовая база для Firefox на компьютере и на Android, есть версия для Chrome на Mac.
+
+### Для кого
+
+Разработчикам и тестировщикам сервисов с камерой, а ещё тем, кто ведёт демо и презентации.
+
+### Что умеет
+
+- **Любой файл — как камера.** Сайт запрашивает камеру — и получает выбранное видео по кругу или фото. Разрешение и частота кадров берутся из запроса сайта, но не выше выбранных.
+- **Всё в одном окне.** Переключатель «Подменять камеру», выбор файла, разрешение 480p / 720p / 1080p, 15 / 24 / 30 кадров и зеркало. На вкладке сайта видно, сработала ли подмена.
+- **Тестовая картинка.** Без файла сайт получает цветные полосы и время — сразу видно, что камера подменяется и поток идёт.
+
+### Как это работает
+
+1. Установите расширение в Firefox или Chrome.
+2. Нажмите значок ANY CAMERA → «Выбрать видео или фото».
+3. Включите подмену и включите камеру на сайте.
+
+### Вопросы
+
+**Звук тоже подменяется?**
+
+Нет. Видео играет без звука, а если сайт просит микрофон, используется настоящий.
+
+**Какие браузеры?**
+
+Firefox 128+ на компьютере и Android, Chrome 111+ и другие Chromium-браузеры на Mac.
+
+**Какие файлы подходят?**
+
+Видео H.264 MP4 или WebM и обычные фото. HEVC и HEIC лучше перекодировать.
+
+### Требования
+
+- Firefox 128+ (компьютер или Android)
+- или Chrome 111+ на Mac
+
+- Получить расширение: https://t.me/hhrrzz1
