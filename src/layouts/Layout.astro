@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 import type { Lang } from '../content/apps';
-import { tr, path, asset } from '../i18n';
+import { tr, path, asset, PRODUCTION_ORIGIN } from '../i18n';
 import MenuBar from '../components/MenuBar.astro';
 import Dock from '../components/Dock.astro';
 import Spotlight from '../components/Spotlight.astro';
@@ -17,11 +17,14 @@ interface Props {
   accent?: string;
   onAccent?: string;
   jsonld?: Record<string, unknown>;
-  /** Черновые страницы (варианты на согласование) — не индексировать. */
+  /** Не индексировать: 404, черновики, служебные страницы. Убирает canonical и hreflang. */
   noindex?: boolean;
 }
 const { lang, title, description, slug = '', og, glow, accent, onAccent, jsonld, noindex = false } = Astro.props;
 const site = Astro.site!;
+// Индексируем только боевой домен. Зеркала (GitHub Pages, *.vercel.app) и черновики закрыты от поиска,
+// чтобы не плодить дубли.
+const indexable = site.origin === PRODUCTION_ORIGIN && !noindex;
 const canonical = new URL(path(lang, slug), site).href;
 const alt = (l: Lang) => new URL(path(l, slug), site).href;
 const ogImage = new URL(asset(og ?? `og/${lang}/home.png`), site).href;
@@ -40,11 +43,17 @@ const vars = [
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
-    <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="ru" href={alt('ru')} />
-    <link rel="alternate" hreflang="en" href={alt('en')} />
-    <link rel="alternate" hreflang="x-default" href={alt('ru')} />
+    {indexable ? (
+      <>
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <link rel="canonical" href={canonical} />
+        <link rel="alternate" hreflang="ru" href={alt('ru')} />
+        <link rel="alternate" hreflang="en" href={alt('en')} />
+        <link rel="alternate" hreflang="x-default" href={alt('ru')} />
+      </>
+    ) : (
+      <meta name="robots" content="noindex, follow" />
+    )}
     <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#111315" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#eef0f2" media="(prefers-color-scheme: light)" />

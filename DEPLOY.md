@@ -7,7 +7,7 @@
 Продакшн: **https://ehroz.pro** (Vercel, ветка `main`). Каждый merge в `main` обновляет сайт за 1–2 минуты.
 
 1. Создайте ветку от `main` (например `fix-hero-text`) и внесите правки.
-2. Перед пушем: `npm run build` — если сборка проходит локально, на Vercel она тоже пройдёт.
+2. Перед пушем: `npm run build && npm run check:seo` — сборка и проверка битых ссылок, canonical, title/description.
 3. Запушьте ветку — Vercel сам соберёт **Preview** на отдельном адресе (`*.vercel.app`), `ehroz.pro` он не трогает.
 4. Проверьте preview (телефон + компьютер), откройте Pull Request в `main`.
 5. Красная сборка в PR = не мержить. Всё хорошо — Merge.
@@ -15,6 +15,24 @@
 Откат: Vercel → Deployments → прошлый рабочий деплой → **Promote to Production**.
 
 Не трогайте без нужды: `vercel.json`, `astro.config.mjs`, DNS на Porkbun, домены в Vercel.
+
+## Техническое SEO — как устроено
+
+- **Основной адрес:** `https://ehroz.pro/` — https, без www, со слешем в конце (`/morfus/`).
+  Задан в `PRODUCTION_ORIGIN` (`src/i18n.ts`) и `vercel.json`.
+- **Редиректы (vercel.json):** HTTP → HTTPS делает сам Vercel; `www.ehroz.pro` → `ehroz.pro` (301);
+  `/morfus` → `/morfus/` (308, тоже постоянный); `/index.html`, `/x.html` → чистый адрес; `/ru/...` → `/...`.
+- **Индексация:** открыт только `ehroz.pro`. Зеркало на GitHub Pages и адреса `*.vercel.app` получают
+  `noindex` (meta + заголовок `X-Robots-Tag`), robots.txt на зеркале закрывает всё. Страница 404 — `noindex`, без canonical.
+- **Canonical и hreflang** (ru/en/x-default) — на каждой странице, в `src/layouts/Layout.astro`.
+  Параметры в адресе (`?utm_source=…`) не создают дублей: canonical всегда без них.
+- **Черновик/служебная страница:** передайте в `<Layout … noindex>` — страница закроется и уйдёт из canonical.
+  Чтобы убрать её из sitemap, добавьте адрес в `filter` в `astro.config.mjs`.
+- **Сменили адрес страницы:** добавьте в `redirects` в `vercel.json`
+  `{ "source": "/old-slug/", "destination": "/new-slug/", "statusCode": 301 }` (и для `/en/old-slug/`).
+- **Удалили приложение насовсем:** уберите его из `src/content/apps.ts` и поставьте 301 на ближайшую страницу
+  (или на `/`). Если замены нет — адрес отдаст 404 со списком приложений. Ответ 410 на статическом хостинге
+  требует Vercel Middleware; заводите его, только если удалённых адресов станет много.
 
 ## Сейчас: GitHub Pages (бесплатный адрес)
 

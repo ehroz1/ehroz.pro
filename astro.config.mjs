@@ -10,7 +10,8 @@ const base = process.env.SITE_BASE || '/';
 export default defineConfig({
   site,
   base,
-  trailingSlash: 'ignore',
+  // Все адреса страниц — со слешем в конце (/morfus/). Vercel редиректит /morfus → /morfus/ (vercel.json).
+  trailingSlash: 'always',
   // Пробелы между строчными элементами в сценах значимы («JPG 88%»), поэтому HTML не сжимаем.
   compressHTML: false,
   build: { format: 'directory', inlineStylesheets: 'always' },

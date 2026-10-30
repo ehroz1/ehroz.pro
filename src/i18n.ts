@@ -2,6 +2,9 @@ import type { Lang, L, Platform, Status } from './content/apps';
 
 export const LANGS: Lang[] = ['ru', 'en'];
 
+/** Основной домен: https, без www, со слешем в конце адресов. Только он открыт для индексации. */
+export const PRODUCTION_ORIGIN = 'https://ehroz.pro';
+
 /** Контакты — правьте здесь. */
 export const CONTACTS = {
   name: { ru: 'Эхроз', en: 'Ehroz' } as L,
@@ -87,6 +90,8 @@ const S = {
   'foot.made': { ru: 'Сделано в Астане. Без cookies и трекеров.', en: 'Made in Astana. No cookies, no trackers.' },
   'nf.title': { ru: 'Такого окна нет', en: 'No such window' },
   'nf.text': { ru: 'Похоже, ссылка устарела. Загляните в Dock.', en: 'Looks like the link is outdated. Check the Dock.' },
+  'nf.apps': { ru: 'Все приложения', en: 'All apps' },
+  'nf.home': { ru: 'На главную', en: 'Home' },
   'skip': { ru: 'Перейти к содержимому', en: 'Skip to content' },
 } satisfies Record<string, L>;
 
