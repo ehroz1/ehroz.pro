@@ -7,15 +7,15 @@ let running = false;
 const TARGETS = 'h1,h2,h3,h4,p,li,a,button,img,svg,kbd,figure,blockquote,.dock-item,[data-icon]';
 
 type Target = { el: HTMLElement; hp: number };
-type Bullet = { x: number; y: number; vy: number };
+type Bullet = { x: number; y: number; vx: number; vy: number };
 type Particle = { x: number; y: number; vx: number; vy: number; life: number; c: string; s: number };
 
 export function startShooter(lang: 'ru' | 'en') {
   if (running) return;
   running = true;
   const t = lang === 'en'
-    ? { score: 'Score', help: '←↑↓→ / WASD — fly · Space — fire · Esc — exit', done: 'Site destroyed! Esc to restore' }
-    : { score: 'Счёт', help: '←↑↓→ / WASD — полёт · Пробел — огонь · Esc — выход', done: 'Сайт уничтожен! Esc — восстановить' };
+    ? { score: 'Score', help: '←→ — turn · ↑↓ — thrust · Space — fire · Esc — exit', done: 'Site destroyed! Esc to restore' }
+    : { score: 'Счёт', help: '←→ — поворот · ↑↓ — тяга · Пробел — огонь · Esc — выход', done: 'Сайт уничтожен! Esc — восстановить' };
 
   const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#7c93ff';
   const dpr = Math.min(2, devicePixelRatio || 1);
@@ -62,7 +62,7 @@ export function startShooter(lang: 'ru' | 'en') {
   collect();
   const total = targets.length;
 
-  const ship = { x: W / 2, y: H / 2, vx: 0, vy: 0 };
+  const ship = { x: W / 2, y: H / 2, vx: 0, vy: 0, a: 0 }; // a — угол, 0 = нос вверх
   const keys = new Set<string>();
   let bullets: Bullet[] = [];
   let parts: Particle[] = [];
@@ -118,16 +118,20 @@ export function startShooter(lang: 'ru' | 'en') {
   let raf = 0;
   const loop = () => {
     // управление
-    const acc = 0.9;
+    const acc = 0.55;
     if (touch) {
-      ship.vx = (touch.x - ship.x) * 0.2;
-      ship.vy = (touch.y - ship.y) * 0.2;
+      const dx = touch.x - ship.x, dy = touch.y - ship.y;
+      ship.vx = dx * 0.12;
+      ship.vy = dy * 0.12;
+      if (Math.hypot(dx, dy) > 8) ship.a = Math.atan2(dx, -dy);
     } else {
-      if (keys.has('arrowleft') || keys.has('a')) ship.vx -= acc;
-      if (keys.has('arrowright') || keys.has('d')) ship.vx += acc;
-      if (keys.has('arrowup') || keys.has('w')) ship.vy -= acc;
-      if (keys.has('arrowdown') || keys.has('s')) ship.vy += acc;
-      ship.vx *= 0.88; ship.vy *= 0.88;
+      // повороты на 360°, тяга вперёд/назад по направлению носа
+      if (keys.has('arrowleft') || keys.has('a')) ship.a -= 0.085;
+      if (keys.has('arrowright') || keys.has('d')) ship.a += 0.085;
+      const fx = Math.sin(ship.a), fy = -Math.cos(ship.a);
+      if (keys.has('arrowup') || keys.has('w')) { ship.vx += fx * acc; ship.vy += fy * acc; }
+      if (keys.has('arrowdown') || keys.has('s')) { ship.vx -= fx * acc * 0.6; ship.vy -= fy * acc * 0.6; }
+      ship.vx *= 0.94; ship.vy *= 0.94;
     }
     ship.x = Math.max(20, Math.min(W - 20, ship.x + ship.vx));
     ship.y = Math.max(30, Math.min(H - 30, ship.y + ship.vy));
@@ -148,17 +152,19 @@ export function startShooter(lang: 'ru' | 'en') {
     }
     if (cool > 0) cool--;
     if (keys.has(' ') && cool === 0) {
-      bullets.push({ x: ship.x - 9, y: ship.y - 10, vy: -13 }, { x: ship.x + 9, y: ship.y - 10, vy: -13 });
-      cool = 7;
+      const fx = Math.sin(ship.a), fy = -Math.cos(ship.a), sx = -fy * 9, sy = fx * 9;
+      for (const k of [-1, 1]) bullets.push({ x: ship.x + fx * 14 + sx * k, y: ship.y + fy * 14 + sy * k, vx: fx * 13 + ship.vx, vy: fy * 13 + ship.vy });
+      cool = 14;
     }
     // выхлоп
-    parts.push({ x: ship.x + (Math.random() - 0.5) * 8, y: ship.y + 20, vx: (Math.random() - 0.5) * 1.2, vy: 3 + Math.random() * 2, life: 0.6, c: '#ffb84d', s: 2.5 });
+    parts.push({ x: ship.x - Math.sin(ship.a) * 20 + (Math.random() - 0.5) * 8, y: ship.y + Math.cos(ship.a) * 20, vx: -Math.sin(ship.a) * 3 + (Math.random() - 0.5) * 1.2, vy: Math.cos(ship.a) * 3, life: 0.6, c: '#ffb84d', s: 2.5 });
 
     // пули и попадания
     const rects = targets.map((tg) => tg.el.getBoundingClientRect());
     bullets = bullets.filter((b) => {
+      b.x += b.vx;
       b.y += b.vy;
-      if (b.y < -20) return false;
+      if (b.y < -20 || b.y > H + 20 || b.x < -20 || b.x > W + 20) return false;
       for (let i = 0; i < targets.length; i++) {
         const r = rects[i];
         if (b.x >= r.left && b.x <= r.right && b.y >= r.top && b.y <= r.bottom) {
@@ -189,7 +195,16 @@ export function startShooter(lang: 'ru' | 'en') {
     }
     ctx.fillStyle = '#fff';
     ctx.shadowColor = accent; ctx.shadowBlur = 10;
-    for (const b of bullets) ctx.fillRect(b.x - 1.5, b.y - 8, 3, 14);
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+    for (const b of bullets) {
+      const l = 7 / Math.hypot(b.vx, b.vy);
+      ctx.beginPath();
+      ctx.moveTo(b.x - b.vx * l, b.y - b.vy * l);
+      ctx.lineTo(b.x + b.vx * l, b.y + b.vy * l);
+      ctx.stroke();
+    }
     ctx.shadowBlur = 0;
     parts = parts.filter((p) => {
       p.x += p.vx; p.y += p.vy; p.vy += 0.12; p.life -= 0.025;
@@ -202,7 +217,7 @@ export function startShooter(lang: 'ru' | 'en') {
     ctx.globalAlpha = 1;
     // корабль
     ctx.translate(ship.x, ship.y);
-    ctx.rotate(Math.max(-0.4, Math.min(0.4, ship.vx * 0.05)));
+    ctx.rotate(ship.a);
     ctx.shadowColor = accent; ctx.shadowBlur = 16;
     ctx.fillStyle = accent;
     ctx.beginPath();
