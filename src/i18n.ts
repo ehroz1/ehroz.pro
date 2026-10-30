@@ -5,6 +5,27 @@ export const LANGS: Lang[] = ['ru', 'en'];
 /** Основной домен: https, без www, со слешем в конце адресов. Только он открыт для индексации. */
 export const PRODUCTION_ORIGIN = 'https://ehroz.pro';
 
+/** Название сайта/бренда в метаданных (og:site_name, application-name, schema.org WebSite). */
+export const SITE_NAME = 'Ehroz';
+
+/**
+ * Коды подтверждения прав в панелях вебмастеров (только сам код из content="…").
+ * Удобнее подтверждать через DNS — тогда здесь ничего не нужно. См. DEPLOY.md → «Поисковые системы».
+ */
+export const SEARCH_VERIFICATION = {
+  google: '', // Google Search Console → HTML-тег → google-site-verification
+  yandex: '', // Яндекс Вебмастер → Мета-тег → yandex-verification
+  bing: '', // Bing Webmaster Tools → HTML Meta Tag → msvalidate.01
+};
+
+/** Обрезает текст для meta description по границе слова (по умолчанию до 160 символов). */
+export function clip(text: string, max = 160): string {
+  const t = text.replace(/\s+/g, ' ').trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max - 1);
+  return cut.slice(0, cut.lastIndexOf(' ')).replace(/[\s,;:—–-]+$/, '') + '…';
+}
+
 /** Контакты — правьте здесь. */
 export const CONTACTS = {
   name: { ru: 'Эхроз', en: 'Ehroz' } as L,

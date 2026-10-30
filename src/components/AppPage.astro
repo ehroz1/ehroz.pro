@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import type { App, Lang } from '../content/apps';
 import { apps } from '../content/apps';
-import { tr, path, pick, PLATFORM, STATUS, CONTACTS } from '../i18n';
+import { tr, path, pick, clip, PLATFORM, STATUS, CONTACTS, SITE_NAME } from '../i18n';
 import AppIcon from './AppIcon.astro';
 import AppWindow from './AppWindow.astro';
 import Icon from './Icon.astro';
@@ -19,7 +19,9 @@ const idx = apps.findIndex((a) => a.slug === app.slug);
 const no = String(idx + 1).padStart(2, '0');
 const others = apps.map((a, i) => ({ a, i })).filter(({ a }) => a.slug !== app.slug);
 const linkIcon = { download: 'download', open: 'external', github: 'github', releases: 'external', contact: 'telegram' } as const;
-const title = `${app.name} — ${pick(lang, app.short)}`;
+// Бренд в конце заголовка, если влезает в ~60 символов (столько показывает выдача).
+const baseTitle = `${app.name} — ${pick(lang, app.short)}`;
+const title = baseTitle.length + SITE_NAME.length + 3 <= 60 ? `${baseTitle} · ${SITE_NAME}` : baseTitle;
 const site = Astro.site!;
 const jsonld = {
   '@context': 'https://schema.org',
@@ -30,6 +32,8 @@ const jsonld = {
   operatingSystem: app.platforms.map((p) => PLATFORM[p].en).join(', '),
   ...(app.version ? { softwareVersion: app.version } : {}),
   url: new URL(path(lang, app.slug), site).href,
+  inLanguage: lang,
+  dateModified: app.updated,
   image: new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/icons/${app.slug}-512.png`, site).href,
   author: { '@type': 'Person', name: 'Ehroz', url: new URL(path(lang), site).href },
   ...(app.status === 'ready' ? { offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } } : {}),
@@ -38,7 +42,7 @@ const n = app.features.length;
 const pad = (v: number) => String(v).padStart(2, '0');
 ---
 
-<Layout lang={lang} title={title} description={pick(lang, app.about).slice(0, 158)} slug={app.slug} og={`og/${lang}/${app.slug}.png`} jsonld={jsonld}>
+<Layout lang={lang} title={title} description={clip(pick(lang, app.about))} slug={app.slug} og={`og/${lang}/${app.slug}.png`} ogAlt={baseTitle} updated={app.updated} jsonld={jsonld}>
   <div class="app-page" data-tint style={`--tint-d:${app.tint.dark};--tint-l:${app.tint.light}`}>
     <section class="ap-hero container" aria-labelledby="ap-name" data-spy={app.name}>
       <div class="sec-bar">

@@ -1,0 +1,23 @@
+# После продакшн-деплоя на Vercel сообщает Яндексу и Bing об изменённых страницах (IndexNow).
+# Vercel создаёт в GitHub «deployment» для каждого деплоя; реагируем только на успешный Production.
+name: IndexNow
+
+on:
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      all:
+        description: 'Отправить все страницы, а не только изменённые'
+        type: boolean
+        default: false
+
+jobs:
+  ping:
+    if: github.event_name == 'workflow_dispatch' || (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/indexnow.mjs ${{ inputs.all && '--all' || '' }}
