@@ -1,4 +1,4 @@
-// Сценарии сцен Morfu, Pachaq, Sukhan, radius, BLA-БЛА и Picta.
+// Сценарии сцен Morfu, Pachaq, Sukhan, radius, BLA-БЛА, Picta, PadBridge, Moss Pocket, Peecube, ANY CAMERA и Snowpuff.
 import { register } from './scenes';
 
 const ru = () => document.documentElement.lang !== 'en';
@@ -726,4 +726,200 @@ register('anycam-test', async (c) => {
     t.textContent = fmt(performance.now() - start);
     await c.wait(33);
   }
+});
+
+/* ── Snowpuff ── */
+// Перезапустить CSS-анимацию по классу
+const replay = (el: HTMLElement, cls: string) => {
+  el.classList.remove(cls);
+  void el.offsetWidth;
+  el.classList.add(cls);
+};
+// Сбросить снег и сосульки (.bare) и дать им вырасти заново
+const regrow = (root: HTMLElement) => {
+  root.classList.add('bare');
+  void root.offsetWidth;
+  root.classList.remove('bare');
+};
+
+register('snowpuff-desktop', async (c) => {
+  const cur = c.$('cursor'), win = c.$('wa'), dock = c.$('dock');
+  const bursts = c.$$('.burst');
+  let b = 0;
+  const puff = (x: number, y: number) => {
+    const el = bursts[b++ % bursts.length];
+    c.move(x, y, el);
+    replay(el, 'go');
+  };
+  // смести снег курсором слева направо по краю элемента
+  const sweep = async (el: HTMLElement, y: number) => {
+    const r = at(c.root, el);
+    c.move(r.x - 4, y);
+    await c.wait(1000);
+    cur.style.transition = 'translate 0.3s linear';
+    for (let i = 1; i <= 6; i++) {
+      const x = r.x - 4 + ((r.w + 8) * i) / 6;
+      c.move(x, y);
+      el.style.setProperty('--cut', `${(i / 6) * 100 + 2}%`);
+      await c.wait(300);
+      puff(x, y + 2);
+    }
+    cur.style.transition = '';
+  };
+  bursts.forEach((el) => el.classList.remove('go'));
+  win.style.setProperty('--cut', '0%');
+  dock.style.setProperty('--cut', '0%');
+  regrow(c.root);
+  c.move(700, 430);
+  await c.wait(4200);
+  if (c.reduced) return;
+  await sweep(win, 100);
+  await c.wait(400);
+  const d = at(c.root, dock);
+  await sweep(dock, d.y - 4);
+  await c.wait(600);
+  c.move(700, 430);
+  await c.wait(1800);
+});
+
+register('snowpuff-icicles', async (c) => {
+  const win = c.$('win'), cur = c.$('cursor');
+  cur.classList.remove('grabbing');
+  win.style.translate = '';
+  c.move(620, 430);
+  await c.wait(1800);
+  if (c.reduced) return;
+  c.move(300, 96);
+  await c.wait(1100);
+  cur.classList.add('grabbing');
+  await c.wait(250);
+  cur.style.transition = 'translate 0.08s linear';
+  c.root.classList.add('fall');
+  for (const [dx, dy] of [[-16, 4], [18, -3], [-18, 3], [16, -2], [-12, 2], [10, 0], [-6, 0], [0, 0]]) {
+    win.style.translate = `${dx}px ${dy}px`;
+    c.move(300 + dx, 96 + dy);
+    await c.wait(85);
+  }
+  cur.style.transition = '';
+  cur.classList.remove('grabbing');
+  await c.wait(1700);
+  c.move(620, 430);
+  // сосульки отрастают заново
+  c.root.classList.add('bare');
+  c.root.classList.remove('fall');
+  void c.root.offsetWidth;
+  c.root.classList.remove('bare');
+  await c.wait(3600);
+});
+
+register('snowpuff-glow', async (c) => {
+  const a = c.$('wa'), b = c.$('wb'), halo = c.$('halo');
+  const focus = (w: HTMLElement) => {
+    a.classList.toggle('on', w === a);
+    b.classList.toggle('on', w === b);
+    halo.dataset.at = w === a ? 'a' : 'b';
+  };
+  focus(a);
+  c.move(640, 450);
+  await c.wait(1600);
+  c.move(590, 280);
+  await c.wait(1100);
+  focus(b);
+  await c.wait(2600);
+  c.move(220, 280);
+  await c.wait(1100);
+  focus(a);
+  await c.wait(2400);
+});
+
+register('snowpuff-menu', async (c) => {
+  const menu = c.$('menu'), tray = c.$('tray'), snow = c.$('snow'), mic = c.$('mic'), puffRow = c.$('puff'), gust = c.$('gust');
+  const radios = c.$$('[data-r]');
+  const pick = (i: number) => radios.forEach((r, j) => r.classList.toggle('chk', j === i));
+  const hot = (el?: HTMLElement) => c.$$('.mrow').forEach((r) => r.classList.toggle('hot', r === el));
+  const open = async () => {
+    const [x, y] = mid(c.root, tray);
+    c.move(x + 2, y + 4);
+    await c.wait(1000);
+    tray.classList.add('hot');
+    menu.classList.add('open');
+    await c.wait(500);
+  };
+  const choose = async (row: HTMLElement) => {
+    const [x, y] = mid(c.root, row);
+    c.move(x - 30, y + 3);
+    await c.wait(900);
+    hot(row);
+    await c.wait(450);
+  };
+  const close = () => {
+    hot();
+    menu.classList.remove('open');
+    tray.classList.remove('hot');
+  };
+  // исходное состояние: ровный снегопад, микрофон выключен
+  close();
+  pick(2);
+  snow.dataset.lvl = '2';
+  mic.classList.remove('on');
+  puffRow.classList.remove('chk');
+  c.root.classList.remove('blow');
+  gust.classList.remove('go');
+  c.move(560, 330);
+  await c.wait(1400);
+  await open();
+  await choose(radios[3]);
+  pick(3);
+  await c.wait(200);
+  close();
+  snow.dataset.lvl = '3';
+  c.move(560, 330);
+  await c.wait(2600);
+  await open();
+  await choose(puffRow);
+  puffRow.classList.add('chk');
+  await c.wait(200);
+  close();
+  mic.classList.add('on');
+  c.move(560, 330);
+  await c.wait(1300);
+  if (c.reduced) return;
+  replay(gust, 'go');
+  await c.wait(250);
+  c.root.classList.add('blow');
+  await c.wait(1600);
+  c.root.classList.remove('blow');
+  await c.wait(2200);
+});
+
+register('snowpuff-calls', async (c) => {
+  const call = c.$('call'), cam = c.$('cam'), app = c.$('callapp'), hang = c.$('hang');
+  call.classList.remove('on');
+  cam.classList.remove('on');
+  c.root.classList.remove('hush');
+  c.move(640, 400);
+  await c.wait(2000);
+  const [ax, ay] = mid(c.root, app);
+  c.move(ax, ay);
+  await c.wait(1000);
+  app.classList.add('press');
+  await c.wait(160);
+  app.classList.remove('press');
+  call.classList.add('on');
+  await c.wait(500);
+  cam.classList.add('on');
+  await c.wait(400);
+  // другое приложение включило камеру — снег и звук плавно уходят
+  c.root.classList.add('hush');
+  c.move(560, 330);
+  await c.wait(3400);
+  const [hx, hy] = mid(c.root, hang);
+  c.move(hx, hy);
+  await c.wait(1000);
+  call.classList.remove('on');
+  cam.classList.remove('on');
+  await c.wait(700);
+  c.root.classList.remove('hush');
+  c.move(640, 400);
+  await c.wait(2800);
 });

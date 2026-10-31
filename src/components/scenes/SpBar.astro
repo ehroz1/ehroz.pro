@@ -1,0 +1,87 @@
+---
+// Строка меню macOS для сцен Snowpuff: справа индикаторы камеры и микрофона и снежинка Snowpuff.
+interface Props { lang: 'ru' | 'en' }
+const ru = Astro.props.lang === 'ru';
+---
+
+<div class="sp-bar">
+  <span class="l">
+    <b>Finder</b>
+    <span>{ru ? 'Файл' : 'File'}</span>
+    <span>{ru ? 'Правка' : 'Edit'}</span>
+    <span>{ru ? 'Вид' : 'View'}</span>
+    <span>{ru ? 'Окно' : 'Window'}</span>
+  </span>
+  <span class="r">
+    <i class="ind cam" data-el="cam"></i>
+    <i class="ind mic" data-el="mic"></i>
+    <span class="tray" data-el="tray">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+        <path d="M12 2.5v19M3.8 7.25l16.4 9.5M3.8 16.75l16.4-9.5M9.2 4l2.8 2.3L14.8 4M9.2 20l2.8-2.3 2.8 2.3" />
+      </svg>
+    </span>
+    <span>{ru ? 'Пт 21:40' : 'Fri 9:40 PM'}</span>
+  </span>
+</div>
+
+<style>
+  .sp-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 12;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 26px;
+    padding: 0 14px;
+    background: rgba(20, 10, 6, 0.55);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    color: #fff8ee;
+    font-size: 12.5px;
+  }
+  .l,
+  .r {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .l span {
+    opacity: 0.85;
+  }
+  .ind {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    opacity: 0;
+    scale: 0.4;
+    transition: opacity 0.3s, scale 0.3s;
+  }
+  .ind.cam {
+    background: #3dd68c;
+  }
+  .ind.mic {
+    background: #ffd27e;
+  }
+  .ind:global(.on) {
+    opacity: 1;
+    scale: 1;
+  }
+  .tray {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 20px;
+    margin: 0 -6px;
+    border-radius: 5px;
+    transition: background 0.15s, opacity 1.2s;
+  }
+  .tray:global(.hot) {
+    background: rgba(255, 248, 238, 0.22);
+  }
+  :global(.hush) .tray {
+    opacity: 0.45;
+  }
+</style>

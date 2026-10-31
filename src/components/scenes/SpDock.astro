@@ -1,0 +1,83 @@
+---
+// Dock для сцен Snowpuff со снегом сверху. call — плитка приложения для созвонов (сцена «на созвонах»).
+interface Props { call?: boolean }
+const { call = false } = Astro.props;
+const tiles = ['#f2e6d8', '#6e8bff', '#3dd68c', '#ff7aa8', '#ffd27e', '#9c3a28'];
+---
+
+<div class="sp-dock" data-el="dock">
+  <div class="cap" aria-hidden="true">
+    <svg viewBox="0 0 100 12" preserveAspectRatio="none">
+      <path d="M0 12C0 7 4 4 9 5c5-4 13-4 17-1 6-3 14-3 18 0 6-4 14-3 18 0 6-3 14-4 18-1 6-2 13-1 16 3 2 2 4 3 4 6Z" />
+    </svg>
+  </div>
+  {tiles.map((c) => <span class="t" style={`--c:${c}`} />)}
+  {
+    call && (
+      <span class="t call" data-el="callapp" style="--c:#2fa36b">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="#fff">
+          <rect x="3" y="7" width="12" height="10" rx="2.5" />
+          <path d="M16 11l5-3v8l-5-3z" />
+        </svg>
+      </span>
+    )
+  }
+</div>
+
+<style>
+  .sp-dock {
+    position: absolute;
+    z-index: 4;
+    left: 50%;
+    bottom: 12px;
+    translate: -50% 0;
+    display: flex;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 20px;
+    background: rgba(255, 243, 226, 0.13);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    box-shadow: inset 0 0 0 1px rgba(255, 248, 238, 0.18);
+  }
+  .t {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: var(--c);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2), 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: scale 0.15s;
+  }
+  .t:global(.press) {
+    scale: 0.88;
+  }
+  .cap {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    top: -11px;
+    height: 15px;
+    transform-origin: 50% 100%;
+    transition: transform 6s cubic-bezier(0.2, 0.6, 0.3, 1), opacity 1.2s, clip-path 0.35s linear;
+    filter: drop-shadow(0 1.5px 0 #d9a98e);
+    /* --cut — сколько снега слева уже смёл курсор */
+    clip-path: polygon(var(--cut, 0%) -100%, 100% -100%, 100% 300%, var(--cut, 0%) 300%);
+  }
+  .cap svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .cap path {
+    fill: #fff8ee;
+  }
+  :global(.bare) .cap {
+    transform: scaleY(0.12);
+    transition: none;
+  }
+  :global(.hush) .cap {
+    opacity: 0;
+  }
+</style>
