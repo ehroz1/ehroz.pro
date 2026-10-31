@@ -1,0 +1,451 @@
+---
+// Сцены Snowpuff — по README и меню приложения (Sources/Snowpuff, пункты меню и режимы снегопада).
+// Палитра «Cocoa» из Assets/brand/palette.json: какао-фон, тёплый свет окна, молочный снег.
+import Scene from './Scene.astro';
+import Cursor from './Cursor.astro';
+import Snow from './Snow.astro';
+import SpBar from './SpBar.astro';
+import SpWin from './SpWin.astro';
+import SpDock from './SpDock.astro';
+
+interface Props {
+  id: string;
+  lang: 'ru' | 'en';
+  label: string;
+}
+const { id, lang, label } = Astro.props;
+const ru = lang === 'ru';
+
+// Брызги снега от курсора: веер вверх и в стороны
+const puff = Array.from({ length: 12 }, (_, i) => {
+  const a = ((-170 + (160 * i) / 11) * Math.PI) / 180;
+  const r = 26 + ((i * 37) % 5) * 10;
+  return [Math.cos(a) * r, Math.sin(a) * r - 6];
+});
+
+const notes = ru ? 'Заметки' : 'Notes';
+const levels = ru ? ['Выкл', 'Лёгкий', 'Ровный', 'Метель', 'Переменный'] : ['Off', 'Light', 'Steady', 'Heavy', 'Variable'];
+const toggles: [string, boolean][] = ru
+  ? [
+      ['Сугробы', true],
+      ['Таяние', false],
+      ['Снег на окнах', true],
+      ['Сосульки', true],
+      ['Тёплый свет окна', true],
+      ['Смести весь снег', false],
+    ]
+  : [
+      ['Accumulate', true],
+      ['Melt Snow', false],
+      ['Snow on Windows', true],
+      ['Icicles', true],
+      ['Warm Window Light', true],
+      ['Clear Snow', false],
+    ];
+const photos = ['#9c3a28', '#e98f3e', '#4a2718', '#ffd27e', '#7d4426', '#d9a98e'];
+---
+
+{
+  id === 'snowpuff-desktop' && (
+    <Scene id={id} label={label} bg="none" class="sp-bg">
+      <SpBar lang={lang} />
+      <SpWin el="wa" x={120} y={110} w={400} h={240} title={notes} />
+      <SpWin x={480} y={210} w={250} h={170} title={ru ? 'Музыка' : 'Music'} rows={[70, 46, 58]} />
+      <SpDock />
+      <Snow seed={1} />
+      {[0, 1, 2].map(() => (
+        <div class="burst">
+          {puff.map(([dx, dy]) => (
+            <i style={`--dx:${dx.toFixed(0)}px;--dy:${dy.toFixed(0)}px`} />
+          ))}
+        </div>
+      ))}
+      <Cursor x={700} y={430} />
+    </Scene>
+  )
+}
+
+{
+  id === 'snowpuff-icicles' && (
+    <Scene id={id} label={label} bg="none" class="sp-bg">
+      <SpBar lang={lang} />
+      <svg class="bank" viewBox="0 0 800 110" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 40C90 10 170 30 250 22s170-26 260-6 190 18 290-4V110H0Z" />
+      </svg>
+      <SpWin el="win" x={180} y={80} w={440} h={230} title={notes} ice={[26, 44, 18, 52, 34, 22, 48, 30, 40, 20, 56, 28, 36]} />
+      <Snow seed={2} lvl={2} />
+      <Cursor x={620} y={430} />
+    </Scene>
+  )
+}
+
+{
+  id === 'snowpuff-glow' && (
+    <Scene id={id} label={label} bg="none" class="sp-bg">
+      <SpBar lang={lang} />
+      <div class="halo" data-el="halo" data-at="a" />
+      <SpWin el="wa" class="on" x={60} y={130} w={330} h={230} title={notes} />
+      <SpWin el="wb" x={430} y={100} w={310} h={270} title={ru ? 'Фото' : 'Photos'}>
+        <div class="photos">
+          {photos.map((p) => (
+            <span style={`background:linear-gradient(135deg,${p},#2a170e)`} />
+          ))}
+        </div>
+      </SpWin>
+      <Snow seed={3} lvl={2} />
+      <Cursor x={640} y={450} />
+    </Scene>
+  )
+}
+
+{
+  id === 'snowpuff-menu' && (
+    <Scene id={id} label={label} bg="none" class="sp-bg">
+      <SpBar lang={lang} />
+      <SpWin x={50} y={120} w={360} h={240} title={notes} />
+      <SpDock />
+      <Snow seed={4} lvl={2} />
+      <svg class="gust" data-el="gust" viewBox="0 0 300 160" aria-hidden="true">
+        <path d="M0 40c60-20 120 10 180-6s90-30 120-10" />
+        <path d="M20 90c70-18 120 12 190-4s60-20 90-6" />
+        <path d="M0 135c50-14 110 6 160-6" />
+      </svg>
+      <div class="menu" data-el="menu">
+        <div class="hdr">{ru ? 'Снегопад' : 'Snowfall'}</div>
+        {levels.map((l, i) => (
+          <div class:list={['mrow', { chk: i === 2 }]} data-r={i}>
+            <i class="ck">✓</i>
+            {l}
+          </div>
+        ))}
+        <div class="sep" />
+        {toggles.map(([l, on]) => (
+          <div class:list={['mrow', { chk: on }]}>
+            <i class="ck">✓</i>
+            {l}
+          </div>
+        ))}
+        <div class="sep" />
+        <div class="mrow" data-el="puff">
+          <i class="ck">✓</i>
+          {ru ? 'Подуть на снег (микрофон)' : 'Blow on the Snow (Microphone)'}
+        </div>
+        <div class="mrow">
+          <i class="ck">✓</i>
+          {ru ? 'Звук' : 'Sound'}
+          <span class="arr">›</span>
+        </div>
+        <div class="mrow chk">
+          <i class="ck">✓</i>
+          {ru ? 'Прятать на созвонах' : 'Hide During Calls'}
+        </div>
+      </div>
+      <Cursor x={560} y={330} />
+    </Scene>
+  )
+}
+
+{
+  id === 'snowpuff-calls' && (
+    <Scene id={id} label={label} bg="none" class="sp-bg">
+      <SpBar lang={lang} />
+      <SpWin x={80} y={100} w={380} h={220} title={notes} />
+      <SpDock call />
+      <div class="call" data-el="call">
+        <div class="call-h">
+          <span class="lights">
+            <i />
+            <i />
+            <i />
+          </span>
+          <b>{ru ? 'Созвон · дизайн-ревью' : 'Call · design review'}</b>
+        </div>
+        <div class="tiles">
+          <span class="tile" style="--c:#7d4426">
+            <i>{ru ? 'А' : 'A'}</i>
+            <small>{ru ? 'Аня' : 'Anna'}</small>
+          </span>
+          <span class="tile" style="--c:#4a5a7d">
+            <i>{ru ? 'М' : 'M'}</i>
+            <small>{ru ? 'Макс' : 'Max'}</small>
+          </span>
+        </div>
+        <div class="ctl">
+          <span class="cb" />
+          <span class="cb" />
+          <span class="cb hang" data-el="hang">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff">
+              <path d="M3 14.5c4.8-4.6 13.2-4.6 18 0l-2.4 2.6-3.3-1.4v-2.4a12 12 0 0 0-6.6 0v2.4L5.4 17Z" />
+            </svg>
+          </span>
+        </div>
+      </div>
+      <Snow seed={5} />
+      <Cursor x={640} y={400} />
+    </Scene>
+  )
+}
+
+<style>
+  :global(.scene.sp-bg) {
+    background:
+      radial-gradient(120% 95% at 50% 32%, transparent 55%, rgba(30, 17, 11, 0.65)),
+      linear-gradient(180deg, #1e110b, #4a2718 62%, #7d4426);
+  }
+  /* Брызги снега от курсора */
+  .burst {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 8;
+    pointer-events: none;
+  }
+  .burst i {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #fff8ee;
+    opacity: 0;
+  }
+  .burst:global(.go) i {
+    animation: sp-puff 0.9s ease-out forwards;
+  }
+  @keyframes sp-puff {
+    0% {
+      opacity: 1;
+      transform: none;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(var(--dx), var(--dy));
+    }
+  }
+  /* Сугроб внизу — сюда падают сосульки */
+  .bank {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+    width: 100%;
+    height: 110px;
+  }
+  .bank path {
+    fill: #fff3e2;
+    filter: drop-shadow(0 -2px 0 #d9a98e);
+  }
+  /* Тёплый свет активного окна */
+  .halo {
+    position: absolute;
+    z-index: 1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 210, 126, 0.42), rgba(233, 143, 62, 0.12) 60%, transparent);
+    transition: left 0.9s ease, top 0.9s ease, width 0.9s ease, height 0.9s ease;
+  }
+  .halo[data-at='a'] {
+    left: -40px;
+    top: 40px;
+    width: 530px;
+    height: 410px;
+  }
+  .halo[data-at='b'] {
+    left: 330px;
+    top: 10px;
+    width: 510px;
+    height: 450px;
+  }
+  .photos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .photos span {
+    aspect-ratio: 1;
+    border-radius: 6px;
+  }
+  /* Дуновение */
+  .gust {
+    position: absolute;
+    left: 0;
+    top: 150px;
+    z-index: 7;
+    width: 300px;
+    height: 160px;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .gust path {
+    fill: none;
+    stroke: rgba(255, 248, 238, 0.55);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+  .gust:global(.go) {
+    animation: sp-gust 1.5s ease-out forwards;
+  }
+  @keyframes sp-gust {
+    0% {
+      opacity: 0;
+      transform: translateX(-320px);
+    }
+    25% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(760px);
+    }
+  }
+  /* Меню Snowpuff в строке меню */
+  .menu {
+    position: absolute;
+    z-index: 11;
+    right: 36px;
+    top: 30px;
+    width: 290px;
+    padding: 6px;
+    border-radius: 10px;
+    background: rgba(46, 30, 22, 0.88);
+    -webkit-backdrop-filter: blur(24px);
+    backdrop-filter: blur(24px);
+    box-shadow: inset 0 0 0 1px rgba(255, 248, 238, 0.12), 0 18px 40px rgba(0, 0, 0, 0.45);
+    color: #fff8ee;
+    font-size: 13px;
+    opacity: 0;
+    translate: 0 -4px;
+    transition: opacity 0.18s, translate 0.18s;
+  }
+  .menu:global(.open) {
+    opacity: 1;
+    translate: 0 0;
+  }
+  .hdr {
+    padding: 4px 10px 3px 24px;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 248, 238, 0.5);
+  }
+  .mrow {
+    display: flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 10px 0 6px;
+    border-radius: 5px;
+  }
+  .mrow:global(.hot) {
+    background: #ffd27e;
+    color: #1e110b;
+  }
+  .ck {
+    width: 18px;
+    font-style: normal;
+    font-size: 12px;
+    visibility: hidden;
+  }
+  .mrow:global(.chk) .ck {
+    visibility: visible;
+  }
+  .arr {
+    margin-left: auto;
+    opacity: 0.6;
+  }
+  .sep {
+    height: 1px;
+    margin: 5px 8px;
+    background: rgba(255, 248, 238, 0.12);
+  }
+  /* Окно созвона */
+  .call {
+    position: absolute;
+    z-index: 5;
+    left: 300px;
+    top: 120px;
+    width: 430px;
+    height: 280px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #17181c;
+    color: #f2f2f5;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 30px 60px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    scale: 0.96;
+    transition: opacity 0.35s, scale 0.35s;
+  }
+  .call:global(.on) {
+    opacity: 1;
+    scale: 1;
+  }
+  .call-h {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    height: 32px;
+    padding: 0 12px;
+    font-size: 12.5px;
+    background: #22232a;
+  }
+  .lights {
+    display: flex;
+    gap: 7px;
+  }
+  .lights i {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: #ff5f57;
+  }
+  .lights i:nth-child(2) {
+    background: #febc2e;
+  }
+  .lights i:nth-child(3) {
+    background: #28c840;
+  }
+  .tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 10px;
+  }
+  .tile {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: 160px;
+    border-radius: 8px;
+    background: linear-gradient(160deg, var(--c), #111);
+  }
+  .tile i {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    font-style: normal;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  .tile small {
+    position: absolute;
+    left: 8px;
+    bottom: 6px;
+    font-size: 11px;
+    opacity: 0.8;
+  }
+  .ctl {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+  .cb {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2e2f37;
+  }
+  .cb.hang {
+    background: #ff4d5e;
+  }
+</style>

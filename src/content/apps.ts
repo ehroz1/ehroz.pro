@@ -656,6 +656,87 @@ export const apps: App[] = [
     ],
     requirements: [t('Firefox 128+ (компьютер или Android)', 'Firefox 128+ (desktop or Android)'), t('или Chrome 111+ на Mac', 'or Chrome 111+ on Mac')],
   },
+  {
+    slug: 'snowpuff',
+    name: 'Snowpuff',
+    short: t('Тёплый снег на рабочем столе Mac и Windows', 'Cozy snow on your Mac and Windows desktop'),
+    tagline: t('Снег падает, оседает на окнах и Dock и разлетается от курсора.', 'Snow falls, settles on your windows and Dock, and scatters from your cursor.'),
+    about: t(
+      'Snowpuff — снегопад поверх рабочего стола macOS и Windows. Снег копится сугробами на окнах, Dock и панели задач, под окнами растут сосульки, активное окно светится тёплым светом. Можно подуть в микрофон, и снег разлетится. На созвонах снег прячется сам, а новые версии ставятся автоматически.',
+      'Snowpuff is a snowfall on top of your macOS or Windows desktop. Snow piles up on windows, the Dock and the taskbar, icicles grow under windows, and the active window glows warm. Blow into the microphone and the snow flies away. It hides itself during calls and installs new versions automatically.',
+    ),
+    audience: t('Всем, кому зимой хочется уюта прямо на экране, без лишних окон и настроек.', 'Anyone who wants a cozy winter right on their screen, with no extra windows or setup.'),
+    platforms: ['macos', 'windows'],
+    status: 'ready',
+    updated: '2026-10-31',
+    version: '1.1.0',
+    accent: '#FFD27E',
+    onAccent: '#1E110B',
+    glow: ['#7D4426', '#E98F3E', '#2A170E'],
+    tint: { dark: '#FFD27E', light: '#9C3A28' },
+    kind: t('Снег на рабочем столе', 'Desktop snow'),
+    links: [
+      { kind: 'download', href: 'https://github.com/ehroz1/Snowpuff/releases/latest/download/Snowpuff.dmg', label: t('Скачать для Mac', 'Download for Mac') },
+      { kind: 'download', href: 'https://github.com/ehroz1/Snowpuff/releases/latest/download/Snowpuff-Setup.exe', label: t('Скачать для Windows', 'Download for Windows') },
+      { kind: 'github', href: 'https://github.com/ehroz1/Snowpuff', label: t('GitHub', 'GitHub') },
+    ],
+    features: [
+      {
+        scene: 'snowpuff-desktop',
+        title: t('Снег, который оседает', 'Snow that settles'),
+        text: t(
+          'Лёгкий, ровный, метель или переменный снегопад. Снег копится сугробами на окнах, Dock и панели задач Windows, тает и разлетается, если провести по нему курсором.',
+          'Light, steady, heavy or variable snowfall. Snow piles up on windows, the Dock and the Windows taskbar, melts, and scatters when you sweep the cursor through it.',
+        ),
+      },
+      {
+        scene: 'snowpuff-icicles',
+        title: t('Сосульки', 'Icicles'),
+        text: t(
+          'Под окнами со снегом растут сосульки. Дёрните окно, закройте или сверните его — они слетят и разобьются.',
+          'Icicles grow under windows with snow on them. Shake, close or minimise the window and they fall off and shatter.',
+        ),
+      },
+      {
+        scene: 'snowpuff-glow',
+        title: t('Тёплый свет окна', 'Warm window light'),
+        text: t(
+          'Активное окно светится, как окно на иконке Snowpuff, и снег рядом с ним теплеет. Переключились на другое — свет переходит следом.',
+          'The active window glows like the window on the Snowpuff icon, and nearby snow turns warm. Switch windows and the light follows.',
+        ),
+      },
+      {
+        scene: 'snowpuff-menu',
+        title: t('Подуть на снег', 'Blow on the snow'),
+        text: t(
+          'Включите в меню микрофон и подуйте — снег разлетится. Звук только проверяется на дуновение и не записывается. Там же звук ветра, камина или обоих сразу, он синтезируется на лету.',
+          'Turn on the microphone in the menu and blow — the snow flies away. Audio is only checked for a puff and never recorded. The same menu has wind, fireplace or both, synthesised on the fly.',
+        ),
+      },
+      {
+        scene: 'snowpuff-calls',
+        title: t('Прячется на созвонах', 'Hides during calls'),
+        text: t(
+          'Когда другое приложение включает камеру или микрофон, снег и звук плавно исчезают и возвращаются после звонка. Обновление тоже ждёт конца созвона.',
+          'When another app turns on the camera or microphone, the snow and sound fade away and come back after the call. Updates wait for the call to end too.',
+        ),
+      },
+    ],
+    steps: [
+      t('Скачайте Snowpuff.dmg для Mac или Snowpuff-Setup.exe для Windows. Права администратора не нужны.', 'Download Snowpuff.dmg for Mac or Snowpuff-Setup.exe for Windows. No admin rights needed.'),
+      t('На Mac откройте Snowpuff из образа — он сам переедет в «Программы». На Windows запустите установщик.', 'On a Mac, open Snowpuff from the disk image — it moves itself to Applications. On Windows, run the installer.'),
+      t('Снежинка в строке меню или в трее — снегопад, сугробы, сосульки, звук и микрофон. Дальше Snowpuff обновляется сам.', 'The snowflake in the menu bar or tray holds snowfall, drifts, icicles, sound and the microphone. Snowpuff keeps itself up to date.'),
+    ],
+    faq: [
+      { q: t('macOS или Windows не дают запустить Snowpuff', 'macOS or Windows won’t run Snowpuff'), a: t('Приложение не подписано платным сертификатом. На Mac: «Системные настройки → Конфиденциальность и безопасность → Всё равно открыть», один раз. На Windows в окне SmartScreen: «Подробнее → Выполнить в любом случае».', 'The app isn’t signed with a paid certificate. On a Mac: System Settings → Privacy & Security → Open Anyway, once. On Windows, in the SmartScreen window: More info → Run anyway.') },
+      { q: t('Микрофон что-то записывает?', 'Does the microphone record anything?'), a: t('Нет. Микрофон нужен только для «Подуть на снег» и включается в меню. Звук проверяется на дуновение и никуда не отправляется.', 'No. The microphone is only for “Blow on the Snow” and is turned on in the menu. Audio is checked for a puff and never sent anywhere.') },
+      { q: t('Как обновляется?', 'How does it update?'), a: t('Сам: раз в несколько часов проверяет релизы на GitHub, скачивает новую версию, сверяет SHA-256 и перезапускается. Во время созвона ждёт. Выключается пунктом «Обновлять автоматически».', 'By itself: every few hours it checks GitHub releases, downloads the new version, verifies its SHA-256 and restarts. During a call it waits. Turn it off with “Update Automatically”.') },
+      { q: t('Снег не будет мешать работать?', 'Won’t the snow get in the way?'), a: t('Можно убрать его за окна пунктом «За окнами», спрятать со скриншотов или смести весь снег одной командой.', 'You can move it behind windows with “Behind Windows”, hide it from screenshots or clear all the snow in one click.') },
+      { q: t('Код открыт?', 'Is it open source?'), a: t('Да, по лицензии MIT. Snowpuff основан на Snowhush (MIT, © Mykhailo Bezruchko).', 'Yes, under the MIT license. Snowpuff is based on Snowhush (MIT, © Mykhailo Bezruchko).') },
+    ],
+    requirements: [t('macOS 14 Sonoma и новее — Apple Silicon и Intel', 'macOS 14 Sonoma or later — Apple Silicon and Intel'), t('Windows 10 и 11', 'Windows 10 and 11'), t('Микрофон — только для «Подуть на снег»', 'A microphone — only for “Blow on the Snow”')],
+    openSource: true,
+  },
 ];
 
 /** Дата последнего изменения главной (герой, тексты). Итоговая дата главной — самая поздняя из этой и дат приложений. */

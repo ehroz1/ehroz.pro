@@ -1,0 +1,106 @@
+---
+// Снегопад для сцен Snowpuff: снежинки падают сверху вниз и покачиваются.
+// Позиции детерминированы (seed), чтобы сборка не менялась от раза к разу.
+// Плотность — data-lvl (1–3): часть снежинок прячется. Классы на сцене:
+// .hush — снег плавно исчезает, .blow — снег сдувает вправо.
+// При «уменьшить движение» снежинки остаются на своих местах (без анимации).
+interface Props {
+  n?: number;
+  seed?: number;
+  lvl?: 1 | 2 | 3;
+  w?: number;
+  h?: number;
+}
+const { n = 64, seed = 1, lvl = 3, w = 800, h = 560 } = Astro.props;
+let s = (seed * 7919) % 233280;
+const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+const flakes = Array.from({ length: n }, (_, i) => {
+  const size = 2 + rnd() * 4.5;
+  const d = (size < 3.5 ? 13 : 9) + rnd() * 6;
+  return {
+    x: rnd() * w,
+    y: rnd() * h,
+    size,
+    d,
+    dl: -rnd() * d,
+    sw: 6 + rnd() * 18,
+    sd: 2.4 + rnd() * 2.6,
+    o: 0.5 + rnd() * 0.5,
+    bx: 160 + rnd() * 260,
+    l: (i % 3) + 1,
+  };
+});
+---
+
+<div class="sp-snow" data-el="snow" data-lvl={lvl} style={`--fh:${h}px`}>
+  {
+    flakes.map((f) => (
+      <span
+        class="fl"
+        data-l={f.l}
+        style={`--x:${f.x.toFixed(1)}px;--y:${f.y.toFixed(1)}px;--s:${f.size.toFixed(1)}px;--d:${f.d.toFixed(2)}s;--dl:${f.dl.toFixed(2)}s;--sw:${f.sw.toFixed(1)}px;--sd:${f.sd.toFixed(2)}s;--o:${f.o.toFixed(2)};--bx:${f.bx.toFixed(0)}px`}
+      >
+        <i />
+      </span>
+    ))
+  }
+</div>
+
+<style>
+  .sp-snow {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+    transition: opacity 1.2s ease;
+  }
+  :global(.hush) .sp-snow {
+    opacity: 0;
+  }
+  .fl {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--s);
+    height: var(--s);
+    opacity: var(--o);
+    transition: opacity 0.8s;
+    animation: sp-fall var(--d) linear var(--dl) infinite;
+  }
+  .fl i {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #fff8ee;
+    box-shadow: 0 0 4px rgba(255, 243, 226, 0.55);
+    transition: opacity 1s;
+    animation: sp-sway var(--sd) ease-in-out var(--dl) infinite alternate;
+  }
+  [data-lvl='1'] .fl:not([data-l='1']),
+  [data-lvl='2'] .fl[data-l='3'] {
+    opacity: 0;
+  }
+  /* Дуновение: снежинки улетают вправо и гаснут, потом тихо возвращаются */
+  :global(.blow) .fl i {
+    translate: var(--bx) -50px;
+    opacity: 0;
+    transition: translate 1.3s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 1.3s;
+  }
+  @keyframes sp-fall {
+    from {
+      transform: translateY(calc(-1 * var(--y) - 12px));
+    }
+    to {
+      transform: translateY(calc(var(--fh) + 12px - var(--y)));
+    }
+  }
+  @keyframes sp-sway {
+    from {
+      transform: translateX(calc(-1 * var(--sw)));
+    }
+    to {
+      transform: translateX(var(--sw));
+    }
+  }
+</style>

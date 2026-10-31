@@ -35,6 +35,7 @@ const sources = {
   padbridge: await readFile(new URL('padbridge.png', SRC)),
   'moss-pocket': await readFile(new URL('moss-pocket.png', SRC)),
   peecube: await readFile(new URL('peecube.png', SRC)),
+  snowpuff: await readFile(new URL('snowpuff.png', SRC)),
   // ANY CAMERA: иконка расширения — квадрат во всю площадь, вписываем в рамку как остальные
   'any-camera': render(frame(`<image x="100" y="100" width="824" height="824" xlink:href="${await dataUri('any-camera.svg', 'image/svg+xml')}"/>`, '#5b3cf0')),
 };
