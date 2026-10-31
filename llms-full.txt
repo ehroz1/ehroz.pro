@@ -522,6 +522,65 @@ H.264 MP4 or WebM video and regular photos. HEVC and HEIC are best converted fir
 
 - Get the extension: https://t.me/hhrrzz1
 
+## Snowpuff — Cozy snow on your Mac and Windows desktop
+
+URL: https://ehroz1.github.io/ehroz.pro/en/snowpuff/
+Platforms: macOS, Windows · Status: Available · Version: 1.1.0 · Updated: 2026-10-31
+
+Snow falls, settles on your windows and Dock, and scatters from your cursor.
+
+Snowpuff is a snowfall on top of your macOS or Windows desktop. Snow piles up on windows, the Dock and the taskbar, icicles grow under windows, and the active window glows warm. Blow into the microphone and the snow flies away. It hides itself during calls and installs new versions automatically.
+
+### Who it’s for
+
+Anyone who wants a cozy winter right on their screen, with no extra windows or setup.
+
+### What it does
+
+- **Snow that settles.** Light, steady, heavy or variable snowfall. Snow piles up on windows, the Dock and the Windows taskbar, melts, and scatters when you sweep the cursor through it.
+- **Icicles.** Icicles grow under windows with snow on them. Shake, close or minimise the window and they fall off and shatter.
+- **Warm window light.** The active window glows like the window on the Snowpuff icon, and nearby snow turns warm. Switch windows and the light follows.
+- **Blow on the snow.** Turn on the microphone in the menu and blow — the snow flies away. Audio is only checked for a puff and never recorded. The same menu has wind, fireplace or both, synthesised on the fly.
+- **Hides during calls.** When another app turns on the camera or microphone, the snow and sound fade away and come back after the call. Updates wait for the call to end too.
+
+### How it works
+
+1. Download Snowpuff.dmg for Mac or Snowpuff-Setup.exe for Windows. No admin rights needed.
+2. On a Mac, open Snowpuff from the disk image — it moves itself to Applications. On Windows, run the installer.
+3. The snowflake in the menu bar or tray holds snowfall, drifts, icicles, sound and the microphone. Snowpuff keeps itself up to date.
+
+### FAQ
+
+**macOS or Windows won’t run Snowpuff**
+
+The app isn’t signed with a paid certificate. On a Mac: System Settings → Privacy & Security → Open Anyway, once. On Windows, in the SmartScreen window: More info → Run anyway.
+
+**Does the microphone record anything?**
+
+No. The microphone is only for “Blow on the Snow” and is turned on in the menu. Audio is checked for a puff and never sent anywhere.
+
+**How does it update?**
+
+By itself: every few hours it checks GitHub releases, downloads the new version, verifies its SHA-256 and restarts. During a call it waits. Turn it off with “Update Automatically”.
+
+**Won’t the snow get in the way?**
+
+You can move it behind windows with “Behind Windows”, hide it from screenshots or clear all the snow in one click.
+
+**Is it open source?**
+
+Yes, under the MIT license. Snowpuff is based on Snowhush (MIT, © Mykhailo Bezruchko).
+
+### Requirements
+
+- macOS 14 Sonoma or later — Apple Silicon and Intel
+- Windows 10 and 11
+- A microphone — only for “Blow on the Snow”
+
+- Download for Mac: https://github.com/ehroz1/Snowpuff/releases/latest/download/Snowpuff.dmg
+- Download for Windows: https://github.com/ehroz1/Snowpuff/releases/latest/download/Snowpuff-Setup.exe
+- GitHub: https://github.com/ehroz1/Snowpuff
+
 # Русский
 
 ## Morfus — Радиальный конвертер файлов для macOS
@@ -1041,3 +1100,62 @@ Firefox 128+ на компьютере и Android, Chrome 111+ и другие C
 - или Chrome 111+ на Mac
 
 - Получить расширение: https://t.me/hhrrzz1
+
+## Snowpuff — Тёплый снег на рабочем столе Mac и Windows
+
+URL: https://ehroz1.github.io/ehroz.pro/snowpuff/
+Платформы: macOS, Windows · Статус: Готово · Версия: 1.1.0 · Обновлено: 2026-10-31
+
+Снег падает, оседает на окнах и Dock и разлетается от курсора.
+
+Snowpuff — снегопад поверх рабочего стола macOS и Windows. Снег копится сугробами на окнах, Dock и панели задач, под окнами растут сосульки, активное окно светится тёплым светом. Можно подуть в микрофон, и снег разлетится. На созвонах снег прячется сам, а новые версии ставятся автоматически.
+
+### Для кого
+
+Всем, кому зимой хочется уюта прямо на экране, без лишних окон и настроек.
+
+### Что умеет
+
+- **Снег, который оседает.** Лёгкий, ровный, метель или переменный снегопад. Снег копится сугробами на окнах, Dock и панели задач Windows, тает и разлетается, если провести по нему курсором.
+- **Сосульки.** Под окнами со снегом растут сосульки. Дёрните окно, закройте или сверните его — они слетят и разобьются.
+- **Тёплый свет окна.** Активное окно светится, как окно на иконке Snowpuff, и снег рядом с ним теплеет. Переключились на другое — свет переходит следом.
+- **Подуть на снег.** Включите в меню микрофон и подуйте — снег разлетится. Звук только проверяется на дуновение и не записывается. Там же звук ветра, камина или обоих сразу, он синтезируется на лету.
+- **Прячется на созвонах.** Когда другое приложение включает камеру или микрофон, снег и звук плавно исчезают и возвращаются после звонка. Обновление тоже ждёт конца созвона.
+
+### Как это работает
+
+1. Скачайте Snowpuff.dmg для Mac или Snowpuff-Setup.exe для Windows. Права администратора не нужны.
+2. На Mac откройте Snowpuff из образа — он сам переедет в «Программы». На Windows запустите установщик.
+3. Снежинка в строке меню или в трее — снегопад, сугробы, сосульки, звук и микрофон. Дальше Snowpuff обновляется сам.
+
+### Вопросы
+
+**macOS или Windows не дают запустить Snowpuff**
+
+Приложение не подписано платным сертификатом. На Mac: «Системные настройки → Конфиденциальность и безопасность → Всё равно открыть», один раз. На Windows в окне SmartScreen: «Подробнее → Выполнить в любом случае».
+
+**Микрофон что-то записывает?**
+
+Нет. Микрофон нужен только для «Подуть на снег» и включается в меню. Звук проверяется на дуновение и никуда не отправляется.
+
+**Как обновляется?**
+
+Сам: раз в несколько часов проверяет релизы на GitHub, скачивает новую версию, сверяет SHA-256 и перезапускается. Во время созвона ждёт. Выключается пунктом «Обновлять автоматически».
+
+**Снег не будет мешать работать?**
+
+Можно убрать его за окна пунктом «За окнами», спрятать со скриншотов или смести весь снег одной командой.
+
+**Код открыт?**
+
+Да, по лицензии MIT. Snowpuff основан на Snowhush (MIT, © Mykhailo Bezruchko).
+
+### Требования
+
+- macOS 14 Sonoma и новее — Apple Silicon и Intel
+- Windows 10 и 11
+- Микрофон — только для «Подуть на снег»
+
+- Скачать для Mac: https://github.com/ehroz1/Snowpuff/releases/latest/download/Snowpuff.dmg
+- Скачать для Windows: https://github.com/ehroz1/Snowpuff/releases/latest/download/Snowpuff-Setup.exe
+- GitHub: https://github.com/ehroz1/Snowpuff

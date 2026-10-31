@@ -17,6 +17,7 @@ Contacts: Telegram @hhrrzz1 (https://t.me/hhrrzz1), email ehrozbekisharifzoda@gm
 - [Moss Pocket](https://ehroz1.github.io/ehroz.pro/en/moss-pocket/): Your Downloads, right next to the Dock. macOS; status: In development, version 0.1.0. Russian: https://ehroz1.github.io/ehroz.pro/moss-pocket/
 - [Peecube](https://ehroz1.github.io/ehroz.pro/en/peecube/): Links in a window over the page. macOS, Extension; status: Coming soon, version 4.1. Russian: https://ehroz1.github.io/ehroz.pro/peecube/
 - [ANY CAMERA](https://ehroz1.github.io/ehroz.pro/en/any-camera/): A video or photo instead of your webcam. Extension; status: Coming soon, version 1.0.0. Russian: https://ehroz1.github.io/ehroz.pro/any-camera/
+- [Snowpuff](https://ehroz1.github.io/ehroz.pro/en/snowpuff/): Cozy snow on your Mac and Windows desktop. macOS, Windows; status: Available, version 1.1.0. Russian: https://ehroz1.github.io/ehroz.pro/snowpuff/
 
 ## About
 
