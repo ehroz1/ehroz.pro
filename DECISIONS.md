@@ -105,7 +105,7 @@
 
 - **Аватар** — монограмма «E» на градиенте, фото не нашёл. Положите `public/avatar.webp` и передайте
   `photo="avatar.webp"` в компонент `Avatar` (используется в `MenuBar.astro` и `Home.astro`).
-- **Behance** — `behance.net/ehroz1` по аналогии с остальными ником; **проверить**, существует ли профиль.
+- **Behance** — `behance.net/ehroz` — ник подтверждён владельцем.
 - **«Заказать сайт»** ведёт на ваш лендинг услуг `https://dsgn.ehroz.web.picta.cc` (CNAME репозитория
   `designer.ehroz1.flower`).
 - Полное имя не указывал — только «Эхроз / Ehroz».

@@ -35,7 +35,7 @@ export const CONTACTS = {
   email: 'ehrozbekisharifzoda@gmail.com',
   instagram: 'ehroz1',
   github: 'ehroz1',
-  behance: 'ehroz1',
+  behance: 'ehroz',
   /** «Заказать сайт» — лендинг услуг. */
   order: 'https://dsgn.ehroz.web.picta.cc',
 };
