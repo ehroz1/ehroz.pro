@@ -7,6 +7,7 @@ import Dock from '../components/Dock.astro';
 import Spotlight from '../components/Spotlight.astro';
 import PageFrame from '../components/PageFrame.astro';
 import Consent from '../components/Consent.astro';
+import Analytics from '@vercel/analytics/astro';
 import { analyticsEnabled } from '../analytics.config';
 
 interface Props {
@@ -117,6 +118,8 @@ const vars = [
     <PageFrame />
     <Dock lang={lang} current={slug} />
     <Spotlight lang={lang} />
+    {/* Vercel Web Analytics: без cookies, согласие не требуется; только на боевом домене. */}
+    {site.origin === PRODUCTION_ORIGIN && <Analytics />}
     {analyticsEnabled() && site.origin === PRODUCTION_ORIGIN && <Consent lang={lang} />}
     <script>
       import '../scripts/site';
