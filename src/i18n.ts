@@ -32,6 +32,8 @@ export const CONTACTS = {
   role: 'designer & developer',
   city: { ru: 'Астана', en: 'Astana' } as L,
   telegram: 'hhrrzz1',
+  /** Телефон для WhatsApp и Telegram (только цифры, с кодом страны). */
+  phone: '77775971798',
   email: 'ehrozbekisharifzoda@gmail.com',
   instagram: 'ehroz1',
   github: 'ehroz1',
