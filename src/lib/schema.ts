@@ -173,6 +173,40 @@ export function appList(site: URL, lang: Lang, apps: App[], url: string): Node {
   };
 }
 
+/** Услуга с пакетами. Цены — ровно те, что видны на странице («от»). */
+export interface ServicePackage { name: string; price: number; description: string }
+export function service(site: URL, lang: Lang, url: string, o: { name: string; description: string; area: string; packages: ServicePackage[] }): Node {
+  const ids = schemaIds(site);
+  return {
+    '@type': 'Service',
+    '@id': `${url}#service`,
+    name: o.name,
+    description: o.description,
+    serviceType: lang === 'ru' ? 'Разработка сайтов' : 'Website development',
+    url,
+    inLanguage: inLang(lang),
+    provider: { '@id': ids.person },
+    areaServed: { '@type': 'City', name: o.area },
+    offers: o.packages.map((p) => ({
+      '@type': 'Offer',
+      name: p.name,
+      description: p.description,
+      priceSpecification: { '@type': 'PriceSpecification', minPrice: p.price, priceCurrency: 'USD' },
+    })),
+  };
+}
+
+/** FAQ обычной страницы — те же вопросы и ответы, что видны в тексте. */
+export function faqList(url: string, lang: Lang, items: { q: string; a: string }[]): Node {
+  return {
+    '@type': 'FAQPage',
+    '@id': `${url}#faq`,
+    url,
+    inLanguage: inLang(lang),
+    mainEntity: items.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: i.a } })),
+  };
+}
+
 export const graph = (...nodes: Node[]) => ({ '@context': 'https://schema.org', '@graph': nodes });
 
 export { homeUpdated };
