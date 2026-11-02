@@ -8,7 +8,7 @@
  */
 export const ANALYTICS = {
   ga4: '',
-  metrika: '',
+  metrika: '114006417',
 };
 
 export const analyticsEnabled = () => Boolean(ANALYTICS.ga4 || ANALYTICS.metrika);
