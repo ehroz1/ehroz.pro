@@ -39,8 +39,8 @@ function start() {
   }
   if (metrika) {
     w.ym = w.ym || Object.assign(function (...a: unknown[]) { (w.ym!.a = w.ym!.a || []).push(a); }, { l: Date.now() });
-    w.ym(metrika, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: false });
-    load('https://mc.yandex.ru/metrika/tag.js');
+    w.ym(metrika, 'init', { ssr: true, webvisor: true, clickmap: true, referrer: document.referrer, url: location.href, accurateTrackBounce: true, trackLinks: true });
+    load(`https://mc.yandex.ru/metrika/tag.js?id=${metrika}`);
   }
   queue.splice(0).forEach(([n, p]) => track(n, p));
 }
