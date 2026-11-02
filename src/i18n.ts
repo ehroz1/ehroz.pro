@@ -14,7 +14,7 @@ export const SITE_NAME = 'Ehroz';
  */
 export const SEARCH_VERIFICATION = {
   google: '', // Google Search Console → HTML-тег → google-site-verification
-  yandex: '', // Яндекс Вебмастер → Мета-тег → yandex-verification
+  yandex: '6a8b554db1ca875b', // Яндекс Вебмастер → Мета-тег → yandex-verification
   bing: '', // Bing Webmaster Tools → HTML Meta Tag → msvalidate.01
 };
 
