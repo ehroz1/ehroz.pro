@@ -14,7 +14,7 @@
 
 - **Имена взяты из кода, а не из папок:** «Dual Game Pad» в коде и интерфейсе называется **PadBridge**,
   «Open Link App» — **Peecube**. На сайте — имена из приложений, адреса `/padbridge` и `/peecube`.
-- **Статусы:** PadBridge 0.4.0, Peecube 4.1, ANY CAMERA 1.0.0 — «Скоро релиз» (сборки есть, публичных
+- **Статусы:** PadBridge 0.4.0, ANY CAMERA 1.0.0 — «Скоро релиз» (Peecube 4.1 с 2026-11-04 — «Доступно»: прямые ссылки на файлы из `peecube-releases`) (сборки есть, публичных
   страниц загрузки нет); Moss Pocket 0.1.0 — «В разработке». Кнопка у всех четырёх — «Получить доступ»
   → Telegram `@hhrrzz1`. Когда появятся публичные релизы, замените ссылку в `links` в `apps.ts`.
 - **Цвета изделий:** PadBridge `#4fb4ff`, Moss Pocket `#9ccb7a`, Peecube `#f0ead6`, ANY CAMERA `#ff7aa8`
