@@ -69,12 +69,16 @@ const pad = (v: number) => String(v).padStart(2, '0');
           <p class="ap-tag">{pick(lang, app.tagline)}</p>
           <div class="ap-cta">
             {
-              app.links.map((l, i) => (
-                <a class:list={['btn', { 'btn-primary': i === 0 }]} href={l.href} target="_blank" rel="noopener" data-kind={l.kind}>
-                  <Icon name={linkIcon[l.kind]} />
-                  {pick(lang, l.label)}
-                </a>
-              ))
+              app.links.map((l, i) => {
+                /* Прямая ссылка на файл релиза — скачивание начинается в этой же вкладке, без перехода на GitHub. */
+                const direct = /\/releases\/(latest\/)?download\//.test(l.href);
+                return (
+                  <a class:list={['btn', { 'btn-primary': i === 0 }]} href={l.href} {...(direct ? { download: '' } : { target: '_blank', rel: 'noopener' })} data-kind={l.kind}>
+                    <Icon name={linkIcon[l.kind]} />
+                    {pick(lang, l.label)}
+                  </a>
+                );
+              })
             }
           </div>
           <dl class="spec">
