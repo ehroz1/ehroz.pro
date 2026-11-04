@@ -100,7 +100,7 @@ const tg = `https://t.me/+${c.phone}`;
 const phoneView = `+${c.phone.slice(0, 1)} ${c.phone.slice(1, 4)} ${c.phone.slice(4, 7)} ${c.phone.slice(7, 9)} ${c.phone.slice(9)}`;
 ---
 <Layout lang={lang} title={title} description={description} slug={SLUG} og={og} ogAlt={title} updated={UPDATED} jsonld={jsonld}>
-  <section class="svc container" aria-labelledby="svc-h1" data-spy={h1}>
+  <section class="info container" aria-labelledby="svc-h1" data-spy={h1}>
     <div class="sec-bar">
       <nav class="crumbs" aria-label={ru ? 'Навигационная цепочка' : 'Breadcrumb'}>
         <ol>
@@ -110,22 +110,25 @@ const phoneView = `+${c.phone.slice(0, 1)} ${c.phone.slice(1, 4)} ${c.phone.slic
       </nav>
       <span>{ru ? 'Астана · UTC+5' : 'Astana · UTC+5'}</span>
     </div>
-
-    <h1 class="display" id="svc-h1">{h1}</h1>
-    <p class="lead">{lead}</p>
-    <p class="cta">
-      <a class="btn btn-primary" href={wa} target="_blank" rel="noopener">{ru ? 'Написать в WhatsApp' : 'Message on WhatsApp'}</a>
-      <a class="btn" href={tg} target="_blank" rel="noopener"><Icon name="telegram" />Telegram</a>
-    </p>
+    <div class="info-head">
+      <h1 class="display" id="svc-h1">{h1}</h1>
+      <p class="lead">{lead}</p>
+      <div class="cta">
+        <a class="btn btn-primary" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" />{ru ? 'Написать в WhatsApp' : 'Message on WhatsApp'}</a>
+        <a class="btn" href={tg} target="_blank" rel="noopener"><Icon name="telegram" />Telegram</a>
+      </div>
+    </div>
 
     <h2 class="h3">{ru ? 'Цены и сроки' : 'Prices and timelines'}</h2>
     <ul class="pk">
       {packages.map((p) => (
         <li>
-          <h3>{p.name}</h3>
+          <div class="pk-top">
+            <h3>{p.name}</h3>
+            <span class="time">{p.time}</span>
+          </div>
           <p class="price">{ru ? 'от' : 'from'} <b>${p.price.toLocaleString('en-US')}</b></p>
-          <p class="time">{p.time}</p>
-          <p>{p.description}</p>
+          <p class="d">{p.description}</p>
           <ul>{p.items.map((i) => <li>{i}</li>)}</ul>
         </li>
       ))}
@@ -133,10 +136,14 @@ const phoneView = `+${c.phone.slice(0, 1)} ${c.phone.slice(1, 4)} ${c.phone.slic
     <p class="note">{ru ? 'Цены в долларах США для ориентира, оплата возможна в тенге. Домен и хостинг оплачиваются отдельно.' : 'Prices in US dollars for reference; payment in tenge is possible. Domain and hosting are paid separately.'}</p>
 
     <h2 class="h3">{ru ? 'Что входит в любой пакет' : 'Included in every package'}</h2>
-    <ul class="inc">{included.map((i) => <li>{i}</li>)}</ul>
+    <ul class="rows">{included.map((i) => <li><Icon name="check" /><span>{i}</span></li>)}</ul>
 
     <h2 class="h3">{ru ? 'Как идёт работа' : 'How it works'}</h2>
-    <ol class="steps">{steps.map(([t, d]) => <li><b>{t}</b><span>{d}</span></li>)}</ol>
+    <ol class="steps">
+      {steps.map(([t, d], i) => (
+        <li><span class="n">{String(i + 1).padStart(2, '0')}</span><b>{t}</b><span class="s">{d}</span></li>
+      ))}
+    </ol>
 
     <h2 class="h3">{ru ? 'Частые вопросы' : 'FAQ'}</h2>
     <div class="faq">
@@ -144,37 +151,57 @@ const phoneView = `+${c.phone.slice(0, 1)} ${c.phone.slice(1, 4)} ${c.phone.slic
     </div>
 
     <h2 class="h3">{ru ? 'Связаться' : 'Get in touch'}</h2>
-    <p>{ru ? 'WhatsApp и Telegram:' : 'WhatsApp and Telegram:'} <a href={wa} target="_blank" rel="noopener">{phoneView}</a> · Telegram <a href={`https://t.me/${c.telegram}`} target="_blank" rel="noopener">@{c.telegram}</a> · <a href={`mailto:${c.email}`}>{c.email}</a></p>
-    <p class="upd">{ru ? 'Обновлено:' : 'Updated:'} <time datetime={UPDATED}>{UPDATED}</time></p>
+    <ul class="channels">
+      <li><a href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" /><span class="n">WhatsApp</span><span class="v">{phoneView}</span></a></li>
+      <li><a href={`https://t.me/${c.telegram}`} target="_blank" rel="noopener"><Icon name="telegram" /><span class="n">Telegram</span><span class="v">@{c.telegram}</span></a></li>
+      <li><a href={`mailto:${c.email}`}><Icon name="mail" /><span class="n">Email</span><span class="v">{c.email}</span></a></li>
+    </ul>
+    <p class="note">{ru ? 'Обновлено:' : 'Updated:'} <time datetime={UPDATED}>{UPDATED}</time></p>
   </section>
   <Footer lang={lang} />
 </Layout>
 
 <style>
-  .svc { padding-top: calc(var(--menubar) + 24px); padding-bottom: 64px; }
-  .svc h1 { padding-top: 40px; border-top: 1px solid var(--line); }
-  .svc .lead { max-width: 62ch; margin-top: 16px; }
-  .svc h2 { margin: 48px 0 16px; }
-  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-  .pk { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-  .pk > li { border: 1px solid var(--line); border-radius: 16px; padding: 20px; display: grid; gap: 8px; align-content: start; }
-  .pk h3 { margin: 0; font-size: 18px; }
-  .pk .price { margin: 0; font-size: 15px; color: var(--text-2); }
-  .pk .price b { font-size: 28px; color: var(--text); }
-  .pk .time { margin: 0; font: 400 12px/1.6 var(--font-mono); color: var(--muted); text-transform: uppercase; }
+  .info { padding-top: calc(var(--menubar) + 24px); padding-bottom: 64px; }
+  .info-head { display: grid; gap: 16px; justify-items: start; padding: 40px 0; border-top: 1px solid var(--line); }
+  .info-head .lead { max-width: 62ch; }
+  .cta { display: flex; flex-wrap: wrap; gap: 10px; }
+  .info h2 { margin: 40px 0 16px; }
+  .pk { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); column-gap: 24px; border-top: 1px solid var(--line); }
+  .pk > li { display: grid; gap: 10px; align-content: start; padding: 16px 0 20px; border-bottom: 1px solid var(--line); }
+  .pk-top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .pk h3 { margin: 0; font-size: 16px; }
+  .pk .time { font: 400 11px/1 var(--font-mono); color: var(--muted); text-transform: uppercase; white-space: nowrap; }
   .pk p { margin: 0; }
-  .pk ul { margin: 4px 0 0; padding-left: 1.2em; color: var(--text-2); font-size: 14px; display: grid; gap: 4px; }
-  .note, .upd { color: var(--muted); font-size: 13px; margin-top: 12px; }
-  .inc { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; max-width: 70ch; }
-  .steps { margin: 0; padding-left: 1.4em; display: grid; gap: 12px; max-width: 70ch; }
-  .steps li { display: grid; gap: 2px; }
-  .steps span { color: var(--text-2); }
-  .faq { border-top: 1px solid var(--line); max-width: 80ch; }
-  .faq .qa { border-bottom: 1px solid var(--line); padding: 14px 0; }
-  .faq h3 { margin: 0; font-size: 16px; }
-  .faq p { margin: 8px 0 0; color: var(--text-2); }
+  .pk .price { color: var(--text-2); font-size: 14px; }
+  .pk .price b { font-size: 28px; color: var(--text); letter-spacing: -0.02em; }
+  .pk .d { color: var(--text-2); }
+  .pk ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 14px; color: var(--text-2); }
+  .pk ul li::before { content: '— '; color: var(--muted); }
+  .note { margin-top: 16px; color: var(--muted); font-size: 13px; max-width: 62ch; }
+  .rows { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); max-width: 720px; }
+  .rows li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .rows li :global(svg) { flex: none; margin-top: 3px; color: var(--muted); }
+  .steps { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .steps li { display: grid; grid-template-columns: 48px minmax(140px, 220px) 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+  .steps .n { font: 400 12px/1.6 var(--font-mono); color: var(--muted); }
+  .steps b { font-weight: 500; }
+  .steps .s { color: var(--text-2); }
+  .faq { border-top: 1px solid var(--line); }
+  .faq .qa { display: grid; grid-template-columns: minmax(200px, 360px) 1fr; gap: 16px; border-bottom: 1px solid var(--line); padding: 14px 0; }
+  .faq h3 { margin: 0; font-size: 15px; font-weight: 500; }
+  .faq p { margin: 0; color: var(--text-2); max-width: 70ch; }
+  .channels { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); max-width: 720px; }
+  .channels a { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); color: inherit; }
+  .channels .v { margin-left: auto; color: var(--text-2); font: 400 13px/1.3 var(--font-mono); overflow-wrap: anywhere; text-align: right; }
+  .channels a:hover .n, .channels a:focus-visible .n { color: var(--accent); }
   .crumbs ol { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
   .crumbs li + li::before { content: '/'; margin-right: 6px; color: var(--muted); }
   .crumbs a { color: var(--text-2); }
   .crumbs a:hover, .crumbs a:focus-visible { color: var(--accent); }
+  @media (max-width: 640px) {
+    .steps li { grid-template-columns: 32px 1fr; gap: 4px 12px; }
+    .steps .s { grid-column: 2; }
+    .faq .qa { grid-template-columns: 1fr; gap: 8px; }
+  }
 </style>
