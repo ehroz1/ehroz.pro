@@ -467,7 +467,7 @@ Yes, the Mac app does. The Firefox extension works inside the browser only.
 
 **How do I install the extension?**
 
-Chrome, Edge, Brave, Arc (Chrome 137+): unpack the archive to a permanent folder, open chrome://extensions, turn on Developer mode and click Load unpacked. Firefox (142+): about:debugging#/runtime/this-firefox → Load Temporary Add-on → pick the archive; Firefox keeps such add-ons until restart. One key works in the app and in the extensions.
+Firefox (142+, including Android): click Firefox extension and install it from the Mozilla add-ons catalog. Chrome, Edge, Brave, Arc (Chrome 137+): download the archive, unpack it to a permanent folder, open chrome://extensions, turn on Developer mode and click Load unpacked. One key works in the app and in the extensions.
 
 **How does it update?**
 
@@ -479,7 +479,7 @@ By itself: every update is signed by the author, and Peecube checks that its fil
 - Firefox 142+ or Chrome 137+ (Edge, Brave, Arc) — for the extension
 
 - Download for Mac: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube.dmg
-- Firefox extension: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube-Firefox.zip
+- Firefox extension: https://addons.mozilla.org/ru/firefox/addon/peecube/
 - Chrome extension: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube-Chrome.zip
 
 ## ANY CAMERA — A video or photo instead of your webcam
@@ -1052,7 +1052,7 @@ Peecube открывает ссылки во всплывающем окне р�
 
 **Как поставить расширение?**
 
-Chrome, Edge, Brave, Arc (Chrome 137+): распакуйте архив в постоянную папку, откройте chrome://extensions, включите «Режим разработчика» и нажмите «Загрузить распакованное». Firefox (142+): about:debugging#/runtime/this-firefox → «Загрузить временное дополнение» → выберите архив; Firefox держит такие дополнения до перезапуска. Один ключ работает и в приложении, и в расширениях.
+Firefox (142+, в том числе на Android): нажмите «Расширение для Firefox» и установите его из каталога Mozilla. Chrome, Edge, Brave, Arc (Chrome 137+): скачайте архив, распакуйте в постоянную папку, откройте chrome://extensions, включите «Режим разработчика» и нажмите «Загрузить распакованное». Один ключ работает и в приложении, и в расширениях.
 
 **Как обновляется?**
 
@@ -1064,7 +1064,7 @@ Chrome, Edge, Brave, Arc (Chrome 137+): распакуйте архив в по�
 - Firefox 142+ или Chrome 137+ (Edge, Brave, Arc) — для расширения
 
 - Скачать для Mac: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube.dmg
-- Расширение для Firefox: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube-Firefox.zip
+- Расширение для Firefox: https://addons.mozilla.org/ru/firefox/addon/peecube/
 - Расширение для Chrome: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube-Chrome.zip
 
 ## ANY CAMERA — Видео или фото вместо веб-камеры
