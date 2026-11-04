@@ -1,0 +1,18 @@
+---
+// Логотип EHROZ.PRO: буквы на сетке (штрих 64/54, высота 224), .PRO вырезано в кобальтовой плашке.
+// Буквы — currentColor, плашка — var(--accent). Исходники: assets-src/logo/.
+interface Props { height?: number; class?: string }
+const { height = 16, class: cls } = Astro.props;
+const [, , w, h] = '0 0 1656 224'.split(' ').map(Number);
+const id = `ehroz-pro-${Math.random().toString(36).slice(2, 8)}`;
+---
+<svg class:list={['logo', cls]} viewBox="0 0 1656 224" height={height} width={Math.round((height * w) / h)} aria-hidden="true" focusable="false">
+  <defs>
+    <mask id={id} maskUnits="userSpaceOnUse" x="0" y="0" width={w} height={h}>
+      <rect x="1202" y="64" width="454" height="160" rx="20" fill="#fff" />
+      <g fill="#000"><g transform="translate(1234 88) scale(0.5)"><path fill-rule="evenodd" transform="translate(0 0)" d="M0 170H64V224H0Z"/><path fill-rule="evenodd" transform="translate(92 0)" d="M0 0H64V224H0Z"/><path fill-rule="evenodd" transform="translate(92 0)" d="M0 0H208V108A64 64 0 0 1 144 172H0Z M64 54H144V92A26 26 0 0 1 118 118H64Z"/><path fill-rule="evenodd" transform="translate(336 0)" d="M0 0H64V224H0Z"/><path fill-rule="evenodd" transform="translate(336 0)" d="M0 0H208V108A64 64 0 0 1 144 172H0Z M64 54H144V92A26 26 0 0 1 118 118H64Z"/><path fill-rule="evenodd" transform="translate(336 0)" d="M95 118H155L208 224H148Z"/><path fill-rule="evenodd" transform="translate(572 0)" d="M64 0H208V160A64 64 0 0 1 144 224H64A64 64 0 0 1 0 160V64A64 64 0 0 1 64 0Z M90 54H144V144A26 26 0 0 1 118 170H90A26 26 0 0 1 64 144V80A26 26 0 0 1 90 54Z"/></g></g>
+    </mask>
+  </defs>
+  <g fill="currentColor"><path fill-rule="evenodd" d="M0 0H292V85H372V0H436V224H372V139H292V224H228V54H64V85H160V139H64V170H192V224H0Z"/><path fill-rule="evenodd" transform="translate(472 0)" d="M0 0H64V224H0Z"/><path fill-rule="evenodd" transform="translate(472 0)" d="M0 0H208V108A64 64 0 0 1 144 172H0Z M64 54H144V92A26 26 0 0 1 118 118H64Z"/><path fill-rule="evenodd" transform="translate(472 0)" d="M95 118H155L208 224H148Z"/><path fill-rule="evenodd" transform="translate(708 0)" d="M64 0H208V160A64 64 0 0 1 144 224H64A64 64 0 0 1 0 160V64A64 64 0 0 1 64 0Z M90 54H144V144A26 26 0 0 1 118 170H90A26 26 0 0 1 64 144V80A26 26 0 0 1 90 54Z"/><path fill-rule="evenodd" transform="translate(942 0)" d="M0 0H228V54L170 170H228V224H0V170L58 54H0Z M118 54H168L110 170H60Z"/></g>
+  <rect x="1202" y="64" width="454" height="160" rx="20" fill="var(--accent)" mask={`url(#${id})`} />
+</svg>
