@@ -2,7 +2,7 @@
 import type { Lang } from '../content/apps';
 import { tr, path, CONTACTS } from '../i18n';
 import Icon from './Icon.astro';
-import Mark from './Mark.astro';
+import Logo from './Logo.astro';
 import Avatar from './Avatar.astro';
 
 interface Props {
@@ -24,8 +24,7 @@ const links = [
 
 <header class="menubar" style="view-transition-name: menubar">
   <a class="mb-logo" href={path(lang)} aria-label="ehroz.pro" data-logo>
-    <Mark size={16} />
-    <span>ehroz.pro</span>
+    <Logo height={15} />
   </a>
   <nav class="mb-nav hide-sm" aria-label={lang === 'ru' ? 'Основное меню' : 'Main menu'}>
     <a class="mb-item" href={`${path(lang)}#apps`}>{tr(lang, 'menu.apps')}</a>
@@ -142,12 +141,6 @@ const links = [
     font: 700 14px/1 var(--font-sans);
     letter-spacing: -0.01em;
     text-transform: none;
-  }
-  .mb-logo :global(.mark) {
-    transition: transform var(--mid) var(--ease);
-  }
-  .mb-logo:hover :global(.mark) {
-    transform: rotate(60deg);
   }
   .mb-nav {
     display: flex;

@@ -2,7 +2,7 @@
 import type { Lang } from '../content/apps';
 import { apps } from '../content/apps';
 import { tr, path, CONTACTS } from '../i18n';
-import Mark from './Mark.astro';
+import Logo from './Logo.astro';
 import { analyticsEnabled } from '../analytics.config';
 
 interface Props {
@@ -17,7 +17,7 @@ const c = CONTACTS;
   <i class="ikat ikat-sep" aria-hidden="true"></i>
   <div class="foot-grid">
     <div class="foot-brand">
-      <a href={path(lang)} class="foot-logo"><Mark size={18} /> ehroz.pro</a>
+      <a href={path(lang)} class="foot-logo" aria-label="ehroz.pro"><Logo height={22} /></a>
       <p>{analyticsEnabled() ? tr(lang, 'foot.consent') : tr(lang, 'foot.made')}</p>
       {analyticsEnabled() && <p><a href="#" data-consent-open>{tr(lang, 'foot.cookies')}</a></p>}
     </div>
