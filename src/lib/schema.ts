@@ -175,14 +175,14 @@ export function appList(site: URL, lang: Lang, apps: App[], url: string): Node {
 
 /** Услуга с пакетами. Цены — ровно те, что видны на странице («от»). */
 export interface ServicePackage { name: string; price: number; description: string }
-export function service(site: URL, lang: Lang, url: string, o: { name: string; description: string; area: string; packages: ServicePackage[] }): Node {
+export function service(site: URL, lang: Lang, url: string, o: { name: string; description: string; area: string; packages: ServicePackage[]; id?: string; type?: string }): Node {
   const ids = schemaIds(site);
   return {
     '@type': 'Service',
-    '@id': `${url}#service`,
+    '@id': `${url}#${o.id ?? 'service'}`,
     name: o.name,
     description: o.description,
-    serviceType: lang === 'ru' ? 'Разработка сайтов' : 'Website development',
+    serviceType: o.type ?? (lang === 'ru' ? 'Разработка сайтов' : 'Website development'),
     url,
     inLanguage: inLang(lang),
     provider: { '@id': ids.person },

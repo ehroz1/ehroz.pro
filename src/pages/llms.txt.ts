@@ -24,7 +24,7 @@ export const GET: APIRoute = ({ site }) => {
     '',
     `- [About Ehroz](${u(path('en', 'about'))}): who makes the apps and how.`,
     `- [Contacts](${u(path('en', 'contacts'))}): how to get in touch or order a website.`,
-    `- [Turnkey websites in Astana](${u(path('en', 'website-astana'))}): website development by Ehroz in Astana, Kazakhstan — landing page from $350 (5–7 working days), business website from $700 (2–3 weeks), online store from $1,300 (3–5 weeks). Russian: ${u(path('ru', 'website-astana'))}`,
+    `- [Turnkey websites in Astana](${u(path('en', 'website-astana'))}): website development by Ehroz in Astana, Kazakhstan — landing page from $350 (5–7 working days), business website from $700 (2–3 weeks), online store from $1,300 (3–5 weeks); graphic design (logo from $150, brand identity from $450, social media, print, packaging, presentations) and UX/UI design (UX audit from $200, mobile app design from $900). Russian: ${u(path('ru', 'website-astana'))}`,
     '',
   ];
   return new Response(lines.join('\n'), { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
