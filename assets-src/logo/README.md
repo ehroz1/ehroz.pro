@@ -17,5 +17,6 @@
 - **Строка — `ehroz-line-pro-*.svg`** (вариант 27.4): EHROZ и .PRO на кобальтовой плашке, буквы .PRO прорезаны насквозь.
   Стоит на сайте в меню и подвале (`src/components/Logo.astro`).
 - **Блок — `ehroz-block-*.svg`** (вариант 26.3), без .pro.
-- `ehroz-logo-all.svg` — всё на одном листе. `ehroz-line-*.svg` без .pro и `ehroz-favicon.svg` — промежуточные версии.
-- Фавиконка на согласовании, на сайте пока прежняя.
+- `ehroz-logo-all.svg` — всё на одном листе. `ehroz-line-*.svg` без .pro — промежуточная версия, `ehroz-favicon-options.svg` — варианты фавиконки.
+- **Фавиконка — `ehroz-favicon.svg`** (вариант 1): узкая Z на тёмной плашке, одна полоса кобальтовая.
+  Из неё `npm run icons` делает `public/favicon.svg`, `favicon-32.png` и `apple-touch-icon.png`; та же Z стоит в Dock (`src/components/ZMark.astro`).

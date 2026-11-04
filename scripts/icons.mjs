@@ -67,24 +67,14 @@ for (const [slug, buf] of Object.entries(sources)) {
   console.log('icon', slug);
 }
 
-// ── Фавиконки: знак ehroz.pro (кольцо из шести долек, одна «горячая») ──
-function sectors(n, cx, cy, rOut, rIn, gap, start) {
-  const rad = (d) => ((d - 90) * Math.PI) / 180;
-  const pt = (r, d) => [cx + r * Math.cos(rad(d)), cy + r * Math.sin(rad(d))].map((v) => v.toFixed(2)).join(' ');
-  const step = 360 / n;
-  return Array.from({ length: n }, (_, i) => {
-    const a0 = start + i * step - step / 2, a1 = a0 + step;
-    const go = ((gap / 2 / rOut) * 180) / Math.PI, gi = ((gap / 2 / rIn) * 180) / Math.PI;
-    return `M${pt(rOut, a0 + go)} A${rOut} ${rOut} 0 0 1 ${pt(rOut, a1 - go)} L${pt(rIn, a1 - gi)} A${rIn} ${rIn} 0 0 0 ${pt(rIn, a0 + gi)} Z`;
-  });
-}
-const sec = sectors(6, 32, 32, 22, 10, 3.2, 30);
-const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="15" fill="#111114"/>${sec
-  .map((d, i) => `<path d="${d}" fill="#f5f5f7" stroke="#f5f5f7" stroke-width="2.4" stroke-linejoin="round" opacity="${i === 0 ? 1 : 0.4}"/>`)
-  .join('')}</svg>`;
+// ── Фавиконки: узкая Z из логотипа на тёмной плашке, одна полоса кобальтовая (assets-src/logo/ehroz-favicon.svg) ──
+const favicon = await readFile(new URL('../assets-src/logo/ehroz-favicon.svg', import.meta.url), 'utf8');
+// для iPhone — квадрат без скругления: система скругляет углы сама
+const touch = favicon.replace(' rx="22"', '');
 const PUB = new URL('../public/', import.meta.url);
 await writeFile(new URL('favicon.svg', PUB), favicon);
 const fav = new Resvg(favicon, { fitTo: { mode: 'width', value: 180 } }).render().asPng();
 await sharp(fav).resize(32, 32).png().toFile(new URL('favicon-32.png', PUB).pathname);
-await sharp(fav).resize(180, 180).png().toFile(new URL('apple-touch-icon.png', PUB).pathname);
+const touchPng = new Resvg(touch, { fitTo: { mode: 'width', value: 180 } }).render().asPng();
+await sharp(touchPng).resize(180, 180).png().toFile(new URL('apple-touch-icon.png', PUB).pathname);
 console.log('favicon');
