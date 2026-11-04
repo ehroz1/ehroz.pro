@@ -432,11 +432,11 @@ For now it supports a bottom Dock only; with a side Dock it sits in the bottom-r
 ## Peecube — Links in a window over the page
 
 URL: https://ehroz1.github.io/ehroz.pro/en/peecube/
-Platforms: macOS, Extension · Status: Coming soon · Version: 4.1 · Updated: 2026-10-28
+Platforms: macOS, Extension · Status: Available · Version: 4.1 · Updated: 2026-11-04
 
 Hold ⌥ and right-click a link. Done reading — click outside and you’re back where you were.
 
-Peecube opens links in a pop-up window next to the cursor — from the browser, Telegram and other apps. The window has tabs, ad and cookie-banner blocking, translation, page analysis and photo and video downloads. A Firefox extension does the same, including on Android.
+Peecube opens links in a pop-up window next to the cursor — from the browser, Telegram and other apps. The window has tabs, ad and cookie-banner blocking, translation, page analysis and photo and video downloads. Firefox and Chrome extensions do the same, including Firefox on Android.
 
 ### Who it’s for
 
@@ -451,19 +451,23 @@ People who open links from chats and don’t want to lose their place.
 
 ### How it works
 
-1. Install Peecube and go through onboarding — it shows which permissions to grant.
-2. Hold ⌥ and right-click any link.
-3. Read the page, click outside the window — you’re back where you were.
+1. Download Peecube.dmg and drag Peecube to Applications. On first launch, right-click → Open.
+2. Go through the short setup and make Peecube your default browser so it catches links from Telegram.
+3. Hold ⌥ and right-click a link. Done reading — click outside and you’re back where you were.
 
 ### FAQ
 
 **Is it paid?**
 
-There’s a 14-day trial with every feature; after that, a key in Peecube → License.
+Free for 14 days with every feature. After that, one key for good: a one-time purchase with all future updates included. Enter it in Settings → License. When the trial ends, links still open — in your regular browser.
 
 **Does it work with Telegram links?**
 
 Yes, the Mac app does. The Firefox extension works inside the browser only.
+
+**How do I install the extension?**
+
+Chrome, Edge, Brave, Arc (Chrome 137+): unpack the archive to a permanent folder, open chrome://extensions, turn on Developer mode and click Load unpacked. Firefox (142+): about:debugging#/runtime/this-firefox → Load Temporary Add-on → pick the archive; Firefox keeps such add-ons until restart. One key works in the app and in the extensions.
 
 **How does it update?**
 
@@ -471,10 +475,12 @@ By itself: every update is signed by the author, and Peecube checks that its fil
 
 ### Requirements
 
-- macOS 13 Ventura or later
-- Firefox on desktop or Android — for the extension
+- macOS 13 Ventura or later, Apple Silicon and Intel
+- Firefox 142+ or Chrome 137+ (Edge, Brave, Arc) — for the extension
 
-- Get access: https://t.me/hhrrzz1
+- Download for Mac: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube.dmg
+- Firefox extension: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube-Firefox.zip
+- Chrome extension: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube-Chrome.zip
 
 ## ANY CAMERA — A video or photo instead of your webcam
 
@@ -1011,11 +1017,11 @@ Moss Pocket показывает содержимое папки — по умо
 ## Peecube — Ссылка — в окне поверх страницы
 
 URL: https://ehroz1.github.io/ehroz.pro/peecube/
-Платформы: macOS, Расширение · Статус: Скоро релиз · Версия: 4.1 · Обновлено: 2026-10-28
+Платформы: macOS, Расширение · Статус: Готово · Версия: 4.1 · Обновлено: 2026-11-04
 
 Зажмите ⌥ и нажмите правой кнопкой по ссылке. Посмотрели — кликнули мимо, и вы там же, где были.
 
-Peecube открывает ссылки во всплывающем окне рядом с курсором — из браузера, Telegram и других приложений. В окне есть вкладки, блокировка рекламы и cookie-баннеров, перевод, анализ страницы, скачивание фото и видео. Для Firefox есть расширение с теми же функциями, в том числе на Android.
+Peecube открывает ссылки во всплывающем окне рядом с курсором — из браузера, Telegram и других приложений. В окне есть вкладки, блокировка рекламы и cookie-баннеров, перевод, анализ страницы, скачивание фото и видео. Для Firefox и Chrome есть расширения с теми же функциями, в том числе на Android.
 
 ### Для кого
 
@@ -1030,19 +1036,23 @@ Peecube открывает ссылки во всплывающем окне р�
 
 ### Как это работает
 
-1. Установите Peecube и пройдите знакомство — он подскажет нужные разрешения.
-2. Зажмите ⌥ и нажмите правой кнопкой по любой ссылке.
-3. Посмотрите страницу и кликните мимо окна — вы там же, где были.
+1. Скачайте Peecube.dmg и перетащите Peecube в «Программы». Первый запуск — правый клик → «Открыть».
+2. Пройдите короткую настройку и сделайте Peecube браузером по умолчанию — он начнёт ловить ссылки из Telegram.
+3. Зажмите ⌥ и нажмите правой кнопкой по ссылке. Посмотрели — кликнули мимо, и вы там же, где были.
 
 ### Вопросы
 
 **Это платно?**
 
-Есть пробный период 14 дней со всеми функциями, дальше — ключ в меню Peecube → «Лицензия».
+14 дней — бесплатно и без ограничений. Дальше — один ключ навсегда: разовая покупка, все будущие обновления включены. Ключ вводится в «Настройки → Лицензия». Когда пробный период закончится, ссылки по-прежнему будут открываться — в вашем обычном браузере.
 
 **Работает со ссылками из Telegram?**
 
 Да, это умеет приложение для Mac. Расширение для Firefox работает только внутри браузера.
+
+**Как поставить расширение?**
+
+Chrome, Edge, Brave, Arc (Chrome 137+): распакуйте архив в постоянную папку, откройте chrome://extensions, включите «Режим разработчика» и нажмите «Загрузить распакованное». Firefox (142+): about:debugging#/runtime/this-firefox → «Загрузить временное дополнение» → выберите архив; Firefox держит такие дополнения до перезапуска. Один ключ работает и в приложении, и в расширениях.
 
 **Как обновляется?**
 
@@ -1050,10 +1060,12 @@ Peecube открывает ссылки во всплывающем окне р�
 
 ### Требования
 
-- macOS 13 Ventura и новее
-- Firefox на компьютере или Android — для расширения
+- macOS 13 Ventura или новее, Apple Silicon и Intel
+- Firefox 142+ или Chrome 137+ (Edge, Brave, Arc) — для расширения
 
-- Получить доступ: https://t.me/hhrrzz1
+- Скачать для Mac: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube.dmg
+- Расширение для Firefox: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube-Firefox.zip
+- Расширение для Chrome: https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube-Chrome.zip
 
 ## ANY CAMERA — Видео или фото вместо веб-камеры
 
