@@ -87,4 +87,31 @@ await writeFile(new URL('favicon.svg', PUB), favicon);
 const fav = new Resvg(favicon, { fitTo: { mode: 'width', value: 180 } }).render().asPng();
 await sharp(fav).resize(32, 32).png().toFile(new URL('favicon-32.png', PUB).pathname);
 await sharp(fav).resize(180, 180).png().toFile(new URL('apple-touch-icon.png', PUB).pathname);
+// Google просит иконку кратную 48 px (≥48) и ищет /favicon.ico в корне — делаем набор PNG + ICO + манифест.
+const big = new Resvg(favicon, { fitTo: { mode: 'width', value: 512 } }).render().asPng();
+const png = (n) => sharp(big).resize(n, n).png().toBuffer();
+for (const n of [48, 96, 192, 512]) await writeFile(new URL(`favicon-${n}.png`, PUB), await png(n));
+// ICO с PNG внутри: 16, 32, 48
+const ico = async (sizes) => {
+  const imgs = await Promise.all(sizes.map(png));
+  const head = Buffer.alloc(6 + 16 * sizes.length);
+  head.writeUInt16LE(1, 2); head.writeUInt16LE(sizes.length, 4);
+  let off = head.length;
+  sizes.forEach((n, i) => {
+    const o = 6 + i * 16;
+    head[o] = n; head[o + 1] = n; head.writeUInt16LE(1, o + 4); head.writeUInt16LE(32, o + 6);
+    head.writeUInt32LE(imgs[i].length, o + 8); head.writeUInt32LE(off, o + 12);
+    off += imgs[i].length;
+  });
+  return Buffer.concat([head, ...imgs]);
+};
+await writeFile(new URL('favicon.ico', PUB), await ico([16, 32, 48]));
+await writeFile(new URL('site.webmanifest', PUB), JSON.stringify({
+  name: 'Ehroz', short_name: 'Ehroz', start_url: '/', display: 'browser',
+  background_color: '#111114', theme_color: '#111114',
+  icons: [
+    { src: '/favicon-192.png', sizes: '192x192', type: 'image/png' },
+    { src: '/favicon-512.png', sizes: '512x512', type: 'image/png' },
+  ],
+}, null, 2) + '\n');
 console.log('favicon');
