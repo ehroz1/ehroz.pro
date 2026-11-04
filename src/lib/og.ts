@@ -11,6 +11,11 @@ const fontFiles = ['medeo-sans-700', 'medeo-sans-400', 'medeo-mono-500'].map((f)
 const icon = (slug: string) => `data:image/png;base64,${readFileSync(new URL(`public/icons/${slug}-512.png`, root)).toString('base64')}`;
 const esc = (s: string) => s.replace(/[&<>"]/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[m]!);
 
+// Логотип EHROZ.PRO (светлые буквы и кобальт для тёмного фона) — тот же файл, что в assets-src/logo/
+const logoSrc = readFileSync(new URL('assets-src/logo/ehroz-line-pro-color-on-dark.svg', root), 'utf8');
+const logoInner = logoSrc.replace(/^<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
+const logo = (x: number, y: number, h: number) => `<svg x="${x}" y="${y}" width="${Math.round((h * 1656) / 224)}" height="${h}" viewBox="0 0 1656 224">${logoInner}</svg>`;
+
 const BG = '#111315';
 const PLATE = '#1b1b1d';
 const LINE = '#2a2a2d';
@@ -45,7 +50,7 @@ const frame = (body: string, ikatColor: string) => `<svg xmlns="http://www.w3.or
   <path d="M0 64H1200M0 566H1200" stroke="${LINE}" stroke-width="1"/>
   ${body}
   <rect x="0" y="616" width="1200" height="14" fill="url(#adras)"/>
-  ${mono(56, 42, 'ehroz.pro', TEXT)}
+  ${logo(56, 27, 16)}
   ${mono(1144, 42, 'Ehroz · designer & developer', FAINT, 'end')}
 </svg>`;
 

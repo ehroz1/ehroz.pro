@@ -3,7 +3,7 @@ import type { Lang } from '../content/apps';
 import { apps } from '../content/apps';
 import { path, tr, pick, CONTACTS } from '../i18n';
 import AppIcon from './AppIcon.astro';
-import Mark from './Mark.astro';
+import ZMark from './ZMark.astro';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -18,7 +18,7 @@ const { lang, current = '' } = Astro.props;
     <li class="dock-item">
       <a href={path(lang)} aria-current={current === '' ? 'page' : undefined}>
         <span class="no">00</span>
-        <span class="tile"><Mark size={22} /></span>
+        <span class="tile"><ZMark size={18} /></span>
         <span class="lbl">{tr(lang, 'menu.home')}</span>
       </a>
     </li>
