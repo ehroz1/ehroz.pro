@@ -68,7 +68,6 @@ const stats = [
               <li data-reveal data-tint style={`--tint-d:${a.tint.dark};--tint-l:${a.tint.light}`}>
                 <a href={path(lang, a.slug)} data-app-link={a.slug}>
                   <AppIcon slug={a.slug} name={a.name} size={64} decorative eager vt />
-                  <span class="hi-no">{String(i + 1).padStart(2, '0')}</span>
                   <span class="hi-name">{a.name}</span>
                   <span class="hi-plat">{a.platforms.map((p) => pick(lang, PLATFORM[p])).join(' · ')}</span>
                 </a>
@@ -77,7 +76,6 @@ const stats = [
           }
           <li class="hi-more" data-reveal>
             <a href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener">
-              <span class="hi-no">{String(apps.length + 1).padStart(2, '0')}</span>
               <span class="hi-plus" aria-hidden="true">+</span>
               <span class="hi-name">{ru ? 'Новые изделия' : 'More on the way'}</span>
               <span class="hi-plat">{ru ? 'Следите в Telegram' : 'Follow on Telegram'}</span>
@@ -239,13 +237,6 @@ const stats = [
     transition: transform var(--mid) var(--ease);
   }
   .hero-index a:hover :global(img) { transform: translateY(-4px); }
-  .hi-no {
-    position: absolute;
-    top: 8px;
-    left: 10px;
-    color: var(--tint);
-    font: 500 10px/1 var(--font-mono);
-  }
   .hi-plus {
     display: grid;
     place-items: center;
@@ -256,7 +247,6 @@ const stats = [
     color: var(--faint);
     font: 300 28px/1 var(--font-mono);
   }
-  .hi-more .hi-no { color: var(--faint); }
   .hi-name { font-weight: 650; font-size: 14.5px; }
   .hi-plat {
     color: var(--faint);
