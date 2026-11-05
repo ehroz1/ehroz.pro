@@ -65,10 +65,10 @@ const pad = (v: number) => String(v).padStart(2, '0');
       </div>
       <div class="ap-grid bleed">
         <div class="ap-pass">
-          <div class="ap-no"><span class="tag-no">{no}</span><span class="pixel ap-no-big">№ {no}</span></div>
-          <h1 class="display ap-name" id="ap-name">{app.name}</h1>
-          <p class="ap-tag">{pick(lang, app.tagline)}</p>
-          <div class="ap-cta">
+          <div class="ap-no" data-reveal><span class="tag-no">{no}</span><span class="pixel ap-no-big">№ {no}</span></div>
+          <h1 class="display ap-name" id="ap-name" data-reveal>{app.name}</h1>
+          <p class="ap-tag" data-reveal>{pick(lang, app.tagline)}</p>
+          <div class="ap-cta" data-reveal>
             {
               app.links.map((l, i) => {
                 /* Прямая ссылка на файл релиза — скачивание начинается в этой же вкладке, без перехода на GitHub. */
@@ -82,7 +82,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
               })
             }
           </div>
-          <dl class="spec">
+          <dl class="spec" data-reveal>
             <div>
               <dt>{ru ? 'Статус' : 'Status'}</dt>
               <dd><span class={`stag ${app.status}`}><i class="sq" />{pick(lang, STATUS[app.status])}</span></dd>
@@ -94,7 +94,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
             <div><dt>{ru ? 'Обновлено' : 'Updated'}</dt><dd><time datetime={app.updated}>{updatedText}</time></dd></div>
           </dl>
         </div>
-        <div class="ap-plate">
+        <div class="ap-plate" data-reveal>
           <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
           <AppIcon slug={app.slug} name={app.name} size={260} eager vt style="view-transition-name: app-icon" class="ap-icon" />
           <span class="plate-lbl">{ru ? 'Изд.' : 'Item'} {no} · {app.name}</span>
@@ -115,13 +115,13 @@ const pad = (v: number) => String(v).padStart(2, '0');
       <h2 class="sr-only" id="feat-title">{tr(lang, 'page.features')}</h2>
       {
         app.features.map((f, i) => (
-          <article class="feat">
-            <div class="feat-text">
+          <article class="feat" data-reveal-group>
+            <div class="feat-text" data-reveal>
               <span class="feat-no">{pad(i + 1)} / {pad(n)}</span>
               <h3 class="h2 feat-title">{f.title[lang]}</h3>
               <p class="lead">{pick(lang, f.text)}</p>
             </div>
-            <div class="feat-plate">
+            <div class="feat-plate" data-reveal>
               <div class="fp-bar">
                 <span>{app.name} · {ru ? 'демо' : 'demo'} {pad(i + 1)}</span>
                 <span>{tr(lang, 'page.demo')}</span>
@@ -152,8 +152,8 @@ const pad = (v: number) => String(v).padStart(2, '0');
 
     <section class="faq-req container" data-spy={tr(lang, 'page.faq')}>
       <div class="sec-bar"><span>D / {tr(lang, 'page.faq')}</span><span>E / {tr(lang, 'page.req')}</span></div>
-      <div class="fr-grid">
-        <div class="faq">
+      <div class="fr-grid" data-reveal-group>
+        <div class="faq" data-reveal>
           <h2 class="h2">{tr(lang, 'page.faq')}</h2>
           <div class="faq-list">
             {
@@ -169,7 +169,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
             }
           </div>
         </div>
-        <aside class="req" aria-labelledby="req-title">
+        <aside class="req" aria-labelledby="req-title" data-reveal>
           <h2 class="h3" id="req-title">{tr(lang, 'page.req')}</h2>
           <ul>
             {
@@ -399,7 +399,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
   @media (min-width: 960px) {
     .feat-text {
       position: sticky;
-      top: calc(var(--menubar) + 24px);
+      top: calc(var(--menubar) + 64px); /* под прилипшей полосой раздела */
     }
   }
   .feat-plate {
