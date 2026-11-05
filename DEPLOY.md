@@ -79,6 +79,9 @@
 - **SEO monitor** (`.github/workflows/seo-monitor.yml`) — каждый понедельник проверяет живой сайт:
   robots.txt, sitemap, статус 200, noindex, canonical, редиректы и что страниц в sitemap не меньше 20.
   Если что-то не так, GitHub пришлёт письмо. Вручную: `node scripts/monitor-seo.mjs`.
+- **Releases** (`.github/workflows/releases.yml`) — раз в час проверяет последние релизы приложений на GitHub.
+  Вышла новая версия — коммитит `src/content/releases.json` в `main`, Vercel пересобирает сайт, и кнопки
+  «Скачать» ведут прямо на новый файл (`src/lib/downloads.ts`). Вручную: Actions → Releases → Run workflow.
 
 ## Сейчас: GitHub Pages (бесплатный адрес)
 
