@@ -241,7 +241,11 @@ main section > .sec-bar {
 main section > .sec-bar.stuck {
   box-shadow: 0 1px 0 var(--line);
 }
+/* фон полосы закрывает рельсы — рисуем их на самой полосе */
 @media (min-width: 900px) {
+  main section > .sec-bar {
+    box-shadow: inset 1px 0 var(--line), inset -1px 0 var(--line);
+  }
   main section > .sec-bar.stuck {
     box-shadow: 0 1px 0 var(--line), inset 1px 0 var(--line), inset -1px 0 var(--line);
   }
