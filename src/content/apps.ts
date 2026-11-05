@@ -22,6 +22,9 @@ export interface AppLink {
   kind: 'download' | 'open' | 'github' | 'releases' | 'contact';
   href: string;
   label: L;
+  /** Имя файла в последнем релизе GitHub (когда в нём есть версия). При сборке href заменяется
+   *  на прямую ссылку на этот файл — см. src/lib/downloads.ts. */
+  asset?: RegExp;
 }
 
 export interface App {
@@ -82,7 +85,7 @@ export const apps: App[] = [
     tint: { dark: '#A99BFF', light: '#5B45E0' },
     kind: t('Радиальный конвертер', 'Radial converter'),
     links: [
-      { kind: 'download', href: 'https://github.com/ehroz1/morfus-releases/releases/latest', label: t('Скачать для Mac', 'Download for Mac') },
+      { kind: 'download', href: 'https://github.com/ehroz1/morfus-releases/releases/latest', asset: /^Morfus-.*\.zip$/i, label: t('Скачать для Mac', 'Download for Mac') },
       { kind: 'releases', href: 'https://github.com/ehroz1/morfus-releases/releases', label: t('Все версии', 'All releases') },
     ],
     features: [
@@ -160,7 +163,7 @@ export const apps: App[] = [
     tint: { dark: '#E4E4E8', light: '#2A2A2E' },
     kind: t('Конвертер в строке меню', 'Menu bar converter'),
     links: [
-      { kind: 'download', href: 'https://github.com/ehroz1/morfu-releases/releases/latest', label: t('Скачать для Mac', 'Download for Mac') },
+      { kind: 'download', href: 'https://github.com/ehroz1/morfu-releases/releases/latest', asset: /^Morfu-.*\.zip$/i, label: t('Скачать для Mac', 'Download for Mac') },
       { kind: 'releases', href: 'https://github.com/ehroz1/morfu-releases/releases', label: t('Все версии', 'All releases') },
     ],
     features: [
