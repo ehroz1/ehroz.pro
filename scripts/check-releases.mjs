@@ -1,11 +1,12 @@
-// Проверяет последние релизы приложений на GitHub и записывает их в src/content/releases.json.
-// Запускается по расписанию (.github/workflows/releases.yml). Если вышла новая версия, файл меняется,
-// workflow коммитит его в main — и Vercel пересобирает сайт с новыми прямыми ссылками на скачивание.
+// Проверяет последние релизы приложений на GitHub и записывает их в JSON-файл
+// (по умолчанию src/content/releases.json, путь можно задать в RELEASES_FILE).
+// Запускается по расписанию (.github/workflows/releases.yml): если вышла новая версия, файл меняется,
+// и workflow вызывает Deploy Hook Vercel — сайт пересобирается с новыми прямыми ссылками на скачивание.
 // Репозитории берутся из ссылок вида github.com/<owner>/<repo>/releases в src/content/apps.ts.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 
 const APPS = 'src/content/apps.ts';
-const OUT = 'src/content/releases.json';
+const OUT = process.env.RELEASES_FILE || 'src/content/releases.json';
 const token = process.env.GITHUB_TOKEN;
 
 const repos = [...new Set([...readFileSync(APPS, 'utf8').matchAll(/github\.com\/([\w.-]+\/[\w.-]+)\/releases/g)].map((m) => m[1]))].sort();
