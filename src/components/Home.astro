@@ -45,27 +45,27 @@ const stats = [
     </div>
     <div class="hero-grid bleed">
       <div class="hero-main">
-        <h1 class="hero-title" id="hero-title">
+        <h1 class="hero-title" id="hero-title" data-reveal>
           {ru ? 'Небольшие инструменты.' : 'Small tools.'}<br />
           {ru ? 'Одна ' : 'One '}<span class="hl">{ru ? 'мастерская' : 'workshop'}</span>.
         </h1>
-        <p class="hero-lead">
+        <p class="hero-lead" data-reveal>
           {ru
             ? 'Конвертеры, работа с картинками, видео и речью, утилиты для Mac и расширения для браузера. Делаю их сам, пользуюсь каждый день — и каталог постоянно пополняется.'
             : 'Converters, tools for images, video and speech, Mac utilities and browser extensions. I make them myself, use them every day — and the catalogue keeps growing.'}
         </p>
-        <div class="hero-cta">
+        <div class="hero-cta" data-reveal>
           <a class="btn btn-primary" href="#apps"><Icon name="arrow" />{tr(lang, 'hero.cta')}</a>
           <a class="btn" href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener"><Icon name="telegram" />{ru ? 'Написать в Telegram' : 'Message on Telegram'}</a>
           <a class="btn" href={`https://github.com/${CONTACTS.github}`} target="_blank" rel="noopener"><Icon name="github" />GitHub</a>
         </div>
-        <p class="hero-note">macOS · Windows · {ru ? 'веб · расширения браузера' : 'web · browser extensions'}</p>
+        <p class="hero-note" data-reveal>macOS · Windows · {ru ? 'веб · расширения браузера' : 'web · browser extensions'}</p>
       </div>
       <nav class="hero-index" aria-label={ru ? 'Каталог приложений' : 'App index'}>
-        <ol>
+        <ol data-reveal-group="wave">
           {
             apps.map((a, i) => (
-              <li data-tint style={`--tint-d:${a.tint.dark};--tint-l:${a.tint.light}`}>
+              <li data-reveal data-tint style={`--tint-d:${a.tint.dark};--tint-l:${a.tint.light}`}>
                 <a href={path(lang, a.slug)} data-app-link={a.slug}>
                   <AppIcon slug={a.slug} name={a.name} size={64} decorative eager vt />
                   <span class="hi-no">{String(i + 1).padStart(2, '0')}</span>
@@ -75,7 +75,7 @@ const stats = [
               </li>
             ))
           }
-          <li class="hi-more">
+          <li class="hi-more" data-reveal>
             <a href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener">
               <span class="hi-no">{String(apps.length + 1).padStart(2, '0')}</span>
               <span class="hi-plus" aria-hidden="true">+</span>

@@ -1,5 +1,6 @@
 import { initScenes } from './scenes';
 import './scenes-more';
+import { initMotion } from './motion';
 
 const $ = <T extends Element = HTMLElement>(s: string, root: ParentNode = document) => root.querySelector<T>(s);
 const $$ = <T extends Element = HTMLElement>(s: string, root: ParentNode = document) => Array.from(root.querySelectorAll<T>(s));
@@ -294,3 +295,6 @@ function startGame() {
 
 /* ── Сцены ── */
 initScenes();
+
+/* ── Плавная прокрутка и появление блоков (после обработчика pagereveal выше) ── */
+initMotion();

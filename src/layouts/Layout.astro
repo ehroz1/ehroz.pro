@@ -110,6 +110,12 @@ const vars = [
         d.setAttribute('data-theme-pref', p);
         if (p !== 'auto') d.setAttribute('data-theme', p);
         try { if (localStorage.getItem('motion') === 'reduce') d.setAttribute('data-motion', 'reduce'); } catch (e) {}
+        // Появление при прокрутке: блоки скрыты до своей анимации (src/scripts/motion.ts).
+        // Если скрипт не загрузился за 3 с — показываем всё как есть.
+        if (d.getAttribute('data-motion') !== 'reduce' && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          d.classList.add('rv');
+          setTimeout(function () { if (!d.hasAttribute('data-rv-ready')) d.classList.remove('rv'); }, 3000);
+        }
       })();
     </script>
     {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
