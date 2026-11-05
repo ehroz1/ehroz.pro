@@ -1,0 +1,39 @@
+# Пересборка сайта после выхода нового релиза приложения.
+# Раз в час смотрит последние релизы на GitHub (scripts/check-releases.mjs). Если версия сменилась —
+# коммитит src/content/releases.json в main, и Vercel сам пересобирает сайт: кнопки «Скачать»
+# начинают вести на новый файл. Запустить вручную: Actions → Releases → Run workflow.
+name: Releases
+
+on:
+  schedule:
+    - cron: '23 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: releases
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/check-releases.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- src/content/releases.json; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898699+github-actions[bot]@users.noreply.github.com'
+          git add src/content/releases.json
+          git commit -m "Новые релизы приложений — пересборка сайта"
+          git push origin HEAD:main
