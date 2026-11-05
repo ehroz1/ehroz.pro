@@ -77,4 +77,30 @@ const fav = new Resvg(favicon, { fitTo: { mode: 'width', value: 180 } }).render(
 await sharp(fav).resize(32, 32).png().toFile(new URL('favicon-32.png', PUB).pathname);
 const touchPng = new Resvg(touch, { fitTo: { mode: 'width', value: 180 } }).render().asPng();
 await sharp(touchPng).resize(180, 180).png().toFile(new URL('apple-touch-icon.png', PUB).pathname);
+// Google в выдаче берёт иконку размером кратным 48 px и по привычке запрашивает /favicon.ico — даём и то и другое.
+const png = async (size, src = fav) => sharp(new Resvg(src === touchPng ? touch : favicon, { fitTo: { mode: 'width', value: size } }).render().asPng()).resize(size, size).png().toBuffer();
+for (const size of [48, 96, 192]) await writeFile(new URL(`favicon-${size}.png`, PUB), await png(size));
+// Для манифеста (Android, «На главный экран») — квадратная иконка без скругления, как для iPhone.
+await writeFile(new URL('icon-512.png', PUB), await png(512, touchPng));
+// favicon.ico: PNG 16, 32 и 48 внутри одного файла
+const icoParts = await Promise.all([16, 32, 48].map((s) => png(s)));
+const head = Buffer.alloc(6 + 16 * icoParts.length);
+head.writeUInt16LE(0, 0); head.writeUInt16LE(1, 2); head.writeUInt16LE(icoParts.length, 4);
+let offset = head.length;
+icoParts.forEach((buf, i) => {
+  const size = [16, 32, 48][i], e = 6 + i * 16;
+  head.writeUInt8(size, e); head.writeUInt8(size, e + 1); head.writeUInt8(0, e + 2); head.writeUInt8(0, e + 3);
+  head.writeUInt16LE(1, e + 4); head.writeUInt16LE(32, e + 6); head.writeUInt32LE(buf.length, e + 8); head.writeUInt32LE(offset, e + 12);
+  offset += buf.length;
+});
+await writeFile(new URL('favicon.ico', PUB), Buffer.concat([head, ...icoParts]));
+await writeFile(new URL('site.webmanifest', PUB), JSON.stringify({
+  name: 'Ehroz', short_name: 'Ehroz', start_url: '/', display: 'browser',
+  background_color: '#111315', theme_color: '#111315',
+  icons: [
+    { src: '/favicon-192.png', sizes: '192x192', type: 'image/png' },
+    { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' },
+    { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' },
+  ],
+}, null, 2) + '\n');
 console.log('favicon');
