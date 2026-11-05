@@ -55,7 +55,7 @@ Yes: Help → Transfer settings saves everything into a single .morfus file.
 - Apple Silicon and Intel
 - Free ffmpeg, Ghostscript and qpdf for video, audio and PDF (installed from Morfus)
 
-- Download for Mac: https://github.com/ehroz1/morfus-releases/releases/latest
+- Download for Mac: https://github.com/ehroz1/morfus-releases/releases/download/v0.2.3/Morfus-0.2.3.zip
 - All releases: https://github.com/ehroz1/morfus-releases/releases
 
 ## Morfu — Menu bar converter for macOS
@@ -104,7 +104,7 @@ Yes: ⌃⌥C converts the clipboard contents and puts them back.
 - Homebrew with ffmpeg, webp, mupdf-tools, potrace, pngquant
 - Media Engine on Apple Silicon makes video 2–3× faster
 
-- Download for Mac: https://github.com/ehroz1/morfu-releases/releases/latest
+- Download for Mac: https://github.com/ehroz1/morfu-releases/releases/download/v3.3/Morfu-3.3.zip
 - All releases: https://github.com/ehroz1/morfu-releases/releases
 
 ## Pachaq — Image compression and cropping for the web
@@ -640,7 +640,7 @@ Morfus сам проверяет новые версии, в меню значк
 - Apple Silicon и Intel
 - Для видео, звука и PDF — бесплатные ffmpeg, Ghostscript, qpdf (ставятся из Morfus)
 
-- Скачать для Mac: https://github.com/ehroz1/morfus-releases/releases/latest
+- Скачать для Mac: https://github.com/ehroz1/morfus-releases/releases/download/v0.2.3/Morfus-0.2.3.zip
 - Все версии: https://github.com/ehroz1/morfus-releases/releases
 
 ## Morfu — Конвертер в строке меню macOS
@@ -689,7 +689,7 @@ Morfu — панель в строке меню на Swift. Morfus — след�
 - Homebrew и утилиты ffmpeg, webp, mupdf-tools, potrace, pngquant
 - Media Engine на Apple Silicon ускоряет видео в 2–3 раза
 
-- Скачать для Mac: https://github.com/ehroz1/morfu-releases/releases/latest
+- Скачать для Mac: https://github.com/ehroz1/morfu-releases/releases/download/v3.3/Morfu-3.3.zip
 - Все версии: https://github.com/ehroz1/morfu-releases/releases
 
 ## Pachaq — Сжатие и обрезка картинок для сайтов
