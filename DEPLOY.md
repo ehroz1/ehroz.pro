@@ -80,8 +80,11 @@
   robots.txt, sitemap, статус 200, noindex, canonical, редиректы и что страниц в sitemap не меньше 20.
   Если что-то не так, GitHub пришлёт письмо. Вручную: `node scripts/monitor-seo.mjs`.
 - **Releases** (`.github/workflows/releases.yml`) — раз в час проверяет последние релизы приложений на GitHub.
-  Вышла новая версия — коммитит `src/content/releases.json` в `main`, Vercel пересобирает сайт, и кнопки
-  «Скачать» ведут прямо на новый файл (`src/lib/downloads.ts`). Вручную: Actions → Releases → Run workflow.
+  Вышла новая версия — вызывает Deploy Hook Vercel, сайт пересобирается, и кнопки «Скачать» ведут прямо
+  на новый файл (`src/lib/downloads.ts`). Вручную: Actions → Releases → Run workflow.
+  Настройка (один раз): Vercel → проект → Settings → Git → Deploy Hooks → создать хук для ветки `main`;
+  его адрес добавить в GitHub → Settings → Secrets and variables → Actions → New repository secret
+  с именем `VERCEL_DEPLOY_HOOK`.
 
 ## Сейчас: GitHub Pages (бесплатный адрес)
 
