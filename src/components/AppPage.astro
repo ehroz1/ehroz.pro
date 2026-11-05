@@ -17,8 +17,6 @@ interface Props {
 }
 const { app, lang } = Astro.props;
 const ru = lang === 'ru';
-const idx = apps.findIndex((a) => a.slug === app.slug);
-const no = String(idx + 1).padStart(2, '0');
 const others = apps.map((a, i) => ({ a, i })).filter(({ a }) => a.slug !== app.slug);
 const linkIcon = { download: 'download', open: 'external', github: 'github', releases: 'external', contact: 'telegram' } as const;
 // Бренд в конце заголовка, если влезает в ~60 символов (столько показывает выдача).
@@ -61,11 +59,10 @@ const pad = (v: number) => String(v).padStart(2, '0');
             <li><span aria-current="page">{app.name}</span></li>
           </ol>
         </nav>
-        <span>{no} / {pick(lang, app.kind)}</span>
+        <span>{pick(lang, app.kind)}</span>
       </div>
       <div class="ap-grid bleed">
         <div class="ap-pass">
-          <div class="ap-no"><span class="tag-no">{no}</span><span class="pixel ap-no-big">№ {no}</span></div>
           <h1 class="display ap-name" id="ap-name">{app.name}</h1>
           <p class="ap-tag">{pick(lang, app.tagline)}</p>
           <div class="ap-cta">
@@ -97,13 +94,12 @@ const pad = (v: number) => String(v).padStart(2, '0');
         <div class="ap-plate">
           <span class="crop tl"></span><span class="crop tr"></span><span class="crop bl"></span><span class="crop br"></span>
           <AppIcon slug={app.slug} name={app.name} size={260} eager vt style="view-transition-name: app-icon" class="ap-icon" />
-          <span class="plate-lbl">{ru ? 'Изд.' : 'Item'} {no} · {app.name}</span>
         </div>
       </div>
     </section>
 
     <section class="ap-about container" aria-label={tr(lang, 'page.for')} data-spy={ru ? 'Описание' : 'About'}>
-      <div class="sec-bar"><span>A / {ru ? 'Описание' : 'Description'}</span><span>{tr(lang, 'page.for')}</span></div>
+      <div class="sec-bar"><span>{ru ? 'Описание' : 'Description'}</span><span>{tr(lang, 'page.for')}</span></div>
       <div class="about-grid">
         <p class="ap-about-text">{pick(lang, app.about)}</p>
         <p class="ap-for"><span class="mono">{tr(lang, 'page.for')}</span>{pick(lang, app.audience)}</p>
@@ -111,13 +107,13 @@ const pad = (v: number) => String(v).padStart(2, '0');
     </section>
 
     <section class="features container" aria-labelledby="feat-title" data-spy={tr(lang, 'page.features')}>
-      <div class="sec-bar"><span>B / {tr(lang, 'page.features')}</span><span>{pad(n)} {ru ? 'функции' : 'features'}</span></div>
+      <div class="sec-bar"><span>{tr(lang, 'page.features')}</span><span></span></div>
       <h2 class="sr-only" id="feat-title">{tr(lang, 'page.features')}</h2>
       {
         app.features.map((f, i) => (
           <article class="feat">
             <div class="feat-text">
-              <span class="feat-no">{pad(i + 1)} / {pad(n)}</span>
+              <span class="feat-no">{pad(i + 1)}</span>
               <h3 class="h2 feat-title">{f.title[lang]}</h3>
               <p class="lead">{pick(lang, f.text)}</p>
             </div>
@@ -136,7 +132,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
     </section>
 
     <section class="how container" aria-labelledby="how-title" data-spy={tr(lang, 'page.how')}>
-      <div class="sec-bar"><span>C / {tr(lang, 'page.how')}</span><span>03 {ru ? 'шага' : 'steps'}</span></div>
+      <div class="sec-bar"><span>{tr(lang, 'page.how')}</span><span></span></div>
       <h2 class="h2" id="how-title">{tr(lang, 'page.how')}</h2>
       <ol class="steps">
         {
@@ -151,7 +147,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
     </section>
 
     <section class="faq-req container" data-spy={tr(lang, 'page.faq')}>
-      <div class="sec-bar"><span>D / {tr(lang, 'page.faq')}</span><span>E / {tr(lang, 'page.req')}</span></div>
+      <div class="sec-bar"><span>{tr(lang, 'page.faq')}</span><span>{tr(lang, 'page.req')}</span></div>
       <div class="fr-grid">
         <div class="faq">
           <h2 class="h2">{tr(lang, 'page.faq')}</h2>
@@ -186,7 +182,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
     </section>
 
     <section class="others container" aria-labelledby="others-title" data-spy={tr(lang, 'page.other')}>
-      <div class="sec-bar"><span>F / {tr(lang, 'page.other')}</span><span>{pad(others.length)}</span></div>
+      <div class="sec-bar"><span>{tr(lang, 'page.other')}</span><span></span></div>
       <h2 class="h2" id="others-title">{tr(lang, 'page.other')}</h2>
       <div class="o-grid bleed">
         {others.map(({ a, i }) => <AppWindow app={a} lang={lang} index={i} compact />)}
@@ -194,7 +190,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
     </section>
 
     <section class="ap-contact container" data-spy={tr(lang, 'cc.title')}>
-      <div class="sec-bar"><span>G / {tr(lang, 'cc.title')}</span><span>@{CONTACTS.telegram}</span></div>
+      <div class="sec-bar"><span>{tr(lang, 'cc.title')}</span><span>@{CONTACTS.telegram}</span></div>
       <div class="c-grid">
         <div>
           <h2 class="h2">{tr(lang, 'contact.title')}</h2>
@@ -262,16 +258,6 @@ const pad = (v: number) => String(v).padStart(2, '0');
       border-right: 1px solid var(--line);
     }
   }
-  .ap-no {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-  .ap-no-big {
-    color: var(--tint);
-    font-size: 28px;
-    line-height: 1;
-  }
   .ap-name {
     font-size: clamp(3.4rem, 1.6rem + 7vw, 8rem);
   }
@@ -279,7 +265,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
     max-width: 30ch;
     font-size: clamp(1.25rem, 1rem + 1vw, 1.9rem);
     line-height: 1.25;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.005em;
     color: var(--text-2);
     text-wrap: balance;
   }
@@ -303,9 +289,8 @@ const pad = (v: number) => String(v).padStart(2, '0');
   }
   .spec dt {
     color: var(--faint);
-    font: 500 10.5px/1.4 var(--font-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 13px;
+    line-height: 1.4;
   }
   .spec dd {
     margin: 0;
@@ -328,15 +313,6 @@ const pad = (v: number) => String(v).padStart(2, '0');
     width: min(260px, 60vw);
     height: auto;
     filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.28));
-  }
-  .plate-lbl {
-    position: absolute;
-    left: 28px;
-    bottom: 13px;
-    color: var(--faint);
-    font: 500 10px/1 var(--font-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
   }
 
   section + section {

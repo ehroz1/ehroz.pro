@@ -94,7 +94,7 @@ export function homeOg(lang: Lang): Buffer {
   const t3 = lang === 'ru' ? ['которые экономят', 'время.'] : ['that save time.'];
   const body = `
     <path d="M736 64V566" stroke="${LINE}"/>
-    ${mono(56, 104, lang === 'ru' ? '01 / Мастерская Ehroz' : '01 / Ehroz workshop')}
+    ${mono(56, 104, lang === 'ru' ? 'Приложения Ehroz' : 'Apps by Ehroz')}
     <text x="50" y="222" font-family="Medeo Sans" font-weight="700" font-size="120" letter-spacing="-6" fill="${TEXT}">Ehroz.</text>
     ${[...t2.map((l) => [l, TEXT]), ...t3.map((l) => [l, '#7c93ff'])]
       .map(([l, c], k) => `<text x="54" y="${300 + k * 58}" font-family="Medeo Sans" font-weight="700" font-size="56" letter-spacing="-2.5" fill="${c}">${esc(l)}</text>`)

@@ -15,8 +15,6 @@ interface Props {
 }
 const { lang } = Astro.props;
 const ru = lang === 'ru';
-const platforms = new Set(apps.flatMap((a) => a.platforms)).size;
-const ready = apps.filter((a) => a.status === 'ready').length;
 const site = Astro.site!;
 const homeUrl = new URL(path(lang), site).href;
 const jsonld = graph(
@@ -29,118 +27,70 @@ const jsonld = graph(
   website(site),
   person(site, lang),
 );
-const stats = [
-  [String(apps.length).padStart(2, '0'), ru ? 'продуктов' : 'products'],
-  [String(ready).padStart(2, '0'), ru ? 'уже доступны' : 'available now'],
-  [String(platforms).padStart(2, '0'), ru ? 'платформы' : 'platforms'],
-  ['RU·EN·KZ', ru ? 'языки речи в BLA-БЛА и Sukhan' : 'speech languages in BLA-БЛА & Sukhan'],
-];
+// Эта карточка в каталоге шире остальных и лежит горизонтально.
+const WIDE = 'sukhan';
 ---
 
 <Layout lang={lang} title={tr(lang, 'meta.title')} description={tr(lang, 'meta.description')} jsonld={jsonld} updated={homeUpdated()}>
-  <section class="hero container" aria-labelledby="hero-title" data-spy={ru ? 'Мастерская' : 'Workshop'}>
-    <div class="sec-bar">
-      <span>01 / <b>{ru ? 'Мастерская Ehroz' : 'Ehroz workshop'}</b></span>
-      <span>{apps.length} {ru ? 'изделий' : 'products'} · macOS · Windows · {ru ? 'веб' : 'web'} · <em>{CONTACTS.city[lang]}</em></span>
-    </div>
+  <section class="hero container" aria-labelledby="hero-title" data-spy={ru ? 'Главная' : 'Home'}>
     <div class="hero-grid bleed">
       <div class="hero-main">
-        <h1 class="hero-title" id="hero-title">
-          {ru ? 'Небольшие инструменты.' : 'Small tools.'}<br />
-          {ru ? 'Одна ' : 'One '}<span class="hl">{ru ? 'мастерская' : 'workshop'}</span>.
-        </h1>
-        <p class="hero-lead">
-          {ru
-            ? 'Конвертеры, работа с картинками, видео и речью, утилиты для Mac и расширения для браузера. Делаю их сам, пользуюсь каждый день — и каталог постоянно пополняется.'
-            : 'Converters, tools for images, video and speech, Mac utilities and browser extensions. I make them myself, use them every day — and the catalogue keeps growing.'}
-        </p>
+        <h1 class="hero-title" id="hero-title">{tr(lang, 'hero.title')}</h1>
+        <p class="hero-lead">{tr(lang, 'hero.lead')}</p>
         <div class="hero-cta">
           <a class="btn btn-primary" href="#apps"><Icon name="arrow" />{tr(lang, 'hero.cta')}</a>
-          <a class="btn" href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener"><Icon name="telegram" />{ru ? 'Написать в Telegram' : 'Message on Telegram'}</a>
-          <a class="btn" href={`https://github.com/${CONTACTS.github}`} target="_blank" rel="noopener"><Icon name="github" />GitHub</a>
         </div>
-        <p class="hero-note">macOS · Windows · {ru ? 'веб · расширения браузера' : 'web · browser extensions'}</p>
       </div>
       <nav class="hero-index" aria-label={ru ? 'Каталог приложений' : 'App index'}>
         <ol>
           {
-            apps.map((a, i) => (
-              <li data-tint style={`--tint-d:${a.tint.dark};--tint-l:${a.tint.light}`}>
+            apps.map((a) => (
+              <li>
                 <a href={path(lang, a.slug)} data-app-link={a.slug}>
                   <AppIcon slug={a.slug} name={a.name} size={64} decorative eager vt />
-                  <span class="hi-no">{String(i + 1).padStart(2, '0')}</span>
                   <span class="hi-name">{a.name}</span>
-                  <span class="hi-plat">{a.platforms.map((p) => pick(lang, PLATFORM[p])).join(' · ')}</span>
+                  <span class="hi-plat">{a.platforms.map((p) => pick(lang, PLATFORM[p])).join(', ')}</span>
                 </a>
               </li>
             ))
           }
-          <li class="hi-more">
-            <a href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener">
-              <span class="hi-no">{String(apps.length + 1).padStart(2, '0')}</span>
-              <span class="hi-plus" aria-hidden="true">+</span>
-              <span class="hi-name">{ru ? 'Новые изделия' : 'More on the way'}</span>
-              <span class="hi-plat">{ru ? 'Следите в Telegram' : 'Follow on Telegram'}</span>
-            </a>
-          </li>
         </ol>
       </nav>
     </div>
   </section>
 
-  <section class="apps container" id="apps" aria-labelledby="apps-title" data-spy={ru ? 'Изделия' : 'Products'}>
-    <div class="sec-bar">
-      <span>02 / {tr(lang, 'apps.title')}</span>
-      <span>{ru ? 'Выберите изделие' : 'Pick a product'}</span>
-    </div>
+  <section class="apps container" id="apps" aria-labelledby="apps-title" data-spy={ru ? 'Приложения' : 'Apps'}>
     <header class="sec-head">
       <h2 class="h2" id="apps-title">{tr(lang, 'apps.title')}</h2>
       <p class="lead">{tr(lang, 'apps.lead')}</p>
     </header>
     <div class="cards bleed">
-      {apps.map((a, i) => <AppWindow app={a} lang={lang} featured={i === 0} index={i} />)}
+      {apps.map((a, i) => <AppWindow app={a} lang={lang} featured={i === 0} wide={a.slug === WIDE} index={i} />)}
     </div>
   </section>
 
   <section class="about container" id="about" aria-labelledby="about-title" data-spy={ru ? 'Об Ehroz' : 'About'}>
-    <div class="sec-bar">
-      <span>03 / {tr(lang, 'about.title')}</span>
-      <span>{CONTACTS.city[lang]} · UTC+5</span>
-    </div>
     <div class="about-grid">
       <div class="about-who">
         <Avatar size={72} />
-        <h2 class="h3" id="about-title">Ehroz · designer &amp; developer</h2>
+        <h2 class="h3" id="about-title">{tr(lang, 'about.title')}</h2>
       </div>
-      <p class="about-text">{tr(lang, 'about.text')} <a href={path(lang, 'about')}>{tr(lang, 'about.mac.more').replace('…', '')} →</a></p>
+      <p class="about-text">{tr(lang, 'about.text')} <a href={path(lang, 'about')}>{ru ? 'Подробнее обо мне' : 'More about me'}</a></p>
     </div>
-    <dl class="stats">
-      {
-        stats.map(([n, l], i) => (
-          <div data-i={String(i + 1).padStart(2, '0')}>
-            <dt class:list={['pixel', { long: n.length > 3 }]}>{n}</dt>
-            <dd>{l}</dd>
-          </div>
-        ))
-      }
-    </dl>
   </section>
 
   <section class="contact container" id="contact" aria-labelledby="contact-title" data-spy={ru ? 'Контакты' : 'Contact'}>
-    <div class="sec-bar">
-      <span>04 / {tr(lang, 'cc.title')}</span>
-      <span>@{CONTACTS.telegram}</span>
-    </div>
     <div class="contact-grid">
       <div>
         <h2 class="h2" id="contact-title">{tr(lang, 'contact.title')}</h2>
         <p class="lead">{tr(lang, 'contact.lead')}</p>
       </div>
       <div class="contact-cta">
-        <a class="btn btn-primary" href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener"><Icon name="telegram" />@{CONTACTS.telegram}</a>
-        <a class="btn" href={CONTACTS.order} target="_blank" rel="noopener"><Icon name="briefcase" />{tr(lang, 'contact.order')}</a>
-        <a class="btn" href={`mailto:${CONTACTS.email}`}><Icon name="mail" />Email</a>
-        <a class="btn" href={path(lang, 'contacts')}>{tr(lang, 'contacts.page.h1')}</a>
+        <a class="btn btn-primary" href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener"><Icon name="telegram" />{ru ? 'Написать в Telegram' : 'Message on Telegram'}</a>
+        <p class="contact-alt">
+          {ru ? 'Или на почту ' : 'Or by email at '}<a href={`mailto:${CONTACTS.email}`}>{CONTACTS.email}</a>.
+          {ru ? ' Все способы связи на странице ' : ' Every other way to reach me is on the '}<a href={path(lang, 'contacts')}>{ru ? 'контактов' : 'contacts page'}</a>.
+        </p>
       </div>
     </div>
   </section>
@@ -152,10 +102,9 @@ const stats = [
   .hero {
     padding-top: calc(var(--menubar) + 24px);
   }
-  .hero .sec-bar b { color: var(--text-2, var(--text)); font-weight: 500; }
-  .hero .sec-bar em { font-style: normal; }
   .hero-grid {
     display: grid;
+    border-top: 1px solid var(--line);
     grid-template-columns: minmax(0, 1fr);
   }
   /* следующий раздел начинается сразу под первым экраном — общая линия */
@@ -173,10 +122,12 @@ const stats = [
   .hero-title {
     margin: 0 0 28px;
     font-family: var(--font-sans);
-    font-size: clamp(2.1rem, 0.4rem + 2.6vw, 3.9rem);
-    font-weight: 700;
-    line-height: 0.98;
-    letter-spacing: -0.045em;
+    max-width: 18ch;
+    font-size: clamp(2rem, 0.6rem + 2.4vw, 3.4rem);
+    font-weight: 600;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
   }
   .hero-lead {
     max-width: 640px;
@@ -186,16 +137,6 @@ const stats = [
     line-height: 1.6;
   }
   .hero-cta { display: flex; flex-wrap: wrap; gap: 8px; }
-  @media (min-width: 1600px) {
-    .hero-cta .btn { height: 52px; padding: 0 26px; }
-  }
-  .hero-note {
-    margin: 14px 0 0;
-    color: var(--faint);
-    font: 500 11px/1.4 var(--font-mono);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
   .hero-index { border-top: 1px solid var(--line); }
   @media (min-width: 1000px) {
     .hero-index { border-top: 0; border-left: 1px solid var(--line); }
@@ -239,30 +180,11 @@ const stats = [
     transition: transform var(--mid) var(--ease);
   }
   .hero-index a:hover :global(img) { transform: translateY(-4px); }
-  .hi-no {
-    position: absolute;
-    top: 8px;
-    left: 10px;
-    color: var(--tint);
-    font: 500 10px/1 var(--font-mono);
-  }
-  .hi-plus {
-    display: grid;
-    place-items: center;
-    width: 52px;
-    height: 52px;
-    margin: 0 0 8px;
-    border: 1px dashed var(--line-strong);
-    color: var(--faint);
-    font: 300 28px/1 var(--font-mono);
-  }
-  .hi-more .hi-no { color: var(--faint); }
   .hi-name { font-weight: 650; font-size: 14.5px; }
   .hi-plat {
     color: var(--faint);
-    font: 500 9.5px/1.4 var(--font-mono);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 12px;
+    line-height: 1.4;
   }
 
   section + section {
@@ -271,7 +193,8 @@ const stats = [
   .sec-head {
     display: grid;
     gap: 14px;
-    padding: 24px 0 32px;
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
   }
   @media (min-width: 900px) {
     .sec-head {
@@ -288,14 +211,20 @@ const stats = [
   @media (min-width: 640px) {
     .cards {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-auto-flow: dense;
     }
-    .cards > :global(.featured) {
+    .cards > :global(.featured),
+    .cards > :global(.wide) {
       grid-column: span 2;
     }
   }
   @media (min-width: 1100px) {
     .cards {
       grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    /* Morfus занимает квадрат 2×2, Sukhan лежит горизонтально на две колонки */
+    .cards > :global(.featured) {
+      grid-row: span 2;
     }
   }
 
@@ -321,50 +250,6 @@ const stats = [
     letter-spacing: -0.01em;
     text-wrap: pretty;
   }
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    margin: 0;
-    border-top: 1px solid var(--line);
-    border-left: 1px solid var(--line);
-  }
-  @media (min-width: 900px) {
-    .stats {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-  }
-  .stats div {
-    position: relative;
-    display: grid;
-    gap: 8px;
-    padding: 36px 16px 18px;
-    border-right: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    background: var(--cell);
-    min-width: 0;
-  }
-  .stats div::before {
-    content: attr(data-i);
-    position: absolute;
-    top: 12px;
-    right: 14px;
-    color: var(--faint);
-    font: 500 11px/1.4 var(--font-mono);
-    letter-spacing: 0.08em;
-  }
-  .stats dt {
-    font-size: clamp(40px, 5vw, 64px);
-    line-height: 1;
-  }
-  .stats dt.long {
-    font-size: clamp(24px, 2.6vw, 34px);
-    padding-block: 0.4em;
-  }
-  .stats dd {
-    margin: 0;
-    color: var(--muted);
-    font-size: 14px;
-  }
 
   .contact-grid {
     display: grid;
@@ -382,13 +267,24 @@ const stats = [
     }
   }
   .contact-cta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    display: grid;
+    justify-items: start;
+    gap: 16px;
   }
-  @media (min-width: 900px) {
-    .contact-cta {
-      justify-content: flex-end;
-    }
+  .contact-alt {
+    max-width: 44ch;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .contact-alt a,
+  .about-text a {
+    text-decoration: underline;
+    text-decoration-color: var(--line-strong);
+    text-underline-offset: 3px;
+  }
+  .contact-alt a:hover,
+  .about-text a:hover {
+    text-decoration-color: currentColor;
   }
 </style>

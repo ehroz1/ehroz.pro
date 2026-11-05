@@ -1,10 +1,9 @@
 ---
 import type { Lang } from '../content/apps';
 import { apps } from '../content/apps';
-import { path, tr, pick, CONTACTS } from '../i18n';
+import { path, tr, pick } from '../i18n';
 import AppIcon from './AppIcon.astro';
 import ZMark from './ZMark.astro';
-import Icon from './Icon.astro';
 
 interface Props {
   lang: Lang;
@@ -17,29 +16,20 @@ const { lang, current = '' } = Astro.props;
   <ul class="dock" data-dock>
     <li class="dock-item">
       <a href={path(lang)} aria-current={current === '' ? 'page' : undefined}>
-        <span class="no">00</span>
         <span class="tile"><ZMark size={18} /></span>
         <span class="lbl">{tr(lang, 'menu.home')}</span>
       </a>
     </li>
     {
-      apps.map((a, i) => (
+      apps.map((a) => (
         <li class="dock-item" data-tint style={`--tint-d:${a.tint.dark};--tint-l:${a.tint.light}`}>
           <a href={path(lang, a.slug)} aria-label={`${a.name} — ${pick(lang, a.short)}`} aria-current={current === a.slug ? 'page' : undefined} data-app-link={a.slug}>
-            <span class="no">{String(i + 1).padStart(2, '0')}</span>
             <AppIcon slug={a.slug} name={a.name} size={64} class="dock-icon" decorative />
             <span class="lbl">{a.name}</span>
           </a>
         </li>
       ))
     }
-    <li class="dock-item">
-      <a href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener" aria-label={`Telegram @${CONTACTS.telegram}`}>
-        <span class="no">TG</span>
-        <span class="tile"><Icon name="telegram" size={20} /></span>
-        <span class="lbl">Telegram</span>
-      </a>
-    </li>
   </ul>
 </nav>
 
@@ -77,7 +67,8 @@ const { lang, current = '' } = Astro.props;
   .dock-item a {
     position: relative;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: 1fr auto;
+    align-items: center;
     justify-items: center;
     width: 76px;
     height: 100%;
@@ -89,15 +80,6 @@ const { lang, current = '' } = Astro.props;
   }
   .dock-item a[aria-current='page'] {
     box-shadow: inset 0 -2px 0 var(--tint, var(--text));
-  }
-  .no {
-    justify-self: start;
-    color: var(--faint);
-    font: 500 9px/1 var(--font-mono);
-    letter-spacing: 0.06em;
-  }
-  .dock-item a[aria-current='page'] .no {
-    color: var(--tint, var(--text));
   }
   .dock-item :global(.dock-icon),
   .tile {
@@ -130,9 +112,8 @@ const { lang, current = '' } = Astro.props;
     text-overflow: ellipsis;
     white-space: nowrap;
     color: var(--muted);
-    font: 500 9.5px/1 var(--font-mono);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-size: 11px;
+    line-height: 1;
   }
   @media (max-width: 760px) {
     .dock-item a {

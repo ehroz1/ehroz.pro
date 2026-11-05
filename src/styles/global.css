@@ -1,9 +1,9 @@
 @import 'tailwindcss';
 
-/* ── Мастерская ehroz.pro ──
-   Каталог изделий: тёмная основа (светлая — по выбору), строгая сетка с видимыми линиями,
-   Medeo Sans / Mono / Pixel, кобальт для действий, у каждого изделия свой цвет ярлыка.
-   Без стекла, размытия, свечений и градиентного текста. */
+/* ── ehroz.pro ──
+   Каталог приложений: тёмная основа (светлая по системе), строгая сетка с видимыми линиями,
+   Medeo Sans / Mono / Pixel. Акцент нейтральный (цвет текста), цвет приложения только
+   у кромки карточки при наведении. Без стекла, размытия, свечений и градиентного текста. */
 
 @font-face {
   font-family: 'Medeo Sans';
@@ -45,8 +45,8 @@
   --text-2: #c9c6bf;
   --muted: #a3a09a;
   --faint: #8e8b85;
-  --accent: #7c93ff;
-  --on-accent: #0e0e0f;
+  --accent: #f2f0eb;
+  --on-accent: #111315;
   --btn: #f2f0eb;
   --on-btn: #0e0e0f;
   --ok: #3ccb8a;
@@ -88,8 +88,8 @@
     --text-2: #34312c;
     --muted: #4a463f;
     --faint: #615c54;
-    --accent: #2340c8;
-    --on-accent: #ffffff;
+    --accent: #161513;
+    --on-accent: #eef0f2;
     --btn: #161513;
     --on-btn: #eef0f2;
     --ok: #0f7046;
@@ -109,8 +109,8 @@
   --text-2: #34312c;
   --muted: #4a463f;
   --faint: #615c54;
-  --accent: #2340c8;
-  --on-accent: #ffffff;
+  --accent: #161513;
+  --on-accent: #eef0f2;
   --btn: #161513;
   --on-btn: #eef0f2;
   --ok: #0f7046;
@@ -206,7 +206,7 @@ img {
   grid-template-columns: repeat(12, minmax(0, 1fr));
 }
 
-/* Полоса-заголовок раздела: «02 / ПРИЛОЖЕНИЯ ……… ВЫБЕРИТЕ ИЗДЕЛИЕ» */
+/* Полоса-заголовок раздела: название слева, пояснение справа */
 .sec-bar {
   position: relative;
   display: flex;
@@ -217,22 +217,11 @@ img {
   border-top: 1px solid var(--line);
   color: var(--faint);
 }
-/* крестики на стыке линии раздела и рельс */
-@media (min-width: 900px) {
-  .sec-bar::before,
-  .sec-bar::after {
-    content: '+';
-    position: absolute;
-    top: -1px;
-    color: var(--faint);
-    font: 300 17px/1 var(--font-mono);
-    translate: -50% -50%;
-  }
-  .sec-bar::before { left: 0; }
-  .sec-bar::after { left: 100%; }
-}
-.mono,
 .sec-bar {
+  font-size: 13px;
+  line-height: 1.4;
+}
+.mono {
   font: 500 11px/1.4 var(--font-mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -245,24 +234,24 @@ img {
 /* ── Типографика ── */
 .display {
   font-family: var(--font-display);
-  font-weight: 750;
-  letter-spacing: -0.045em;
-  line-height: 0.92;
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  line-height: 1.02;
   text-wrap: balance;
 }
 .h2 {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
   font-size: clamp(2rem, 1.3rem + 2.8vw, 3.6rem);
   text-wrap: balance;
 }
 .h3 {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  line-height: 1.15;
   font-size: clamp(1.4rem, 1.15rem + 0.9vw, 1.9rem);
   text-wrap: balance;
 }
@@ -272,9 +261,6 @@ img {
   line-height: 1.55;
   max-width: 62ch;
   text-wrap: pretty;
-}
-.hl {
-  color: var(--accent);
 }
 .pixel {
   font-family: var(--font-pixel);
@@ -292,9 +278,7 @@ img {
   border: 1px solid var(--line-strong);
   background: transparent;
   color: var(--text);
-  font: 500 11.5px/1 var(--font-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font: 500 14px/1 var(--font-sans);
   white-space: nowrap;
   cursor: pointer;
   transition:
@@ -315,9 +299,9 @@ img {
   color: var(--on-btn);
 }
 .btn-primary:hover {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--on-accent);
+  background: var(--text-2);
+  border-color: var(--text-2);
+  color: var(--on-btn);
 }
 .btn svg {
   width: 15px;
@@ -333,27 +317,25 @@ img {
   align-items: center;
   gap: 8px;
   color: var(--text-2);
-  font: 500 11px/1.4 var(--font-mono);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 14px;
+  line-height: 1.4;
   transition: color var(--fast) var(--ease);
 }
 a:hover .go,
 .go:hover {
-  color: var(--accent);
+  color: var(--text);
 }
 
-/* Ярлык номера изделия (цвет изделия) */
+/* Номер приложения: один нейтральный цвет для всех */
 .tag-no {
   display: inline-grid;
   place-items: center;
   min-width: 30px;
   height: 18px;
   padding: 0 5px;
-  background: var(--tint, var(--accent));
-  color: var(--bg);
-  font: 600 10.5px/1 var(--font-mono);
-  letter-spacing: 0.04em;
+  border: 1px solid var(--line-strong);
+  color: var(--muted);
+  font: 500 10.5px/1 var(--font-mono);
 }
 
 /* Метки-спецификации: прямоугольные, моноширинные */
@@ -370,9 +352,8 @@ a:hover .go,
   padding: 0 6px;
   border: 1px solid var(--line-strong);
   color: var(--muted);
-  font: 500 10px/1 var(--font-mono);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 12px;
+  line-height: 1;
   white-space: nowrap;
 }
 .stag .sq {
@@ -392,13 +373,13 @@ a:hover .go,
   border-color: color-mix(in srgb, var(--warn) 55%, transparent);
 }
 .stag.beta .sq {
-  background: linear-gradient(90deg, currentColor 50%, transparent 50%);
+  border-style: dashed;
 }
 .stag.dev {
   color: var(--text-2);
 }
 
-/* Метки кадра (предметная съёмка) */
+/* Метки кадра: остались только у демо на странице приложения */
 .crop {
   position: absolute;
   width: 12px;
@@ -482,7 +463,7 @@ a:hover .go,
     navigation: none;
   }
 }
-/* Анимации выключены вручную (панель «Связаться» → Анимации). */
+/* Анимации выключены вручную (старая настройка в localStorage; переключатель убран). */
 html[data-motion='reduce'] *,
 html[data-motion='reduce'] *::before,
 html[data-motion='reduce'] *::after {

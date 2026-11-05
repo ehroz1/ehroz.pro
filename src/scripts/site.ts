@@ -16,28 +16,15 @@ function setTheme(p: Pref) {
   try {
     localStorage.setItem('theme', p);
   } catch {}
-  $$('[data-set-theme]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.setTheme === p)));
 }
 const pref = (): Pref => (document.documentElement.getAttribute('data-theme-pref') as Pref) || 'auto';
 setTheme(pref());
-$$('[data-theme-toggle]').forEach((b) =>
-  b.addEventListener('click', () => {
-    const order: Pref[] = ['auto', 'dark', 'light'];
-    setTheme(order[(order.indexOf(pref()) + 1) % 3]);
-  }),
-);
-$$('[data-set-theme]').forEach((b) => b.addEventListener('click', () => setTheme(b.dataset.setTheme as Pref)));
+// По умолчанию тема как в системе; кнопка в меню меняет тёмную на светлую и обратно.
+const isLight = () => pref() === 'light' || (pref() === 'auto' && matchMedia('(prefers-color-scheme: light)').matches);
+$$('[data-theme-toggle]').forEach((b) => b.addEventListener('click', () => setTheme(isLight() ? 'dark' : 'light')));
 
-// Анимации: «вкл.» (как в системе) или «без анимаций». Сцены и обои читают настройку при загрузке — перезагружаем.
-const motion = document.documentElement.dataset.motion === 'reduce' ? 'reduce' : 'auto';
-$$('[data-set-motion]').forEach((b) => {
-  b.setAttribute('aria-pressed', String(b.dataset.setMotion === motion));
-  b.addEventListener('click', () => {
-    if (b.dataset.setMotion === motion) return;
-    try { localStorage.setItem('motion', b.dataset.setMotion!); } catch {}
-    location.reload();
-  });
-});
+// Ручной переключатель анимаций убран, работает только системная настройка «Уменьшить движение».
+try { localStorage.removeItem('motion'); } catch {}
 
 /* ── Часы: Астана, UTC+5 (без опоры на базу часовых поясов браузера — она могла устареть) ── */
 const clocks = $$('[data-clock]');
@@ -104,132 +91,10 @@ about?.addEventListener('click', (e) => {
   if (e.target === about) about.close();
 });
 
-/* ── Spotlight (⌘K / Ctrl+K) ── */
-type Item = { type: 'app' | 'action'; title: string; sub: string; meta?: string; href?: string; icon?: string; ic?: string; action?: string; slug?: string; keys: string };
-const spot = $<HTMLDialogElement>('#spotlight');
-if (spot) {
-  const data = JSON.parse($('#spot-data')!.textContent!) as { items: Item[]; labels: { apps: string; actions: string } };
-  const input = $<HTMLInputElement>('input', spot)!;
-  const list = $('#spot-list', spot)!;
-  const empty = $('.spot-empty', spot)!;
-  const icons = $<HTMLTemplateElement>('#spot-icons', spot)!.content;
-  let shown: Item[] = [];
-  let sel = 0;
-  const norm = (s: string) => s.toLowerCase().replace(/ё/g, 'е');
-  const render = () => {
-    const q = norm(input.value.trim());
-    const words = q.split(/\s+/).filter(Boolean);
-    shown = data.items.filter((it) => {
-      const hay = norm(`${it.title} ${it.sub} ${it.keys}`);
-      return words.every((w) => hay.includes(w));
-    });
-    if (!q) shown = shown.filter((i) => i.type === 'app').concat(shown.filter((i) => i.type === 'action').slice(0, 2));
-    sel = Math.min(sel, Math.max(0, shown.length - 1));
-    list.innerHTML = '';
-    let group = '';
-    shown.forEach((it, i) => {
-      const g = it.type === 'app' ? data.labels.apps : data.labels.actions;
-      if (g !== group) {
-        group = g;
-        const h = document.createElement('li');
-        h.className = 'spot-group';
-        h.setAttribute('role', 'presentation');
-        h.textContent = g;
-        list.append(h);
-      }
-      const li = document.createElement('li');
-      li.className = 'spot-item';
-      li.id = `spot-${i}`;
-      li.setAttribute('role', 'option');
-      li.setAttribute('aria-selected', String(i === sel));
-      const lead = it.icon
-        ? Object.assign(document.createElement('img'), { src: it.icon, alt: '', width: 40, height: 40 })
-        : (() => {
-            const s = document.createElement('span');
-            s.className = 'spot-ic';
-            const src = icons.querySelector(`[data-ic="${it.ic}"]`);
-            if (src) s.innerHTML = src.innerHTML;
-            return s;
-          })();
-      const t = document.createElement('span');
-      t.className = 'spot-t';
-      t.innerHTML = '<b></b><small></small>';
-      t.querySelector('b')!.textContent = it.title;
-      t.querySelector('small')!.textContent = it.sub;
-      li.append(lead, t);
-      if (it.meta) {
-        const m = document.createElement('span');
-        m.className = 'spot-meta';
-        m.textContent = it.meta;
-        li.append(m);
-      }
-      li.addEventListener('pointermove', () => select(i));
-      li.addEventListener('click', () => run(it));
-      list.append(li);
-    });
-    empty.hidden = shown.length > 0;
-    input.setAttribute('aria-activedescendant', shown.length ? `spot-${sel}` : '');
-  };
-  const select = (i: number) => {
-    if (i === sel) return;
-    sel = i;
-    $$('.spot-item', list).forEach((el, j) => el.setAttribute('aria-selected', String(j === sel)));
-    input.setAttribute('aria-activedescendant', `spot-${sel}`);
-    $(`#spot-${sel}`, list)?.scrollIntoView({ block: 'nearest' });
-  };
-  const run = (it?: Item) => {
-    if (!it) return;
-    if (it.action === 'theme') {
-      setTheme(document.documentElement.getAttribute('data-theme') === 'light' || (pref() === 'auto' && matchMedia('(prefers-color-scheme: light)').matches) ? 'dark' : 'light');
-      spot.close();
-      return;
-    }
-    if (!it.href) return;
-    if (it.slug) markIcon(it.slug, null);
-    spot.close();
-    if (/^https?:|^mailto:/.test(it.href) && !it.href.startsWith(location.origin)) window.open(it.href, '_blank', 'noopener');
-    else location.href = it.href;
-  };
-  const open = () => {
-    if (spot.open) return spot.close();
-    input.value = '';
-    sel = 0;
-    render();
-    spot.showModal();
-    input.focus();
-  };
-  input.addEventListener('input', () => {
-    sel = 0;
-    render();
-  });
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      select((sel + 1) % Math.max(1, shown.length));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      select((sel - 1 + shown.length) % Math.max(1, shown.length));
-    } else if (e.key === 'Enter') {
-      e.preventDefault();
-      run(shown[sel]);
-    }
-  });
-  spot.addEventListener('click', (e) => {
-    if (e.target === spot) spot.close();
-  });
-  $$('[data-open="spotlight"]').forEach((b) => b.addEventListener('click', open));
-  document.addEventListener('keydown', (e) => {
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-      e.preventDefault();
-      open();
-    } else if (e.key === '/' && !(e.target as HTMLElement).closest('input, textarea, [contenteditable]')) {
-      e.preventDefault();
-      open();
-    } else if (e.key === 'Escape') {
-      toggleCC(false);
-    }
-  });
-}
+// Escape закрывает панель контактов
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') toggleCC(false);
+});
 
 // Клик по иконке приложения — «прыжок», как при запуске
 $$('.dock-item a[data-app-link]').forEach((a) =>

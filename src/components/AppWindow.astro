@@ -1,5 +1,5 @@
 ---
-// Карточка изделия в каталоге: ярлык номера, категория, демо на подложке, иконка и паспорт.
+// Карточка приложения в каталоге: номер, категория, демо на подложке, иконка и описание.
 import type { App, Lang } from '../content/apps';
 import { path, pick, PLATFORM, STATUS, tr } from '../i18n';
 import AppIcon from './AppIcon.astro';
@@ -9,15 +9,17 @@ interface Props {
   app: App;
   lang: Lang;
   featured?: boolean;
+  /** Горизонтальная карточка на две колонки (демо слева, текст справа). */
+  wide?: boolean;
   index: number;
   /** Без демо-сцены (компактная карточка: «Другие приложения»). */
   compact?: boolean;
 }
-const { app, lang, featured = false, index, compact = false } = Astro.props;
+const { app, lang, featured = false, wide = false, index, compact = false } = Astro.props;
 const no = String(index + 1).padStart(2, '0');
 ---
 
-<article class:list={['card', { featured, compact }]} data-tint style={`--tint-d:${app.tint.dark};--tint-l:${app.tint.light}`}>
+<article class:list={['card', { featured, wide, compact }]} data-tint style={`--tint-d:${app.tint.dark};--tint-l:${app.tint.light}`}>
   <a class="card-link" href={path(lang, app.slug)} data-app-link={app.slug} aria-label={`${app.name} — ${pick(lang, app.short)}`}>
     <header class="card-h">
       <span class="tag-no">{no}</span>
@@ -26,10 +28,6 @@ const no = String(index + 1).padStart(2, '0');
     {
       !compact && (
         <div class="card-plate">
-          <span class="crop tl" />
-          <span class="crop tr" />
-          <span class="crop bl" />
-          <span class="crop br" />
           <SceneSwitch fit id={app.features[0].scene} lang={lang} label={`${app.name}: ${pick(lang, app.features[0].title)}`} />
         </div>
       )
@@ -43,7 +41,7 @@ const no = String(index + 1).padStart(2, '0');
         <span class="stag">{app.platforms.map((p) => pick(lang, PLATFORM[p])).join(' · ')}</span>
         {app.version && <span class="stag">v{app.version}</span>}
       </div>
-      <span class="go">{tr(lang, 'apps.open')} {app.name} ↗</span>
+      <span class="go">{tr(lang, 'apps.open')} →</span>
     </div>
     <i class="ikat card-edge" aria-hidden="true" />
   </a>
@@ -77,9 +75,8 @@ const no = String(index + 1).padStart(2, '0');
     text-overflow: ellipsis;
     white-space: nowrap;
     color: var(--faint);
-    font: 500 10.5px/1 var(--font-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 13px;
+    line-height: 1;
   }
   .card-plate {
     position: relative;
@@ -116,11 +113,45 @@ const no = String(index + 1).padStart(2, '0');
     transform: translateY(-5px);
   }
   .card-name {
-    font: 700 clamp(1.5rem, 1.3rem + 0.8vw, 2rem)/1 var(--font-sans);
-    letter-spacing: -0.035em;
+    font: 650 clamp(1.5rem, 1.3rem + 0.8vw, 2rem)/1.05 var(--font-sans);
+    letter-spacing: -0.01em;
   }
   .featured .card-name {
     font-size: clamp(2rem, 1.5rem + 1.6vw, 3rem);
+  }
+  @media (min-width: 1100px) {
+    .featured .card-plate {
+      height: auto;
+      flex: 1;
+      min-height: clamp(380px, 32vw, 520px);
+    }
+    .featured .card-body {
+      flex: none;
+    }
+  }
+  /* Горизонтальная карточка: демо слева, описание справа */
+  @media (min-width: 640px) {
+    .wide .card-link {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      grid-template-rows: auto 1fr;
+    }
+    .wide .card-h {
+      grid-column: 1 / -1;
+    }
+    .wide .card-plate {
+      height: 100%;
+      min-height: 260px;
+      border-bottom: 0;
+      border-right: 1px solid var(--line);
+    }
+    .wide .card-body {
+      align-content: center;
+      padding: 20px 20px 24px;
+    }
+    .wide .card-body :global(.card-icon) {
+      margin: 0 0 -4px -8px;
+    }
   }
   .card-short {
     color: var(--muted);

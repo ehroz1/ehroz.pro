@@ -25,10 +25,9 @@ const c = CONTACTS;
       <h2>{tr(lang, 'menu.apps')}</h2>
       <ul>
         {
-          apps.map((a, i) => (
+          apps.map((a) => (
             <li>
               <a href={path(lang, a.slug)}>
-                <span>{String(i + 1).padStart(2, '0')}</span>
                 {a.name}
               </a>
             </li>
@@ -130,9 +129,8 @@ const c = CONTACTS;
   h2 {
     margin-bottom: 12px;
     color: var(--faint);
-    font: 500 10.5px/1 var(--font-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 13px;
+    line-height: 1;
   }
   ul {
     display: grid;
@@ -161,8 +159,7 @@ const c = CONTACTS;
     gap: 16px;
     padding: 14px 0;
     color: var(--faint);
-    font: 500 10.5px/1.4 var(--font-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-size: 13px;
+    line-height: 1.4;
   }
 </style>

@@ -4,7 +4,6 @@ import type { Lang } from '../content/apps';
 import { tr, path, asset, PRODUCTION_ORIGIN, SITE_NAME, SEARCH_VERIFICATION } from '../i18n';
 import MenuBar from '../components/MenuBar.astro';
 import Dock from '../components/Dock.astro';
-import Spotlight from '../components/Spotlight.astro';
 import PageFrame from '../components/PageFrame.astro';
 import Consent from '../components/Consent.astro';
 import Analytics from '@vercel/analytics/astro';
@@ -97,14 +96,13 @@ const vars = [
     <meta name="twitter:image:alt" content={imageAlt} />
     <link rel="sitemap" href={asset('sitemap-index.xml')} />
     <script is:inline>
-      // Тема (auto | dark | light) и отключённые анимации — до первой отрисовки
+      // Тема (auto | dark | light) до первой отрисовки
       (function () {
         var p = 'auto';
         try { p = localStorage.getItem('theme') || 'auto'; } catch (e) {}
         var d = document.documentElement;
         d.setAttribute('data-theme-pref', p);
         if (p !== 'auto') d.setAttribute('data-theme', p);
-        try { if (localStorage.getItem('motion') === 'reduce') d.setAttribute('data-motion', 'reduce'); } catch (e) {}
       })();
     </script>
     {jsonld && <script type="application/ld+json" set:html={JSON.stringify(jsonld)} />}
@@ -117,7 +115,6 @@ const vars = [
     </main>
     <PageFrame />
     <Dock lang={lang} current={slug} />
-    <Spotlight lang={lang} />
     {/* Vercel Web Analytics: без cookies, согласие не требуется; только на боевом домене. */}
     {site.origin === PRODUCTION_ORIGIN && <Analytics />}
     {analyticsEnabled() && site.origin === PRODUCTION_ORIGIN && <Consent lang={lang} />}

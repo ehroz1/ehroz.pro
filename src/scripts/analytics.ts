@@ -5,7 +5,7 @@
  *   написать, заказать сайт);
  *   outbound_click — уход на внешний сайт; internal_click — переход по сайту (откуда и куда);
  *   scroll_depth (25/50/75/90), read_complete — дочитывание;
- *   search — запросы в поиске (⌘K); language_switch; page_not_found; js_error.
+ *   language_switch; page_not_found; js_error.
  */
 type W = Window & { dataLayer?: unknown[]; gtag?: (...a: unknown[]) => void; ym?: ((...a: unknown[]) => void) & { a?: unknown[]; l?: number } };
 const w = window as W;
@@ -102,17 +102,6 @@ addEventListener('scroll', () => {
     if (m === 90 && Date.now() - t0 > 15000) track('read_complete', { page: slug });
   }
 }, { passive: true });
-
-// ── Поиск (⌘K) ──────────────────────────────────────────
-const input = document.querySelector<HTMLInputElement>('#spotlight input');
-let timer = 0;
-input?.addEventListener('input', () => {
-  clearTimeout(timer);
-  timer = window.setTimeout(() => {
-    const q = input.value.trim();
-    if (q.length > 1) track('search', { search_term: q.slice(0, 100), results: document.querySelectorAll('#spot-list [role="option"]').length });
-  }, 1200);
-});
 
 // ── Ошибки ──────────────────────────────────────────────
 if (document.querySelector('[data-spy="404"]')) track('page_not_found', { path: location.pathname, referrer: document.referrer });
