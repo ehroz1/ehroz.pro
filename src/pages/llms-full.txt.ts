@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { apps } from '../content/apps';
+import '../lib/downloads';
 import type { Lang } from '../content/apps';
 import { PLATFORM, STATUS, path, pick, tr } from '../i18n';
 
