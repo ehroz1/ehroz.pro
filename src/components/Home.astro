@@ -46,13 +46,14 @@ const stats = [
     <div class="hero-grid bleed">
       <div class="hero-main">
         <h1 class="hero-title" id="hero-title" data-reveal>
+          <span class="hero-name">{tr(lang, 'hero.name')}</span>
           {ru ? 'Небольшие инструменты.' : 'Small tools.'}<br />
           {ru ? 'Одна ' : 'One '}<span class="hl">{ru ? 'мастерская' : 'workshop'}</span>.
         </h1>
         <p class="hero-lead" data-reveal>
           {ru
-            ? 'Конвертеры, работа с картинками, видео и речью, утилиты для Mac и расширения для браузера. Делаю их сам, пользуюсь каждый день — и каталог постоянно пополняется.'
-            : 'Converters, tools for images, video and speech, Mac utilities and browser extensions. I make them myself, use them every day — and the catalogue keeps growing.'}
+            ? 'Я Эхроз (Ehroz), дизайнер и разработчик из Астаны. Конвертеры, работа с картинками, видео и речью, утилиты для Mac и расширения для браузера. Делаю их сам, пользуюсь каждый день — и каталог постоянно пополняется.'
+            : 'I’m Ehroz (Эхроз), a designer and developer from Astana. Converters, tools for images, video and speech, Mac utilities and browser extensions. I make them myself, use them every day — and the catalogue keeps growing.'}
         </p>
         <div class="hero-cta" data-reveal>
           <a class="btn btn-primary" href="#apps"><Icon name="arrow" />{tr(lang, 'hero.cta')}</a>
@@ -175,6 +176,14 @@ const stats = [
     font-weight: 700;
     line-height: 0.98;
     letter-spacing: -0.045em;
+  }
+  .hero-name {
+    display: block;
+    margin-bottom: 18px;
+    color: var(--muted);
+    font: 500 13px/1.2 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
   .hero-lead {
     max-width: 640px;
