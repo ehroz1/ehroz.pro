@@ -43,11 +43,13 @@ export const CONTACTS = {
 };
 
 const S = {
-  'meta.title': { ru: 'Ehroz — небольшие инструменты, которые экономят время', en: 'Ehroz — small tools that save time' },
+  // Имя в двух написаниях — чтобы сайт находили и по «Эхроз», и по «Ehroz».
+  'meta.title': { ru: 'Эхроз (Ehroz) — инструменты, которые экономят время', en: 'Ehroz (Эхроз) — small tools that save time' },
   'meta.description': {
-    ru: 'Приложения и инструменты Ehroz для macOS, Windows и веба: Morfus, Morfu, Pachaq, Sukhan, BLA-БЛА, Picta и radius.',
-    en: 'Apps and tools by Ehroz for macOS, Windows and the web: Morfus, Morfu, Pachaq, Sukhan, BLA-БЛА, Picta and radius.',
+    ru: 'Эхроз (Ehroz) — дизайнер и разработчик из Астаны. Приложения для macOS, Windows и веба: Morfus, Morfu, Pachaq, Sukhan, BLA-БЛА, Picta и radius.',
+    en: 'Ehroz (Эхроз) — designer and developer from Astana. Apps for macOS, Windows and the web: Morfus, Morfu, Pachaq, Sukhan, BLA-БЛА, Picta, radius.',
   },
+  'hero.name': { ru: 'Эхроз · Ehroz', en: 'Ehroz · Эхроз' },
   'hero.eyebrow': { ru: 'дизайнер и разработчик · Астана', en: 'designer & developer · Astana' },
   'hero.title1': { ru: 'Ehroz.', en: 'Ehroz.' },
   'hero.title2': { ru: 'Небольшие инструменты,', en: 'Small tools' },
@@ -122,7 +124,8 @@ const S = {
   'nf.text': { ru: 'Похоже, ссылка устарела. Загляните в Dock.', en: 'Looks like the link is outdated. Check the Dock.' },
   'nf.apps': { ru: 'Все приложения', en: 'All apps' },
   'nf.home': { ru: 'На главную', en: 'Home' },
-  'about.page.title': { ru: 'Об Ehroz — дизайнер и разработчик из Астаны', en: 'About Ehroz — designer & developer from Astana' },
+  'about.page.title': { ru: 'Эхроз (Ehroz) — дизайнер и разработчик из Астаны', en: 'Ehroz (Эхроз) — designer & developer from Astana' },
+  'about.page.heading': { ru: 'Эхроз (Ehroz)', en: 'Ehroz (Эхроз)' },
   'about.page.desc': {
     ru: 'Эхроз — дизайнер и разработчик из Астаны. Делает небольшие приложения для macOS, Windows и браузера и сайты под задачи бизнеса.',
     en: 'Ehroz is a designer and developer from Astana who makes small apps for macOS, Windows and the browser, and websites for businesses.',
