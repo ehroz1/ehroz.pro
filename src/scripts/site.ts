@@ -232,12 +232,6 @@ if (spot) {
   });
 }
 
-// Клик по иконке приложения — «прыжок», как при запуске
-$$('.dock-item a[data-app-link]').forEach((a) =>
-  a.addEventListener('click', () => {
-    if (!reduced) a.parentElement?.classList.add('bounce');
-  }),
-);
 
 /* ── View Transitions: иконка «перелетает» со страницы на страницу ── */
 function markIcon(slug: string, el: HTMLElement | null) {
