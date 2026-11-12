@@ -3,7 +3,6 @@ import '../styles/global.css';
 import type { Lang } from '../content/apps';
 import { tr, path, asset, PRODUCTION_ORIGIN, SITE_NAME, SEARCH_VERIFICATION } from '../i18n';
 import MenuBar from '../components/MenuBar.astro';
-import Dock from '../components/Dock.astro';
 import Spotlight from '../components/Spotlight.astro';
 import PageFrame from '../components/PageFrame.astro';
 import Consent from '../components/Consent.astro';
@@ -127,7 +126,6 @@ const vars = [
       <slot />
     </main>
     <PageFrame />
-    <Dock lang={lang} current={slug} />
     <Spotlight lang={lang} />
     {/* Vercel Web Analytics: без cookies, согласие не требуется; только на боевом домене. */}
     {site.origin === PRODUCTION_ORIGIN && <Analytics />}
