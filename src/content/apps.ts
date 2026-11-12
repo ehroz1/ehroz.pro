@@ -220,9 +220,9 @@ export const apps: App[] = [
     tint: { dark: '#6E8BFF', light: '#2F4FE6' },
     kind: t('Сжатие картинок', 'Image compression'),
     links: [
-      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_aarch64.dmg', label: t('Mac — Apple Silicon', 'Mac — Apple Silicon') },
-      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64.dmg', label: t('Mac — Intel', 'Mac — Intel') },
-      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64-setup.exe', label: t('Скачать для Windows', 'Download for Windows') },
+      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-arm64.dmg', label: t('Mac — Apple Silicon', 'Mac — Apple Silicon') },
+      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-intel.dmg', label: t('Mac — Intel', 'Mac — Intel') },
+      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-Setup.exe', label: t('Скачать для Windows', 'Download for Windows') },
     ],
     features: [
       {
