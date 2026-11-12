@@ -211,15 +211,19 @@ export const apps: App[] = [
     ),
     audience: t('Веб-разработчикам, контент-менеджерам и всем, кто выкладывает картинки на сайт.', 'Web developers, content managers and anyone publishing images online.'),
     platforms: ['macos', 'windows'],
-    status: 'beta',
-    updated: '2026-10-27',
-    version: '0.1.1',
+    status: 'ready',
+    updated: '2026-11-12',
+    version: '0.1.2',
     accent: '#3a55f0',
     onAccent: '#ffffff',
     glow: ['#4fa8ff', '#3b5bff', '#5a2fd6'],
     tint: { dark: '#6E8BFF', light: '#2F4FE6' },
     kind: t('Сжатие картинок', 'Image compression'),
-    links: [{ kind: 'releases', href: 'https://github.com/ehroz1/pachaq-releases/releases', label: t('Страница релизов', 'Releases page') }],
+    links: [
+      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_aarch64.dmg', label: t('Mac — Apple Silicon', 'Mac — Apple Silicon') },
+      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64.dmg', label: t('Mac — Intel', 'Mac — Intel') },
+      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64-setup.exe', label: t('Скачать для Windows', 'Download for Windows') },
+    ],
     features: [
       {
         scene: 'pachaq-drop',
@@ -243,7 +247,7 @@ export const apps: App[] = [
       },
     ],
     steps: [
-      t('Скачайте установщик для Mac или Windows со страницы релизов.', 'Download the installer for Mac or Windows from the releases page.'),
+      t('Скачайте установщик: .dmg для Mac (Apple Silicon или Intel) или .exe для Windows.', 'Download the installer: a .dmg for Mac (Apple Silicon or Intel) or an .exe for Windows.'),
       t('Выберите формат и обрезку в верхней панели.', 'Choose the format and crop in the top bar.'),
       t('Перетащите картинки или папку — сжатые файлы появятся рядом.', 'Drop images or a folder — compressed files appear next to them.'),
     ],
