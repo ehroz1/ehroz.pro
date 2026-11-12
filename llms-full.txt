@@ -152,9 +152,9 @@ Yes, Pachaq offers an update on launch when a new version is out.
 - macOS 11 or later — Apple Silicon and Intel
 - Windows 10 and 11
 
-- Mac — Apple Silicon: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_aarch64.dmg
-- Mac — Intel: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64.dmg
-- Download for Windows: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64-setup.exe
+- Mac — Apple Silicon: https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-arm64.dmg
+- Mac — Intel: https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-intel.dmg
+- Download for Windows: https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-Setup.exe
 
 ## Sukhan — Auto captions for Reels, TikTok and Shorts
 
@@ -739,9 +739,9 @@ JPEG, PNG, WebP, HEIC/HEIF и TIFF. На Windows для HEIC нужно расш
 - macOS 11 и новее — Apple Silicon и Intel
 - Windows 10 и 11
 
-- Mac — Apple Silicon: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_aarch64.dmg
-- Mac — Intel: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64.dmg
-- Скачать для Windows: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64-setup.exe
+- Mac — Apple Silicon: https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-arm64.dmg
+- Mac — Intel: https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-intel.dmg
+- Скачать для Windows: https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-Setup.exe
 
 ## Sukhan — Автосубтитры для Reels, TikTok и Shorts
 
