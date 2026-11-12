@@ -110,7 +110,7 @@ Yes: ⌃⌥C converts the clipboard contents and puts them back.
 ## Pachaq — Image compression and cropping for the web
 
 URL: https://ehroz1.github.io/ehroz.pro/en/pachaq/
-Platforms: macOS, Windows · Status: Coming soon · Version: 0.1.1 · Updated: 2026-10-27
+Platforms: macOS, Windows · Status: Available · Version: 0.1.2 · Updated: 2026-11-12
 
 Drop images, get light WebP, JPEG and PNG.
 
@@ -129,7 +129,7 @@ Web developers, content managers and anyone publishing images online.
 
 ### How it works
 
-1. Download the installer for Mac or Windows from the releases page.
+1. Download the installer: a .dmg for Mac (Apple Silicon or Intel) or an .exe for Windows.
 2. Choose the format and crop in the top bar.
 3. Drop images or a folder — compressed files appear next to them.
 
@@ -152,7 +152,9 @@ Yes, Pachaq offers an update on launch when a new version is out.
 - macOS 11 or later — Apple Silicon and Intel
 - Windows 10 and 11
 
-- Releases page: https://github.com/ehroz1/pachaq-releases/releases
+- Mac — Apple Silicon: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_aarch64.dmg
+- Mac — Intel: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64.dmg
+- Download for Windows: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64-setup.exe
 
 ## Sukhan — Auto captions for Reels, TikTok and Shorts
 
@@ -695,7 +697,7 @@ Morfu — панель в строке меню на Swift. Morfus — след�
 ## Pachaq — Сжатие и обрезка картинок для сайтов
 
 URL: https://ehroz1.github.io/ehroz.pro/pachaq/
-Платформы: macOS, Windows · Статус: Скоро релиз · Версия: 0.1.1 · Обновлено: 2026-10-27
+Платформы: macOS, Windows · Статус: Готово · Версия: 0.1.2 · Обновлено: 2026-11-12
 
 Перетащите картинки — получите лёгкие WebP, JPEG и PNG.
 
@@ -714,7 +716,7 @@ Pachaq сжимает и обрезает изображения для сайт
 
 ### Как это работает
 
-1. Скачайте установщик для Mac или Windows со страницы релизов.
+1. Скачайте установщик: .dmg для Mac (Apple Silicon или Intel) или .exe для Windows.
 2. Выберите формат и обрезку в верхней панели.
 3. Перетащите картинки или папку — сжатые файлы появятся рядом.
 
@@ -737,7 +739,9 @@ JPEG, PNG, WebP, HEIC/HEIF и TIFF. На Windows для HEIC нужно расш
 - macOS 11 и новее — Apple Silicon и Intel
 - Windows 10 и 11
 
-- Страница релизов: https://github.com/ehroz1/pachaq-releases/releases
+- Mac — Apple Silicon: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_aarch64.dmg
+- Mac — Intel: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64.dmg
+- Скачать для Windows: https://github.com/ehroz1/pachaq-releases/releases/download/v0.1.2/Pachaq_0.1.2_x64-setup.exe
 
 ## Sukhan — Автосубтитры для Reels, TikTok и Shorts
 

@@ -8,7 +8,7 @@ Contacts: Telegram @hhrrzz1 (https://t.me/hhrrzz1), email ehrozbekisharifzoda@gm
 
 - [Morfus](https://ehroz1.github.io/ehroz.pro/en/morfus/): Radial file converter for macOS. macOS; status: Available, version 0.2.2. Russian: https://ehroz1.github.io/ehroz.pro/morfus/
 - [Morfu](https://ehroz1.github.io/ehroz.pro/en/morfu/): Menu bar converter for macOS. macOS; status: Available, version 3.3. Russian: https://ehroz1.github.io/ehroz.pro/morfu/
-- [Pachaq](https://ehroz1.github.io/ehroz.pro/en/pachaq/): Image compression and cropping for the web. macOS, Windows; status: Coming soon, version 0.1.1. Russian: https://ehroz1.github.io/ehroz.pro/pachaq/
+- [Pachaq](https://ehroz1.github.io/ehroz.pro/en/pachaq/): Image compression and cropping for the web. macOS, Windows; status: Available, version 0.1.2. Russian: https://ehroz1.github.io/ehroz.pro/pachaq/
 - [Sukhan](https://ehroz1.github.io/ehroz.pro/en/sukhan/): Auto captions for Reels, TikTok and Shorts. macOS; status: In development. Russian: https://ehroz1.github.io/ehroz.pro/sukhan/
 - [radius](https://ehroz1.github.io/ehroz.pro/en/radius/): Local background removal on Mac. macOS; status: In development. Russian: https://ehroz1.github.io/ehroz.pro/radius/
 - [BLA-БЛА](https://ehroz1.github.io/ehroz.pro/en/bla-bla/): Audio & video transcription in the browser. Web; status: Available. Russian: https://ehroz1.github.io/ehroz.pro/bla-bla/
