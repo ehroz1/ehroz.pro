@@ -33,6 +33,7 @@ const sources = {
   'bla-bla': render(frame(`<image x="232" y="226" width="560" height="580" xlink:href="${await dataUri('bla-logo.svg', 'image/svg+xml')}"/>`, '#ffffff')),
   radius: await readFile(new URL('radius.png', SRC)).catch(() => null),
   padbridge: await readFile(new URL('padbridge.png', SRC)),
+  padplus: await readFile(new URL('padplus.png', SRC)),
   'moss-pocket': await readFile(new URL('moss-pocket.png', SRC)),
   peecube: await readFile(new URL('peecube.png', SRC)),
   snowpuff: await readFile(new URL('snowpuff.png', SRC)),

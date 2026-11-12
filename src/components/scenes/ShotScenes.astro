@@ -1,0 +1,84 @@
+---
+// Сцены Pad+ и скриншоты radius: настоящие снимки окон приложений (public/shots) и схема трекпада.
+// Скриншоты — из README и docs репозиториев приложений.
+import Scene from './Scene.astro';
+import { asset } from '../../i18n';
+
+interface Props { id: string; lang: 'ru' | 'en'; label: string }
+const { id, lang, label } = Astro.props;
+const ru = lang === 'ru';
+
+const shots: Record<string, { file: string; w: number; h: number }> = {
+  'padplus-settings': { file: 'padplus-settings.webp', w: 1600, h: 917 },
+  'padplus-welcome': { file: 'padplus-welcome.webp', w: 1100, h: 835 },
+  'padplus-installer': { file: 'padplus-installer.webp', w: 1080, h: 760 },
+  'radius-main': { file: 'radius-main.webp', w: 1400, h: 925 },
+};
+const shot = shots[id];
+---
+
+{
+  shot && (
+    <Scene id={id} w={shot.w} h={shot.h} label={label} bg="none">
+      <img src={asset(`shots/${shot.file}`)} width={shot.w} height={shot.h} alt="" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover" />
+    </Scene>
+  )
+}
+
+{
+  id === 'padplus-pad' && (
+    <Scene id={id} w={800} h={560} label={label}>
+      <div class="pp">
+        <div class="pp-pad">
+          <i class="pp-edge pp-r"></i>
+          <i class="pp-edge pp-l"></i>
+          <i class="pp-edge pp-t"></i>
+          <i class="pp-edge pp-b"></i>
+          <span class="pp-lbl pp-lr">{ru ? 'Прокрутка' : 'Scroll'}</span>
+          <span class="pp-lbl pp-ll">{ru ? 'Громкость' : 'Volume'}</span>
+          <span class="pp-corner pp-ct">{ru ? 'Копировать' : 'Copy'}</span>
+          <span class="pp-corner pp-cb">{ru ? 'Вставить' : 'Paste'}</span>
+          <div class="pp-hand">
+            <b></b><b></b><b></b><b></b><b></b>
+          </div>
+          <span class="pp-cap">{ru ? 'Тап пятью пальцами — история буфера' : 'Five-finger tap — clipboard history'}</span>
+        </div>
+      </div>
+    </Scene>
+  )
+}
+
+<style>
+  .pp { position: absolute; inset: 0; display: grid; place-items: center; }
+  .pp-pad {
+    position: relative; width: 620px; height: 400px; border-radius: 34px;
+    background: linear-gradient(160deg, #2b2e36, #1c1e24); border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    color: #e9ebf5; font: 500 15px/1 -apple-system, 'SF Pro Text', system-ui, sans-serif;
+  }
+  .pp-edge { position: absolute; background: rgba(110, 139, 255, 0.28); border-radius: 12px; }
+  .pp-r { right: 10px; top: 56px; bottom: 56px; width: 26px; background: rgba(110, 139, 255, 0.55); animation: pp-pulse 2.6s ease-in-out infinite; }
+  .pp-l { left: 10px; top: 56px; bottom: 56px; width: 14px; }
+  .pp-t { top: 10px; left: 56px; right: 56px; height: 14px; }
+  .pp-b { bottom: 10px; left: 56px; right: 56px; height: 14px; }
+  .pp-lbl { position: absolute; top: 50%; font-size: 12px; letter-spacing: 0.04em; opacity: 0.75; white-space: nowrap; }
+  .pp-lr { right: 44px; transform: translateY(-50%); }
+  .pp-ll { left: 36px; transform: translateY(-50%); }
+  .pp-corner {
+    position: absolute; right: 18px; padding: 8px 12px; border-radius: 10px; font-size: 12px;
+    background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .pp-ct { top: 16px; }
+  .pp-cb { bottom: 16px; }
+  .pp-hand { position: absolute; left: 50%; top: 46%; transform: translate(-50%, -50%); display: flex; gap: 14px; align-items: flex-end; }
+  .pp-hand b { width: 30px; height: 30px; border-radius: 50%; background: rgba(110, 139, 255, 0.85); box-shadow: 0 0 0 6px rgba(110, 139, 255, 0.2); animation: pp-tap 2.6s ease-in-out infinite; }
+  .pp-hand b:nth-child(1) { margin-bottom: -10px; }
+  .pp-hand b:nth-child(2) { margin-bottom: 8px; }
+  .pp-hand b:nth-child(3) { margin-bottom: 14px; }
+  .pp-hand b:nth-child(4) { margin-bottom: 8px; }
+  .pp-hand b:nth-child(5) { margin-bottom: -10px; }
+  .pp-cap { position: absolute; left: 50%; bottom: 62px; transform: translateX(-50%); font-size: 13px; opacity: 0.8; white-space: nowrap; }
+  @keyframes pp-pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; } }
+  @keyframes pp-tap { 0%, 60%, 100% { transform: scale(1); } 70% { transform: scale(0.82); } 80% { transform: scale(1.04); } }
+  @media (prefers-reduced-motion: reduce) { .pp-r, .pp-hand b { animation: none; } }
+</style>

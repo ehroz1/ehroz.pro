@@ -6,6 +6,8 @@
  * можно взять 'generic', он рисует подпись фичи на фоне акцентного цвета.
  */
 
+import type { InstallKind } from './install';
+
 export type Lang = 'ru' | 'en';
 export type L = { ru: string; en: string };
 export type Platform = 'macos' | 'windows' | 'web' | 'extension';
@@ -25,6 +27,8 @@ export interface AppLink {
   /** Имя файла в последнем релизе GitHub (когда в нём есть версия). При сборке href заменяется
    *  на прямую ссылку на этот файл — см. src/lib/downloads.ts. */
   asset?: RegExp;
+  /** Инструкция первого запуска: после нажатия на ссылку откроется окно (см. src/content/install.ts). */
+  install?: InstallKind;
 }
 
 export interface App {
@@ -78,14 +82,14 @@ export const apps: App[] = [
     platforms: ['macos'],
     status: 'ready',
     updated: '2026-10-27',
-    version: '0.2.2',
+    version: '0.2.3',
     accent: '#f5f5f7',
     onAccent: '#1d1d1f',
     glow: ['#5b4a9c', '#2b6f8c', '#9c4a6b'],
     tint: { dark: '#A99BFF', light: '#5B45E0' },
     kind: t('Радиальный конвертер', 'Radial converter'),
     links: [
-      { kind: 'download', href: 'https://github.com/ehroz1/morfus-releases/releases/latest', asset: /^Morfus-.*\.zip$/i, label: t('Скачать для Mac', 'Download for Mac') },
+      { kind: 'download', install: 'mac-zip', href: 'https://github.com/ehroz1/morfus-releases/releases/latest/download/Morfus.zip', label: t('Скачать для Mac', 'Download for Mac') },
       { kind: 'releases', href: 'https://github.com/ehroz1/morfus-releases/releases', label: t('Все версии', 'All releases') },
     ],
     features: [
@@ -163,7 +167,7 @@ export const apps: App[] = [
     tint: { dark: '#E4E4E8', light: '#2A2A2E' },
     kind: t('Конвертер в строке меню', 'Menu bar converter'),
     links: [
-      { kind: 'download', href: 'https://github.com/ehroz1/morfu-releases/releases/latest', asset: /^Morfu-.*\.zip$/i, label: t('Скачать для Mac', 'Download for Mac') },
+      { kind: 'download', install: 'mac-zip', href: 'https://github.com/ehroz1/morfu-releases/releases/latest/download/Morfu.zip', label: t('Скачать для Mac', 'Download for Mac') },
       { kind: 'releases', href: 'https://github.com/ehroz1/morfu-releases/releases', label: t('Все версии', 'All releases') },
     ],
     features: [
@@ -220,9 +224,9 @@ export const apps: App[] = [
     tint: { dark: '#6E8BFF', light: '#2F4FE6' },
     kind: t('Сжатие картинок', 'Image compression'),
     links: [
-      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-arm64.dmg', label: t('Mac — Apple Silicon', 'Mac — Apple Silicon') },
-      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-intel.dmg', label: t('Mac — Intel', 'Mac — Intel') },
-      { kind: 'download', href: 'https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-Setup.exe', label: t('Скачать для Windows', 'Download for Windows') },
+      { kind: 'download', install: 'mac', href: 'https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-arm64.dmg', label: t('Mac — Apple Silicon', 'Mac — Apple Silicon') },
+      { kind: 'download', install: 'mac', href: 'https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-intel.dmg', label: t('Mac — Intel', 'Mac — Intel') },
+      { kind: 'download', install: 'win', href: 'https://github.com/ehroz1/pachaq-releases/releases/latest/download/Pachaq-Setup.exe', label: t('Скачать для Windows', 'Download for Windows') },
     ],
     features: [
       {
@@ -314,44 +318,55 @@ export const apps: App[] = [
   {
     slug: 'radius',
     name: 'radius',
-    short: t('Локальное удаление фона на Mac', 'Local background removal on Mac'),
-    tagline: t('Фон убирается на вашем Mac, без загрузки в облако.', 'Backgrounds removed on your Mac, nothing uploaded.'),
+    short: t('Удаление фона с фото на Mac', 'Background removal for photos on Mac'),
+    tagline: t('Перетащи фото — получи PNG без фона. Локально, на видеокарте Mac.', 'Drop a photo, get a PNG with no background. Local, on your Mac’s GPU.'),
     about: t(
-      'radius — локальное удаление фона для macOS. Работает на модели BiRefNet HR-matting, переведённой в Core ML: на вход картинка 2048×2048, на выходе — альфа-маска с мягкими краями. В разработке; модели уже опубликованы.',
-      'radius is local background removal for macOS. It runs BiRefNet HR-matting converted to Core ML: a 2048×2048 image in, a soft-edged alpha matte out. In development; the models are already published.',
+      'radius убирает фон с фото моделью BiRefNet прямо на Mac: примерно 1,5 секунды на снимок, без интернета и подписок. Режим «Максимум» (HR-matting, 2048 px) сохраняет волосы, мех, фату и стекло. Результат можно перетащить в Telegram, Figma или Finder, поправить кистью и заменить фон.',
+      'radius removes the background from photos with the BiRefNet model right on your Mac: about 1.5 seconds per image, no internet and no subscription. Maximum mode (HR-matting, 2048 px) keeps hair, fur, veils and glass. Drag the result into Telegram, Figma or Finder, touch it up with a brush and swap the background.',
     ),
-    audience: t('Дизайнерам и всем, кто вырезает объекты с фото.', 'Designers and anyone cutting objects out of photos.'),
+    audience: t('Дизайнерам, продавцам и всем, кто вырезает объекты с фото.', 'Designers, sellers and anyone cutting objects out of photos.'),
     platforms: ['macos'],
-    status: 'dev',
-    updated: '2026-10-27',
+    status: 'ready',
+    updated: '2026-11-12',
+    version: '1.1.0',
     accent: '#d4d7e0',
     onAccent: '#101114',
     glow: ['#3a3f4b', '#7c8394', '#1b1e25'],
     tint: { dark: '#AEB6C6', light: '#4F5868' },
     kind: t('Удаление фона', 'Background removal'),
-    links: [{ kind: 'github', href: 'https://github.com/ehroz1/radius-models', label: t('Модели Core ML', 'Core ML models') }],
+    links: [
+      { kind: 'download', install: 'mac', href: 'https://github.com/ehroz1/radius-releases/releases/latest/download/radius.dmg', label: t('Скачать для Mac', 'Download for Mac') },
+      { kind: 'github', href: 'https://github.com/ehroz1/radius-models', label: t('Модели Core ML', 'Core ML models') },
+    ],
     features: [
+      {
+        scene: 'radius-main',
+        title: t('Бросил фото — забрал PNG', 'Drop a photo, take a PNG'),
+        text: t('Фото, несколько или целая папка — в окно, на значок в Dock или ⌘V. Фон результата — прозрачный, белый, чёрный или свой цвет, «Сравнить» показывает оригинал.', 'A photo, several or a whole folder — into the window, onto the Dock icon, or ⌘V. The result background is transparent, white, black or your colour, and Compare shows the original.'),
+      },
       {
         scene: 'radius-matte',
         title: t('Мягкая альфа-маска', 'A soft alpha matte'),
-        text: t('Не «ножницы», а маска с прозрачностью от 0 до 1: волосы и полупрозрачные края остаются живыми.', 'Not a hard cut but a matte from 0 to 1: hair and translucent edges stay natural.'),
+        text: t('Не «ножницы», а маска с прозрачностью от 0 до 1. «Быстро» — 1024 px, ~1,5 с на большинство фото; «Максимум» — HR-matting 2048 px для волос и меха, ~7 с.', 'Not a hard cut but a matte from 0 to 1. Fast is 1024 px, ~1.5 s for most photos; Maximum is 2048 px HR-matting for hair and fur, ~7 s.'),
       },
       {
         scene: 'radius-local',
         title: t('Только на устройстве', 'On-device only'),
-        text: t('Core ML в формате fp16: нормализация и сигмоида встроены в модель, фото не покидает Mac.', 'Core ML in fp16 with normalisation and sigmoid baked in — the photo never leaves your Mac.'),
+        text: t('Модель работает на видеокарте Mac, фото не покидает компьютер. Модели (~410 МБ каждая) скачиваются при первом запуске и проверяются по SHA-256.', 'The model runs on your Mac’s GPU and the photo never leaves your computer. Models (~410 MB each) download on first launch and are checked by SHA-256.'),
       },
     ],
     steps: [
-      t('Откройте фото.', 'Open a photo.'),
-      t('Модель строит альфа-маску 2048×2048.', 'The model builds a 2048×2048 alpha matte.'),
-      t('Сохраните PNG с прозрачным фоном.', 'Save a PNG with a transparent background.'),
+      t('Установите radius и пройдите короткое знакомство — модель скачается за это время.', 'Install radius and go through the short intro — the model downloads meanwhile.'),
+      t('Перетащите фото в окно, на значок в Dock или вставьте ⌘V.', 'Drop a photo onto the window or the Dock icon, or paste with ⌘V.'),
+      t('Заберите результат: перетащите картинку в Telegram, Figma или Finder, ⌘C или ⌘S.', 'Take the result: drag the image into Telegram, Figma or Finder, ⌘C or ⌘S.'),
     ],
     faq: [
-      { q: t('Какая модель внутри?', 'Which model is inside?'), a: t('BiRefNet HR-matting (MIT), переведённая в Core ML через coremltools 9.', 'BiRefNet HR-matting (MIT), converted to Core ML with coremltools 9.') },
-      { q: t('Когда выйдет приложение?', 'When does the app ship?'), a: t('Пока в разработке. Модели уже лежат в открытом репозитории.', 'Still in development. The models are already in a public repository.') },
+      { q: t('Какая модель внутри?', 'Which model is inside?'), a: t('BiRefNet (MIT) в формате Core ML: общая для режима «Быстро» и HR-matting для «Максимум».', 'BiRefNet (MIT) in Core ML: the general model for Fast and HR-matting for Maximum.') },
+      { q: t('Если модель ошиблась?', 'What if the model gets it wrong?'), a: t('Нажмите B или дважды кликните по результату — кисть «Стереть / Вернуть» с отменой и масштабом поправит край за пару мазков.', 'Press B or double-click the result — an Erase / Restore brush with undo and zoom fixes an edge in a couple of strokes.') },
+      { q: t('Можно без открытия окна?', 'Can I skip the window?'), a: t('Да: правый клик по фото в Finder → «Быстрые действия» → «Удалить фон (radius)». Рядом появится имя-radius.png.', 'Yes: right-click a photo in Finder → Quick Actions → Remove Background (radius). A name-radius.png appears beside it.') },
+      { q: t('Обновляется сам?', 'Does it update itself?'), a: t('Да: раз в полчаса проверяет релизы, сверяет SHA-256 и подпись, ставит с откатом при ошибке и перезапускается.', 'Yes: every half hour it checks releases, verifies SHA-256 and signature, installs with rollback on error and restarts.') },
     ],
-    requirements: [t('macOS', 'macOS'), t('Core ML', 'Core ML')],
+    requirements: [t('macOS 15 и новее', 'macOS 15 or later'), t('Apple Silicon', 'Apple Silicon'), t('Для режима «Максимум» нужно около 10 ГБ памяти', 'Maximum mode needs about 10 GB of memory')],
   },
   {
     slug: 'bla-bla',
@@ -463,20 +478,20 @@ export const apps: App[] = [
     short: t('Геймпад в любой игре на Mac', 'A gamepad in any game on Mac'),
     tagline: t('DualShock, DualSense, Xbox или Switch Pro — в любой игре, даже если она про геймпад не знает.', 'DualShock, DualSense, Xbox or Switch Pro — in any game, even one that knows nothing about gamepads.'),
     about: t(
-      'PadBridge превращает нажатия геймпада в клавиатуру и мышь. Работает в играх с itch.io и GOG, в браузерных играх, в Windows-играх через CrossOver, Whisky и Wine, в эмуляторах и обычных программах. Сам узнаёт игру и предлагает готовую раскладку по жанру, а профили переключаются под активное приложение.',
-      'PadBridge turns gamepad input into keyboard and mouse. It works in itch.io and GOG games, browser games, Windows games via CrossOver, Whisky and Wine, emulators and regular apps. It recognises the game, offers a ready layout for its genre and switches profiles for the active app.',
+      'PadBridge превращает нажатия геймпада в клавиатуру и мышь. Работает в играх с itch.io и GOG, в браузерных играх, в Windows-играх через CrossOver, Whisky и Wine, в эмуляторах и обычных программах. Сам узнаёт игру и предлагает готовую раскладку по жанру, а профили переключаются под активное приложение. Кнопка PS отключает эмуляцию там, где игра сама понимает геймпад, а Share + Options показывает подсказку поверх игры.',
+      'PadBridge turns gamepad input into keyboard and mouse. It works in itch.io and GOG games, browser games, Windows games via CrossOver, Whisky and Wine, emulators and regular apps. It recognises the game, offers a ready layout for its genre and switches profiles for the active app. The PS button turns emulation off where a game understands the gamepad itself, and Share + Options shows a hint over the game.',
     ),
     audience: t('Тем, кто играет на Mac и хочет держать в руках геймпад, а не клавиатуру.', 'Mac players who would rather hold a gamepad than a keyboard.'),
     platforms: ['macos'],
-    status: 'beta',
-    updated: '2026-10-28',
-    version: '0.4.0',
+    status: 'ready',
+    updated: '2026-11-12',
+    version: '0.5.0',
     accent: '#4FB4FF',
     onAccent: '#0E0E0F',
     glow: ['#2fc7ff', '#5b4bff', '#141a2e'],
     tint: { dark: '#4FB4FF', light: '#1A5F9E' },
     kind: t('Геймпад для Mac', 'Gamepad for Mac'),
-    links: [{ kind: 'contact', href: 'https://t.me/hhrrzz1', label: t('Узнать о выходе', 'Get notified') }],
+    links: [{ kind: 'download', install: 'mac', href: 'https://github.com/ehroz1/padbridge-releases/releases/latest/download/PadBridge.dmg', label: t('Скачать для Mac', 'Download for Mac') }],
     features: [
       {
         scene: 'padbridge-map',
@@ -507,9 +522,65 @@ export const apps: App[] = [
     faq: [
       { q: t('Какие геймпады подходят?', 'Which gamepads work?'), a: t('DualShock 4, DualSense, Xbox и Switch Pro — по USB и Bluetooth.', 'DualShock 4, DualSense, Xbox and Switch Pro — over USB and Bluetooth.') },
       { q: t('Зачем ему «Универсальный доступ»?', 'Why does it need Accessibility?'), a: t('Чтобы нажимать клавиши и двигать мышь за вас. Режим «Научить» хранит только счётчики клавиш, а не то, что вы печатаете.', 'To press keys and move the mouse for you. Learn mode stores only key counters, not what you type.') },
+      { q: t('Что делает кнопка PS?', 'What does the PS button do?'), a: t('Включает «геймпад напрямую»: игра сама читает геймпад, PadBridge отходит в сторону и запоминает это для игры.', 'It switches to direct gamepad mode: the game reads the gamepad itself, PadBridge steps aside and remembers that for the game.') },
+      { q: t('Обновляется сам?', 'Does it update itself?'), a: t('Да: раз в полчаса проверяет релизы, сверяет SHA-256 и подпись и ставит новую версию, когда геймпад не трогали 3 минуты — игра не прервётся.', 'Yes: every half hour it checks releases, verifies the SHA-256 and signature, and installs the new version once the gamepad has been idle for 3 minutes, so a game is never interrupted.') },
       { q: t('Работает с Windows-играми?', 'Does it work with Windows games?'), a: t('Да, PadBridge узнаёт .exe в Wine, CrossOver и Whisky и включает для них свой профиль.', 'Yes, PadBridge detects .exe files in Wine, CrossOver and Whisky and switches to their profile.') },
     ],
     requirements: [t('macOS 13 Ventura и новее', 'macOS 13 Ventura or later'), t('Геймпад DualShock 4, DualSense, Xbox или Switch Pro', 'A DualShock 4, DualSense, Xbox or Switch Pro controller')],
+  },
+  {
+    slug: 'padplus',
+    name: 'Pad+',
+    short: t('Новые жесты для трекпада Mac', 'New gestures for the Mac trackpad'),
+    tagline: t('Края — ползунки, углы — кнопки, ладонь — история буфера.', 'Edges are sliders, corners are buttons, a five-finger tap is your clipboard history.'),
+    about: t(
+      'Pad+ добавляет трекпаду жесты, которых нет в macOS. Палец вдоль правого края листает страницу с инерцией, вдоль остальных кромок меняет громкость с тактильным щелчком, клик в углах копирует и вставляет, а тап пятью пальцами открывает историю буфера обмена. На любой жест можно назначить действие, сочетание клавиш или запуск программы.',
+      'Pad+ adds trackpad gestures macOS doesn’t have. A finger along the right edge scrolls with inertia, along the other edges it changes volume with a haptic click, clicking the corners copies and pastes, and a five-finger tap opens the clipboard history. Any gesture can run an action, a shortcut or an app.',
+    ),
+    audience: t('Тем, кто работает на Mac с трекпадом и хочет больше жестов без лишних программ.', 'Mac users who live on the trackpad and want more gestures without extra clutter.'),
+    platforms: ['macos'],
+    status: 'ready',
+    updated: '2026-11-12',
+    version: '1.1.0',
+    accent: '#5B7CFF',
+    onAccent: '#0E0E0F',
+    glow: ['#2b3fd6', '#5b7cff', '#12141d'],
+    tint: { dark: '#7F9BFF', light: '#2340C8' },
+    kind: t('Жесты трекпада', 'Trackpad gestures'),
+    links: [{ kind: 'download', install: 'mac', href: 'https://github.com/ehroz1/padplus-releases/releases/latest/download/PadPlus.dmg', label: t('Скачать для Mac', 'Download for Mac') }],
+    features: [
+      {
+        scene: 'padplus-pad',
+        title: t('Края — ползунки, углы — кнопки', 'Edges are sliders, corners are buttons'),
+        text: t('Палец вдоль правого края — прокрутка с инерцией, вдоль левого, верхнего и нижнего — громкость с щелчком на каждом шаге. Клик в правом верхнем углу — копировать, в правом нижнем — вставить. Тап пятью пальцами — история буфера: текст, картинки, файлы.', 'A finger along the right edge scrolls with inertia; along the left, top and bottom edges it sets volume with a click on every step. Click the top-right corner to copy, the bottom-right to paste. A five-finger tap opens the clipboard history: text, images, files.'),
+      },
+      {
+        scene: 'padplus-settings',
+        title: t('Каждый жест — под себя', 'Every gesture, your way'),
+        text: t('На жест — встроенное действие, своё сочетание клавиш или запуск программы. Длительность тапа, размеры углов и полос, шаг громкости и скорость прокрутки настраиваются на живой схеме трекпада, где видны пальцы. В играх и графических редакторах Pad+ не трогает трекпад.', 'Give a gesture a built-in action, your own shortcut or an app to launch. Tap length, corner and strip sizes, volume step and scroll speed are tuned on a live trackpad diagram that shows your fingers. In games and graphics editors Pad+ leaves the trackpad alone.'),
+      },
+      {
+        scene: 'padplus-welcome',
+        title: t('Знакомство с первого запуска', 'An intro from the first launch'),
+        text: t('Короткая презентация покажет жесты, а у каждого в настройках есть анимация: наведите на строку — слева покажется, как его делать. Тема, цвет подсветки, три значка для строки меню и подсказка на экране, какой жест сработал.', 'A short intro walks through the gestures, and each one has an animation in settings: hover a row and the left side shows how to do it. Theme, highlight colour, three menu-bar icons and an on-screen hint of which gesture fired.'),
+      },
+      {
+        scene: 'padplus-installer',
+        title: t('Установка и обновления', 'Install and updates'),
+        text: t('Образ с окном установки: перетащите Pad+ в «Программы». Дальше он обновляется сам: раз в четыре часа сверяет SHA-256 и подпись. Настройки дублируются в файл и переживают переустановку; перенос на другой Mac — «Экспорт / Импорт».', 'A disk image with an install window: drag Pad+ to Applications. After that it updates itself, checking the SHA-256 and signature every four hours. Settings are mirrored to a file and survive reinstalling; move to another Mac with Export / Import.'),
+      },
+    ],
+    steps: [
+      t('Скачайте Pad+ и перетащите его в «Программы».', 'Download Pad+ and drag it to Applications.'),
+      t('Разрешите «Универсальный доступ» — без него жесты видны, но клавиши и окна Pad+ не трогает.', 'Allow Accessibility — without it Pad+ sees gestures but can’t press keys or move windows.'),
+      t('Проведите пальцем вдоль правого края трекпада — страница прокрутится.', 'Slide a finger along the right edge of the trackpad — the page scrolls.'),
+    ],
+    faq: [
+      { q: t('Зачем нужен «Универсальный доступ»?', 'Why does it need Accessibility?'), a: t('Чтобы нажимать клавиши, кликать в углах и двигать окна за вас. Без него Pad+ видит жесты, но ничего не делает.', 'To press keys, click corners and move windows for you. Without it Pad+ sees the gestures but can’t act on them.') },
+      { q: t('Какие жесты есть?', 'Which gestures are there?'), a: t('Края трекпада, клики в углах, тапы тремя, четырьмя и пятью пальцами, двойной тап тремя (фиксация перетаскивания), тип-тап, свайпы по кромкам и жесты окон: свайп двумя пальцами по заголовку ставит окно на половину экрана.', 'Trackpad edges, corner clicks, three-, four- and five-finger taps, a double three-finger tap (drag lock), type-tap, edge swipes and window gestures: a two-finger swipe on a title bar snaps the window to half the screen.') },
+      { q: t('Что будет с настройками, если удалить Pad+?', 'What happens to my settings if I delete Pad+?'), a: t('Они лежат в файле ~/Library/Application Support/Ehroz/Pad+/settings.json и остаются. После повторной установки Pad+ всё восстановит сам.', 'They live in ~/Library/Application Support/Ehroz/Pad+/settings.json and stay. After reinstalling, Pad+ restores everything.') },
+    ],
+    requirements: [t('macOS 13 Ventura и новее', 'macOS 13 Ventura or later'), t('Apple Silicon и Intel', 'Apple Silicon and Intel'), t('Трекпад Apple', 'An Apple trackpad')],
   },
   {
     slug: 'moss-pocket',
@@ -580,9 +651,9 @@ export const apps: App[] = [
     tint: { dark: '#F0EAD6', light: '#3B3A35' },
     kind: t('Окно для ссылок', 'Link pop-up'),
     links: [
-      { kind: 'download', href: 'https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube.dmg', label: t('Скачать для Mac', 'Download for Mac') },
+      { kind: 'download', install: 'mac', href: 'https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube.dmg', label: t('Скачать для Mac', 'Download for Mac') },
       { kind: 'open', href: 'https://addons.mozilla.org/ru/firefox/addon/peecube/', label: t('Расширение для Firefox', 'Firefox extension') },
-      { kind: 'download', href: 'https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube-Chrome.zip', label: t('Расширение для Chrome', 'Chrome extension') },
+      { kind: 'download', install: 'chrome', href: 'https://github.com/ehroz1/peecube-releases/releases/latest/download/Peecube-Chrome.zip', label: t('Расширение для Chrome', 'Chrome extension') },
     ],
     features: [
       {
@@ -625,20 +696,23 @@ export const apps: App[] = [
     short: t('Видео или фото вместо веб-камеры', 'A video or photo instead of your webcam'),
     tagline: t('Сайты получают выбранное вами видео (по кругу) или фото вместо потока с веб-камеры.', 'Websites get the video (on a loop) or photo you choose instead of the webcam stream.'),
     about: t(
-      'ANY CAMERA — виртуальная камера в виде расширения браузера. Пока подмена включена, сайт видит одну камеру «ANY CAMERA» и получает ваш файл; микрофон остаётся настоящим. Без файла сайт получает тестовую картинку — удобно проверять, как сервис работает с камерой. Одна кодовая база для Firefox на компьютере и на Android, есть версия для Chrome на Mac.',
-      'ANY CAMERA is a virtual camera as a browser extension. While it’s on, a site sees one camera called “ANY CAMERA” and gets your file; the microphone stays real. With no file, the site gets a test card — handy for checking how a service handles the camera. One codebase for Firefox on desktop and Android, plus a Chrome version for Mac.',
+      'ANY CAMERA — виртуальная камера в виде расширения браузера. Пока подмена включена, сайт видит одну камеру «ANY CAMERA» и получает ваш файл; микрофон остаётся настоящим. Без файла сайт получает тестовую картинку — удобно проверять, как сервис работает с камерой. Один код для Chrome и Firefox: на Mac в Chrome, Arc, Brave и Edge она ставится установщиком .pkg и обновляется сама, в Firefox — на компьютере и на Android.',
+      'ANY CAMERA is a virtual camera as a browser extension. While it’s on, a site sees one camera called “ANY CAMERA” and gets your file; the microphone stays real. With no file, the site gets a test card — handy for checking how a service handles the camera. One codebase for Chrome and Firefox: on Mac it installs into Chrome, Arc, Brave and Edge with a .pkg and updates itself; Firefox works on desktop and Android.',
     ),
     audience: t('Разработчикам и тестировщикам сервисов с камерой, а ещё тем, кто ведёт демо и презентации.', 'Developers and testers of camera features, and anyone running demos and presentations.'),
     platforms: ['extension'],
-    status: 'beta',
-    updated: '2026-10-28',
-    version: '1.0.0',
+    status: 'ready',
+    updated: '2026-11-12',
+    version: '1.1.0',
     accent: '#FF7AA8',
     onAccent: '#0E0E0F',
     glow: ['#5b3cf0', '#8b2fe0', '#f0407f'],
     tint: { dark: '#FF7AA8', light: '#B0245A' },
     kind: t('Виртуальная камера', 'Virtual camera'),
-    links: [{ kind: 'contact', href: 'https://t.me/hhrrzz1', label: t('Получить расширение', 'Get the extension') }],
+    links: [
+      { kind: 'download', install: 'pkg', href: 'https://github.com/ehroz1/any-camera-releases/releases/latest/download/ANY-CAMERA.pkg', label: t('Скачать для Mac', 'Download for Mac') },
+      { kind: 'download', install: 'chrome', href: 'https://github.com/ehroz1/any-camera-releases/releases/latest/download/ANY-CAMERA.zip', label: t('Расширение (.zip)', 'Extension (.zip)') },
+    ],
     features: [
       {
         scene: 'anycam-call',
@@ -657,7 +731,7 @@ export const apps: App[] = [
       },
     ],
     steps: [
-      t('Установите расширение в Firefox или Chrome.', 'Install the extension in Firefox or Chrome.'),
+      t('Скачайте установщик .pkg для Mac (Chrome, Arc, Brave, Edge) или поставьте расширение в Firefox.', 'Download the .pkg for Mac (Chrome, Arc, Brave, Edge) or install the extension in Firefox.'),
       t('Нажмите значок ANY CAMERA → «Выбрать видео или фото».', 'Click the ANY CAMERA icon → “Choose video or photo”.'),
       t('Включите подмену и включите камеру на сайте.', 'Turn the replacement on and enable the camera on the site.'),
     ],
@@ -674,22 +748,22 @@ export const apps: App[] = [
     short: t('Тёплый снег на рабочем столе Mac и Windows', 'Cozy snow on your Mac and Windows desktop'),
     tagline: t('Снег падает, оседает на окнах и Dock и разлетается от курсора.', 'Snow falls, settles on your windows and Dock, and scatters from your cursor.'),
     about: t(
-      'Snowpuff — снегопад поверх рабочего стола macOS и Windows. Снег копится сугробами на окнах, Dock и панели задач, под окнами растут сосульки, активное окно светится тёплым светом. Можно подуть в микрофон, и снег разлетится. На созвонах снег прячется сам, а новые версии ставятся автоматически.',
-      'Snowpuff is a snowfall on top of your macOS or Windows desktop. Snow piles up on windows, the Dock and the taskbar, icicles grow under windows, and the active window glows warm. Blow into the microphone and the snow flies away. It hides itself during calls and installs new versions automatically.',
+      'Snowpuff — снегопад поверх рабочего стола macOS и Windows. Снег копится сугробами на окнах, Dock и панели задач, под окнами растут сосульки, активное окно светится тёплым светом. Есть режимы дождя и осенних листьев. Можно подуть в микрофон, и снег разлетится. На созвонах снег прячется сам, а новые версии ставятся автоматически.',
+      'Snowpuff is a snowfall on top of your macOS or Windows desktop. Snow piles up on windows, the Dock and the taskbar, icicles grow under windows, and the active window glows warm. There are rain and autumn-leaves modes too. Blow into the microphone and the snow flies away. It hides itself during calls and installs new versions automatically.',
     ),
     audience: t('Всем, кому зимой хочется уюта прямо на экране, без лишних окон и настроек.', 'Anyone who wants a cozy winter right on their screen, with no extra windows or setup.'),
     platforms: ['macos', 'windows'],
     status: 'ready',
-    updated: '2026-10-31',
-    version: '1.1.0',
+    updated: '2026-11-12',
+    version: '1.2.0',
     accent: '#FFD27E',
     onAccent: '#1E110B',
     glow: ['#7D4426', '#E98F3E', '#2A170E'],
     tint: { dark: '#FFD27E', light: '#9C3A28' },
     kind: t('Снег на рабочем столе', 'Desktop snow'),
     links: [
-      { kind: 'download', href: 'https://github.com/ehroz1/Snowpuff/releases/latest/download/Snowpuff.dmg', label: t('Скачать для Mac', 'Download for Mac') },
-      { kind: 'download', href: 'https://github.com/ehroz1/Snowpuff/releases/latest/download/Snowpuff-Setup.exe', label: t('Скачать для Windows', 'Download for Windows') },
+      { kind: 'download', install: 'mac', href: 'https://github.com/ehroz1/Snowpuff/releases/latest/download/Snowpuff.dmg', label: t('Скачать для Mac', 'Download for Mac') },
+      { kind: 'download', install: 'win', href: 'https://github.com/ehroz1/Snowpuff/releases/latest/download/Snowpuff-Setup.exe', label: t('Скачать для Windows', 'Download for Windows') },
       { kind: 'github', href: 'https://github.com/ehroz1/Snowpuff', label: t('GitHub', 'GitHub') },
     ],
     features: [

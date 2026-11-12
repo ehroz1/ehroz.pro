@@ -5,7 +5,7 @@
 
 ## Состав витрины
 
-- **На витрине 11 продуктов:** Morfus, Morfu, Pachaq, Sukhan, radius, BLA-БЛА, Picta, PadBridge, Moss Pocket,
+- **На витрине 13 продуктов:** Morfus, Morfu, Pachaq, Sukhan, radius, BLA-БЛА, Picta, PadBridge, Pad+, Moss Pocket,
   Peecube, ANY CAMERA. Таблица — в `projects.md`.
 - **Не присланы и не добавлены:** Androooo / Androoo, Local Conv. Добавить: новый объект в `src/content/apps.ts`
   + иконка в `assets-src/icons/<slug>.png` + `npm run icons`. Для сцен можно временно указать `scene: 'generic'`.
@@ -147,3 +147,19 @@ IntersectionObserver, код в `src/scripts/motion.ts`. «Появление п
 - В публичном репозитории `ehroz1/quote-de` в файле `main.py` открыто лежит токен Telegram-бота.
   Его стоит отозвать у @BotFather (`/revoke`) и убрать из истории репозитория. Я его никуда не копировал
   и ничего в том репозитории не менял.
+
+## Скачивание и первый запуск (2026-11-12)
+
+- **Имена файлов для скачивания — без версии.** В каждом `*-releases` лежит workflow `.github/workflows/stable-names.yml`:
+  при публикации релиза он добавляет рядом с версионными файлами копии `PadPlus.dmg`, `PadBridge.dmg`, `radius.dmg`,
+  `ANY-CAMERA.pkg` / `.zip`, `Morfus.zip`, `Morfu.zip`, `Pachaq-*.dmg` / `Pachaq-Setup.exe`. Версионные файлы остаются —
+  их читает автообновление (`latest.json`, `appcast.xml`). Кнопки на сайте ведут на `releases/latest/download/<имя без версии>`.
+  Новое приложение: скопируйте workflow из любого `*-releases` и поправьте строки `исходное-VER.ext=новое.ext`.
+- **Окно с инструкцией после нажатия «Скачать»** (приложения без подписи Apple и Windows): тексты — `src/content/install.ts`,
+  тип инструкции задаётся в `links[].install` (`mac`, `mac-zip`, `pkg`, `win`, `chrome`) в `src/content/apps.ts`.
+  Скачивание не прерывается: окно открывается поверх страницы.
+- **Pad+ — новое приложение** (репозиторий `padplus`, 1.1.0). Сцены: настоящие скриншоты из `docs/` репозитория
+  (`public/shots`, `ShotScenes.astro`) и нарисованная схема трекпада. **Проверить текст.**
+- **PadBridge 0.5.0, ANY CAMERA 1.1.0, radius 1.1.0** вышли в публичные релизы — на витрине «Доступно», кнопки скачивания.
+  Страница radius переписана по README (раньше были только модели). Иконки radius и Pad+ — из репозиториев приложений.
+- **Sukhan** — релизов пока нет (в `sukhan-releases` только README), остаётся «В разработке». Репозиторий `tx` пуст.

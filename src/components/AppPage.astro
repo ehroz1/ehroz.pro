@@ -10,6 +10,7 @@ import AppWindow from './AppWindow.astro';
 import Icon from './Icon.astro';
 import Footer from './Footer.astro';
 import SceneSwitch from './scenes/SceneSwitch.astro';
+import { INSTALL } from '../content/install';
 
 interface Props {
   app: App;
@@ -20,6 +21,8 @@ const ru = lang === 'ru';
 const idx = apps.findIndex((a) => a.slug === app.slug);
 const no = String(idx + 1).padStart(2, '0');
 const others = apps.map((a, i) => ({ a, i })).filter(({ a }) => a.slug !== app.slug);
+const fill = (v: string) => v.replaceAll('{app}', app.name);
+const guides = app.links.map((l, i) => ({ i, g: l.install ? INSTALL[l.install] : null, l })).filter((x) => x.g);
 const linkIcon = { download: 'download', open: 'external', github: 'github', releases: 'external', contact: 'telegram' } as const;
 // Бренд в конце заголовка, если влезает в ~60 символов (столько показывает выдача).
 const baseTitle = `${app.name} — ${pick(lang, app.short)}`;
@@ -74,7 +77,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
                 /* Прямая ссылка на файл релиза — скачивание начинается в этой же вкладке, без перехода на GitHub. */
                 const direct = /\/releases\/(latest\/)?download\//.test(l.href);
                 return (
-                  <a class:list={['btn', { 'btn-primary': i === 0 }]} href={l.href} {...(direct ? { download: '' } : { target: '_blank', rel: 'noopener' })} data-kind={l.kind}>
+                  <a class:list={['btn', { 'btn-primary': i === 0 }]} href={l.href} {...(direct ? { download: '' } : { target: '_blank', rel: 'noopener' })} data-kind={l.kind} data-install={l.install ? i : undefined}>
                     <Icon name={linkIcon[l.kind]} />
                     {pick(lang, l.label)}
                   </a>
@@ -208,7 +211,70 @@ const pad = (v: number) => String(v).padStart(2, '0');
     </section>
     <Footer lang={lang} />
   </div>
+  {
+    guides.length > 0 && (
+      <dialog class="install" id="install-dialog" aria-labelledby="install-title">
+        <form method="dialog" class="install-x"><button class="install-close" aria-label={ru ? 'Закрыть' : 'Close'}>×</button></form>
+        {guides.map(({ i, g, l }) => (
+          <section class="install-body" data-install-for={i} hidden>
+            <p class="install-kicker">{app.name} · {ru ? 'первый запуск' : 'first launch'}</p>
+            <h2 class="install-title" id={`install-title-${i}`}>{fill(pick(lang, g!.title))}</h2>
+            <p class="install-lead">{fill(pick(lang, g!.lead))}</p>
+            <ol class="install-steps">
+              {g!.steps.map((st) => <li>{fill(pick(lang, st))}</li>)}
+            </ol>
+            {g!.note && <p class="install-note">{fill(pick(lang, g!.note))}</p>}
+            {g!.command && (
+              <div class="install-cmd">
+                {g!.commandNote && <p>{fill(pick(lang, g!.commandNote))}</p>}
+                <div class="cmd-row"><code>{fill(g!.command)}</code><button type="button" class="btn cmd-copy" data-copy={fill(g!.command)} data-done={ru ? 'Скопировано' : 'Copied'}>{ru ? 'Копировать' : 'Copy'}</button></div>
+              </div>
+            )}
+            <div class="install-foot">
+              <button type="button" class="btn btn-primary" data-install-close>{ru ? 'Понятно' : 'Got it'}</button>
+              <a class="install-again" href={l.href} download>{ru ? 'Загрузка не началась? Скачать ещё раз' : 'Download didn’t start? Try again'}</a>
+            </div>
+          </section>
+        ))}
+      </dialog>
+    )
+  }
 </Layout>
+
+<script>
+  // Окно с инструкцией первого запуска: скачивание идёт как обычно, окно открывается поверх страницы.
+  const dlg = document.getElementById('install-dialog') as HTMLDialogElement | null;
+  if (dlg) {
+    document.addEventListener('click', (e) => {
+      const a = (e.target as Element).closest('a[data-install]') as HTMLElement | null;
+      if (!a) return;
+      const id = a.dataset.install!;
+      dlg.querySelectorAll<HTMLElement>('[data-install-for]').forEach((el) => {
+        const on = el.dataset.installFor === id;
+        el.hidden = !on;
+        if (on) dlg.setAttribute('aria-labelledby', `install-title-${id}`);
+      });
+      if (!dlg.open) dlg.showModal();
+      dlg.querySelector<HTMLElement>('[data-install-for]:not([hidden]) [data-install-close]')?.focus();
+    });
+    dlg.addEventListener('click', (e) => {
+      const el = e.target as Element;
+      if (el === dlg || el.closest('[data-install-close]')) dlg.close();
+    });
+    dlg.addEventListener('click', async (e) => {
+      const b = (e.target as Element).closest<HTMLButtonElement>('[data-copy]');
+      if (!b) return;
+      try {
+        await navigator.clipboard.writeText(b.dataset.copy!);
+        const old = b.textContent;
+        b.textContent = b.dataset.done!;
+        setTimeout(() => (b.textContent = old), 1800);
+      } catch {
+        /* буфер недоступен — команду можно выделить вручную */
+      }
+    });
+  }
+</script>
 
 <style>
   .ap-hero {
@@ -603,5 +669,52 @@ const pad = (v: number) => String(v).padStart(2, '0');
     .c-cta {
       justify-content: flex-end;
     }
+  }
+
+  /* ── Окно с инструкцией первого запуска ── */
+  .install {
+    width: min(560px, calc(100vw - 32px));
+    max-height: calc(100dvh - 32px);
+    margin: auto;
+    padding: 0;
+    overflow: auto;
+    border: 1px solid var(--line-strong);
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  }
+  .install::backdrop {
+    background: rgba(8, 9, 10, 0.72);
+    backdrop-filter: blur(3px);
+  }
+  .install-x { position: absolute; top: 10px; right: 10px; margin: 0; }
+  .install-close {
+    width: 36px; height: 36px; border: 1px solid var(--line); background: transparent; color: var(--text);
+    font: 300 22px/1 var(--font-mono); cursor: pointer;
+  }
+  .install-close:hover { border-color: var(--text); background: var(--hover); }
+  .install-body { padding: 28px 28px 24px; }
+  .install-body[hidden] { display: none; }
+  .install-kicker { margin: 0 0 10px; font: 500 11px/1.4 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted, var(--text)); opacity: 0.7; }
+  .install-title { margin: 0 40px 12px 0; font: 600 24px/1.15 var(--font-display); letter-spacing: -0.01em; }
+  .install-lead { margin: 0 0 16px; font-size: 15px; line-height: 1.5; opacity: 0.85; }
+  .install-steps { margin: 0 0 14px; padding: 0; list-style: none; counter-reset: st; display: grid; gap: 10px; }
+  .install-steps li { counter-increment: st; position: relative; padding-left: 36px; font-size: 15px; line-height: 1.45; }
+  .install-steps li::before {
+    content: counter(st); position: absolute; left: 0; top: 0; width: 24px; height: 24px; display: grid; place-items: center;
+    border: 1px solid var(--line-strong); font: 500 12px/1 var(--font-mono);
+  }
+  .install-note { margin: 0 0 14px; font-size: 13.5px; line-height: 1.5; opacity: 0.7; }
+  .install-cmd { margin: 0 0 16px; padding: 12px; border: 1px solid var(--line); }
+  .install-cmd p { margin: 0 0 8px; font-size: 13.5px; line-height: 1.45; opacity: 0.8; }
+  .cmd-row { display: flex; gap: 8px; align-items: stretch; }
+  .cmd-row code { flex: 1; min-width: 0; padding: 10px; white-space: pre-wrap; word-break: break-all; background: var(--hover); font: 400 12.5px/1.4 var(--font-mono); }
+  .cmd-copy { height: auto; padding: 0 12px; }
+  .install-foot { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; margin-top: 8px; }
+  .install-again { font-size: 13px; color: inherit; opacity: 0.7; text-underline-offset: 3px; }
+  .install-again:hover { opacity: 1; }
+  @media (max-width: 520px) {
+    .install-body { padding: 24px 18px 20px; }
+    .install-title { font-size: 21px; }
   }
 </style>
