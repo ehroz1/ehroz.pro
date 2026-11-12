@@ -7,7 +7,7 @@ Author: Ehroz (Эхроз), designer & developer, Astana, Kazakhstan.
 ## Morfus — Radial file converter for macOS
 
 URL: https://ehroz1.github.io/ehroz.pro/en/morfus/
-Platforms: macOS · Status: Available · Version: 0.2.2 · Updated: 2026-10-27
+Platforms: macOS · Status: Available · Version: 0.2.3 · Updated: 2026-10-27
 
 Grab a file, press a key, drop it on a sector.
 
@@ -55,7 +55,7 @@ Yes: Help → Transfer settings saves everything into a single .morfus file.
 - Apple Silicon and Intel
 - Free ffmpeg, Ghostscript and qpdf for video, audio and PDF (installed from Morfus)
 
-- Download for Mac: https://github.com/ehroz1/morfus-releases/releases/download/v0.2.3/Morfus-0.2.3.zip
+- Download for Mac: https://github.com/ehroz1/morfus-releases/releases/latest/download/Morfus.zip
 - All releases: https://github.com/ehroz1/morfus-releases/releases
 
 ## Morfu — Menu bar converter for macOS
@@ -104,7 +104,7 @@ Yes: ⌃⌥C converts the clipboard contents and puts them back.
 - Homebrew with ffmpeg, webp, mupdf-tools, potrace, pngquant
 - Media Engine on Apple Silicon makes video 2–3× faster
 
-- Download for Mac: https://github.com/ehroz1/morfu-releases/releases/download/v3.3/Morfu-3.3.zip
+- Download for Mac: https://github.com/ehroz1/morfu-releases/releases/latest/download/Morfu.zip
 - All releases: https://github.com/ehroz1/morfu-releases/releases
 
 ## Pachaq — Image compression and cropping for the web
@@ -203,45 +203,56 @@ In the macOS Keychain, not in files.
 
 - Watch for releases: https://github.com/ehroz1/sukhan-releases
 
-## radius — Local background removal on Mac
+## radius — Background removal for photos on Mac
 
 URL: https://ehroz1.github.io/ehroz.pro/en/radius/
-Platforms: macOS · Status: In development · Updated: 2026-10-27
+Platforms: macOS · Status: Available · Version: 1.1.0 · Updated: 2026-11-12
 
-Backgrounds removed on your Mac, nothing uploaded.
+Drop a photo, get a PNG with no background. Local, on your Mac’s GPU.
 
-radius is local background removal for macOS. It runs BiRefNet HR-matting converted to Core ML: a 2048×2048 image in, a soft-edged alpha matte out. In development; the models are already published.
+radius removes the background from photos with the BiRefNet model right on your Mac: about 1.5 seconds per image, no internet and no subscription. Maximum mode (HR-matting, 2048 px) keeps hair, fur, veils and glass. Drag the result into Telegram, Figma or Finder, touch it up with a brush and swap the background.
 
 ### Who it’s for
 
-Designers and anyone cutting objects out of photos.
+Designers, sellers and anyone cutting objects out of photos.
 
 ### What it does
 
-- **A soft alpha matte.** Not a hard cut but a matte from 0 to 1: hair and translucent edges stay natural.
-- **On-device only.** Core ML in fp16 with normalisation and sigmoid baked in — the photo never leaves your Mac.
+- **Drop a photo, take a PNG.** A photo, several or a whole folder — into the window, onto the Dock icon, or ⌘V. The result background is transparent, white, black or your colour, and Compare shows the original.
+- **A soft alpha matte.** Not a hard cut but a matte from 0 to 1. Fast is 1024 px, ~1.5 s for most photos; Maximum is 2048 px HR-matting for hair and fur, ~7 s.
+- **On-device only.** The model runs on your Mac’s GPU and the photo never leaves your computer. Models (~410 MB each) download on first launch and are checked by SHA-256.
 
 ### How it works
 
-1. Open a photo.
-2. The model builds a 2048×2048 alpha matte.
-3. Save a PNG with a transparent background.
+1. Install radius and go through the short intro — the model downloads meanwhile.
+2. Drop a photo onto the window or the Dock icon, or paste with ⌘V.
+3. Take the result: drag the image into Telegram, Figma or Finder, ⌘C or ⌘S.
 
 ### FAQ
 
 **Which model is inside?**
 
-BiRefNet HR-matting (MIT), converted to Core ML with coremltools 9.
+BiRefNet (MIT) in Core ML: the general model for Fast and HR-matting for Maximum.
 
-**When does the app ship?**
+**What if the model gets it wrong?**
 
-Still in development. The models are already in a public repository.
+Press B or double-click the result — an Erase / Restore brush with undo and zoom fixes an edge in a couple of strokes.
+
+**Can I skip the window?**
+
+Yes: right-click a photo in Finder → Quick Actions → Remove Background (radius). A name-radius.png appears beside it.
+
+**Does it update itself?**
+
+Yes: every half hour it checks releases, verifies SHA-256 and signature, installs with rollback on error and restarts.
 
 ### Requirements
 
-- macOS
-- Core ML
+- macOS 15 or later
+- Apple Silicon
+- Maximum mode needs about 10 GB of memory
 
+- Download for Mac: https://github.com/ehroz1/radius-releases/releases/latest/download/radius.dmg
 - Core ML models: https://github.com/ehroz1/radius-models
 
 ## BLA-БЛА — Audio & video transcription in the browser
@@ -341,11 +352,11 @@ Yes, it’s a PWA: Install in the browser or Add to Home Screen on a phone.
 ## PadBridge — A gamepad in any game on Mac
 
 URL: https://ehroz1.github.io/ehroz.pro/en/padbridge/
-Platforms: macOS · Status: Coming soon · Version: 0.4.0 · Updated: 2026-10-28
+Platforms: macOS · Status: Available · Version: 0.5.0 · Updated: 2026-11-12
 
 DualShock, DualSense, Xbox or Switch Pro — in any game, even one that knows nothing about gamepads.
 
-PadBridge turns gamepad input into keyboard and mouse. It works in itch.io and GOG games, browser games, Windows games via CrossOver, Whisky and Wine, emulators and regular apps. It recognises the game, offers a ready layout for its genre and switches profiles for the active app.
+PadBridge turns gamepad input into keyboard and mouse. It works in itch.io and GOG games, browser games, Windows games via CrossOver, Whisky and Wine, emulators and regular apps. It recognises the game, offers a ready layout for its genre and switches profiles for the active app. The PS button turns emulation off where a game understands the gamepad itself, and Share + Options shows a hint over the game.
 
 ### Who it’s for
 
@@ -374,6 +385,14 @@ DualShock 4, DualSense, Xbox and Switch Pro — over USB and Bluetooth.
 
 To press keys and move the mouse for you. Learn mode stores only key counters, not what you type.
 
+**What does the PS button do?**
+
+It switches to direct gamepad mode: the game reads the gamepad itself, PadBridge steps aside and remembers that for the game.
+
+**Does it update itself?**
+
+Yes: every half hour it checks releases, verifies the SHA-256 and signature, and installs the new version once the gamepad has been idle for 3 minutes, so a game is never interrupted.
+
 **Does it work with Windows games?**
 
 Yes, PadBridge detects .exe files in Wine, CrossOver and Whisky and switches to their profile.
@@ -383,7 +402,55 @@ Yes, PadBridge detects .exe files in Wine, CrossOver and Whisky and switches to 
 - macOS 13 Ventura or later
 - A DualShock 4, DualSense, Xbox or Switch Pro controller
 
-- Get notified: https://t.me/hhrrzz1
+- Download for Mac: https://github.com/ehroz1/padbridge-releases/releases/latest/download/PadBridge.dmg
+
+## Pad+ — New gestures for the Mac trackpad
+
+URL: https://ehroz1.github.io/ehroz.pro/en/padplus/
+Platforms: macOS · Status: Available · Version: 1.1.0 · Updated: 2026-11-12
+
+Edges are sliders, corners are buttons, a five-finger tap is your clipboard history.
+
+Pad+ adds trackpad gestures macOS doesn’t have. A finger along the right edge scrolls with inertia, along the other edges it changes volume with a haptic click, clicking the corners copies and pastes, and a five-finger tap opens the clipboard history. Any gesture can run an action, a shortcut or an app.
+
+### Who it’s for
+
+Mac users who live on the trackpad and want more gestures without extra clutter.
+
+### What it does
+
+- **Edges are sliders, corners are buttons.** A finger along the right edge scrolls with inertia; along the left, top and bottom edges it sets volume with a click on every step. Click the top-right corner to copy, the bottom-right to paste. A five-finger tap opens the clipboard history: text, images, files.
+- **Every gesture, your way.** Give a gesture a built-in action, your own shortcut or an app to launch. Tap length, corner and strip sizes, volume step and scroll speed are tuned on a live trackpad diagram that shows your fingers. In games and graphics editors Pad+ leaves the trackpad alone.
+- **An intro from the first launch.** A short intro walks through the gestures, and each one has an animation in settings: hover a row and the left side shows how to do it. Theme, highlight colour, three menu-bar icons and an on-screen hint of which gesture fired.
+- **Install and updates.** A disk image with an install window: drag Pad+ to Applications. After that it updates itself, checking the SHA-256 and signature every four hours. Settings are mirrored to a file and survive reinstalling; move to another Mac with Export / Import.
+
+### How it works
+
+1. Download Pad+ and drag it to Applications.
+2. Allow Accessibility — without it Pad+ sees gestures but can’t press keys or move windows.
+3. Slide a finger along the right edge of the trackpad — the page scrolls.
+
+### FAQ
+
+**Why does it need Accessibility?**
+
+To press keys, click corners and move windows for you. Without it Pad+ sees the gestures but can’t act on them.
+
+**Which gestures are there?**
+
+Trackpad edges, corner clicks, three-, four- and five-finger taps, a double three-finger tap (drag lock), type-tap, edge swipes and window gestures: a two-finger swipe on a title bar snaps the window to half the screen.
+
+**What happens to my settings if I delete Pad+?**
+
+They live in ~/Library/Application Support/Ehroz/Pad+/settings.json and stay. After reinstalling, Pad+ restores everything.
+
+### Requirements
+
+- macOS 13 Ventura or later
+- Apple Silicon and Intel
+- An Apple trackpad
+
+- Download for Mac: https://github.com/ehroz1/padplus-releases/releases/latest/download/PadPlus.dmg
 
 ## Moss Pocket — Your Downloads, right next to the Dock
 
@@ -487,11 +554,11 @@ By itself: every update is signed by the author, and Peecube checks that its fil
 ## ANY CAMERA — A video or photo instead of your webcam
 
 URL: https://ehroz1.github.io/ehroz.pro/en/any-camera/
-Platforms: Extension · Status: Coming soon · Version: 1.0.0 · Updated: 2026-10-28
+Platforms: Extension · Status: Available · Version: 1.1.0 · Updated: 2026-11-12
 
 Websites get the video (on a loop) or photo you choose instead of the webcam stream.
 
-ANY CAMERA is a virtual camera as a browser extension. While it’s on, a site sees one camera called “ANY CAMERA” and gets your file; the microphone stays real. With no file, the site gets a test card — handy for checking how a service handles the camera. One codebase for Firefox on desktop and Android, plus a Chrome version for Mac.
+ANY CAMERA is a virtual camera as a browser extension. While it’s on, a site sees one camera called “ANY CAMERA” and gets your file; the microphone stays real. With no file, the site gets a test card — handy for checking how a service handles the camera. One codebase for Chrome and Firefox: on Mac it installs into Chrome, Arc, Brave and Edge with a .pkg and updates itself; Firefox works on desktop and Android.
 
 ### Who it’s for
 
@@ -505,7 +572,7 @@ Developers and testers of camera features, and anyone running demos and presenta
 
 ### How it works
 
-1. Install the extension in Firefox or Chrome.
+1. Download the .pkg for Mac (Chrome, Arc, Brave, Edge) or install the extension in Firefox.
 2. Click the ANY CAMERA icon → “Choose video or photo”.
 3. Turn the replacement on and enable the camera on the site.
 
@@ -528,16 +595,17 @@ H.264 MP4 or WebM video and regular photos. HEVC and HEIC are best converted fir
 - Firefox 128+ (desktop or Android)
 - or Chrome 111+ on Mac
 
-- Get the extension: https://t.me/hhrrzz1
+- Download for Mac: https://github.com/ehroz1/any-camera-releases/releases/latest/download/ANY-CAMERA.pkg
+- Extension (.zip): https://github.com/ehroz1/any-camera-releases/releases/latest/download/ANY-CAMERA.zip
 
 ## Snowpuff — Cozy snow on your Mac and Windows desktop
 
 URL: https://ehroz1.github.io/ehroz.pro/en/snowpuff/
-Platforms: macOS, Windows · Status: Available · Version: 1.1.0 · Updated: 2026-10-31
+Platforms: macOS, Windows · Status: Available · Version: 1.2.0 · Updated: 2026-11-12
 
 Snow falls, settles on your windows and Dock, and scatters from your cursor.
 
-Snowpuff is a snowfall on top of your macOS or Windows desktop. Snow piles up on windows, the Dock and the taskbar, icicles grow under windows, and the active window glows warm. Blow into the microphone and the snow flies away. It hides itself during calls and installs new versions automatically.
+Snowpuff is a snowfall on top of your macOS or Windows desktop. Snow piles up on windows, the Dock and the taskbar, icicles grow under windows, and the active window glows warm. There are rain and autumn-leaves modes too. Blow into the microphone and the snow flies away. It hides itself during calls and installs new versions automatically.
 
 ### Who it’s for
 
@@ -594,7 +662,7 @@ Yes, under the MIT license. Snowpuff is based on Snowhush (MIT, © Mykhailo Bezr
 ## Morfus — Радиальный конвертер файлов для macOS
 
 URL: https://ehroz1.github.io/ehroz.pro/morfus/
-Платформы: macOS · Статус: Готово · Версия: 0.2.2 · Обновлено: 2026-10-27
+Платформы: macOS · Статус: Готово · Версия: 0.2.3 · Обновлено: 2026-10-27
 
 Зажми файл, нажми клавишу — брось в нужный сектор.
 
@@ -642,7 +710,7 @@ Morfus сам проверяет новые версии, в меню значк
 - Apple Silicon и Intel
 - Для видео, звука и PDF — бесплатные ffmpeg, Ghostscript, qpdf (ставятся из Morfus)
 
-- Скачать для Mac: https://github.com/ehroz1/morfus-releases/releases/download/v0.2.3/Morfus-0.2.3.zip
+- Скачать для Mac: https://github.com/ehroz1/morfus-releases/releases/latest/download/Morfus.zip
 - Все версии: https://github.com/ehroz1/morfus-releases/releases
 
 ## Morfu — Конвертер в строке меню macOS
@@ -691,7 +759,7 @@ Morfu — панель в строке меню на Swift. Morfus — след�
 - Homebrew и утилиты ffmpeg, webp, mupdf-tools, potrace, pngquant
 - Media Engine на Apple Silicon ускоряет видео в 2–3 раза
 
-- Скачать для Mac: https://github.com/ehroz1/morfu-releases/releases/download/v3.3/Morfu-3.3.zip
+- Скачать для Mac: https://github.com/ehroz1/morfu-releases/releases/latest/download/Morfu.zip
 - Все версии: https://github.com/ehroz1/morfu-releases/releases
 
 ## Pachaq — Сжатие и обрезка картинок для сайтов
@@ -790,45 +858,56 @@ Sukhan — мини-монтажка для субтитров. Распозна
 
 - Следить за релизами: https://github.com/ehroz1/sukhan-releases
 
-## radius — Локальное удаление фона на Mac
+## radius — Удаление фона с фото на Mac
 
 URL: https://ehroz1.github.io/ehroz.pro/radius/
-Платформы: macOS · Статус: В разработке · Обновлено: 2026-10-27
+Платформы: macOS · Статус: Готово · Версия: 1.1.0 · Обновлено: 2026-11-12
 
-Фон убирается на вашем Mac, без загрузки в облако.
+Перетащи фото — получи PNG без фона. Локально, на видеокарте Mac.
 
-radius — локальное удаление фона для macOS. Работает на модели BiRefNet HR-matting, переведённой в Core ML: на вход картинка 2048×2048, на выходе — альфа-маска с мягкими краями. В разработке; модели уже опубликованы.
+radius убирает фон с фото моделью BiRefNet прямо на Mac: примерно 1,5 секунды на снимок, без интернета и подписок. Режим «Максимум» (HR-matting, 2048 px) сохраняет волосы, мех, фату и стекло. Результат можно перетащить в Telegram, Figma или Finder, поправить кистью и заменить фон.
 
 ### Для кого
 
-Дизайнерам и всем, кто вырезает объекты с фото.
+Дизайнерам, продавцам и всем, кто вырезает объекты с фото.
 
 ### Что умеет
 
-- **Мягкая альфа-маска.** Не «ножницы», а маска с прозрачностью от 0 до 1: волосы и полупрозрачные края остаются живыми.
-- **Только на устройстве.** Core ML в формате fp16: нормализация и сигмоида встроены в модель, фото не покидает Mac.
+- **Бросил фото — забрал PNG.** Фото, несколько или целая папка — в окно, на значок в Dock или ⌘V. Фон результата — прозрачный, белый, чёрный или свой цвет, «Сравнить» показывает оригинал.
+- **Мягкая альфа-маска.** Не «ножницы», а маска с прозрачностью от 0 до 1. «Быстро» — 1024 px, ~1,5 с на большинство фото; «Максимум» — HR-matting 2048 px для волос и меха, ~7 с.
+- **Только на устройстве.** Модель работает на видеокарте Mac, фото не покидает компьютер. Модели (~410 МБ каждая) скачиваются при первом запуске и проверяются по SHA-256.
 
 ### Как это работает
 
-1. Откройте фото.
-2. Модель строит альфа-маску 2048×2048.
-3. Сохраните PNG с прозрачным фоном.
+1. Установите radius и пройдите короткое знакомство — модель скачается за это время.
+2. Перетащите фото в окно, на значок в Dock или вставьте ⌘V.
+3. Заберите результат: перетащите картинку в Telegram, Figma или Finder, ⌘C или ⌘S.
 
 ### Вопросы
 
 **Какая модель внутри?**
 
-BiRefNet HR-matting (MIT), переведённая в Core ML через coremltools 9.
+BiRefNet (MIT) в формате Core ML: общая для режима «Быстро» и HR-matting для «Максимум».
 
-**Когда выйдет приложение?**
+**Если модель ошиблась?**
 
-Пока в разработке. Модели уже лежат в открытом репозитории.
+Нажмите B или дважды кликните по результату — кисть «Стереть / Вернуть» с отменой и масштабом поправит край за пару мазков.
+
+**Можно без открытия окна?**
+
+Да: правый клик по фото в Finder → «Быстрые действия» → «Удалить фон (radius)». Рядом появится имя-radius.png.
+
+**Обновляется сам?**
+
+Да: раз в полчаса проверяет релизы, сверяет SHA-256 и подпись, ставит с откатом при ошибке и перезапускается.
 
 ### Требования
 
-- macOS
-- Core ML
+- macOS 15 и новее
+- Apple Silicon
+- Для режима «Максимум» нужно около 10 ГБ памяти
 
+- Скачать для Mac: https://github.com/ehroz1/radius-releases/releases/latest/download/radius.dmg
 - Модели Core ML: https://github.com/ehroz1/radius-models
 
 ## BLA-БЛА — Расшифровка аудио и видео в браузере
@@ -928,11 +1007,11 @@ Picta ищет бесплатные фото сразу по нескольки�
 ## PadBridge — Геймпад в любой игре на Mac
 
 URL: https://ehroz1.github.io/ehroz.pro/padbridge/
-Платформы: macOS · Статус: Скоро релиз · Версия: 0.4.0 · Обновлено: 2026-10-28
+Платформы: macOS · Статус: Готово · Версия: 0.5.0 · Обновлено: 2026-11-12
 
 DualShock, DualSense, Xbox или Switch Pro — в любой игре, даже если она про геймпад не знает.
 
-PadBridge превращает нажатия геймпада в клавиатуру и мышь. Работает в играх с itch.io и GOG, в браузерных играх, в Windows-играх через CrossOver, Whisky и Wine, в эмуляторах и обычных программах. Сам узнаёт игру и предлагает готовую раскладку по жанру, а профили переключаются под активное приложение.
+PadBridge превращает нажатия геймпада в клавиатуру и мышь. Работает в играх с itch.io и GOG, в браузерных играх, в Windows-играх через CrossOver, Whisky и Wine, в эмуляторах и обычных программах. Сам узнаёт игру и предлагает готовую раскладку по жанру, а профили переключаются под активное приложение. Кнопка PS отключает эмуляцию там, где игра сама понимает геймпад, а Share + Options показывает подсказку поверх игры.
 
 ### Для кого
 
@@ -961,6 +1040,14 @@ DualShock 4, DualSense, Xbox и Switch Pro — по USB и Bluetooth.
 
 Чтобы нажимать клавиши и двигать мышь за вас. Режим «Научить» хранит только счётчики клавиш, а не то, что вы печатаете.
 
+**Что делает кнопка PS?**
+
+Включает «геймпад напрямую»: игра сама читает геймпад, PadBridge отходит в сторону и запоминает это для игры.
+
+**Обновляется сам?**
+
+Да: раз в полчаса проверяет релизы, сверяет SHA-256 и подпись и ставит новую версию, когда геймпад не трогали 3 минуты — игра не прервётся.
+
 **Работает с Windows-играми?**
 
 Да, PadBridge узнаёт .exe в Wine, CrossOver и Whisky и включает для них свой профиль.
@@ -970,7 +1057,55 @@ DualShock 4, DualSense, Xbox и Switch Pro — по USB и Bluetooth.
 - macOS 13 Ventura и новее
 - Геймпад DualShock 4, DualSense, Xbox или Switch Pro
 
-- Узнать о выходе: https://t.me/hhrrzz1
+- Скачать для Mac: https://github.com/ehroz1/padbridge-releases/releases/latest/download/PadBridge.dmg
+
+## Pad+ — Новые жесты для трекпада Mac
+
+URL: https://ehroz1.github.io/ehroz.pro/padplus/
+Платформы: macOS · Статус: Готово · Версия: 1.1.0 · Обновлено: 2026-11-12
+
+Края — ползунки, углы — кнопки, ладонь — история буфера.
+
+Pad+ добавляет трекпаду жесты, которых нет в macOS. Палец вдоль правого края листает страницу с инерцией, вдоль остальных кромок меняет громкость с тактильным щелчком, клик в углах копирует и вставляет, а тап пятью пальцами открывает историю буфера обмена. На любой жест можно назначить действие, сочетание клавиш или запуск программы.
+
+### Для кого
+
+Тем, кто работает на Mac с трекпадом и хочет больше жестов без лишних программ.
+
+### Что умеет
+
+- **Края — ползунки, углы — кнопки.** Палец вдоль правого края — прокрутка с инерцией, вдоль левого, верхнего и нижнего — громкость с щелчком на каждом шаге. Клик в правом верхнем углу — копировать, в правом нижнем — вставить. Тап пятью пальцами — история буфера: текст, картинки, файлы.
+- **Каждый жест — под себя.** На жест — встроенное действие, своё сочетание клавиш или запуск программы. Длительность тапа, размеры углов и полос, шаг громкости и скорость прокрутки настраиваются на живой схеме трекпада, где видны пальцы. В играх и графических редакторах Pad+ не трогает трекпад.
+- **Знакомство с первого запуска.** Короткая презентация покажет жесты, а у каждого в настройках есть анимация: наведите на строку — слева покажется, как его делать. Тема, цвет подсветки, три значка для строки меню и подсказка на экране, какой жест сработал.
+- **Установка и обновления.** Образ с окном установки: перетащите Pad+ в «Программы». Дальше он обновляется сам: раз в четыре часа сверяет SHA-256 и подпись. Настройки дублируются в файл и переживают переустановку; перенос на другой Mac — «Экспорт / Импорт».
+
+### Как это работает
+
+1. Скачайте Pad+ и перетащите его в «Программы».
+2. Разрешите «Универсальный доступ» — без него жесты видны, но клавиши и окна Pad+ не трогает.
+3. Проведите пальцем вдоль правого края трекпада — страница прокрутится.
+
+### Вопросы
+
+**Зачем нужен «Универсальный доступ»?**
+
+Чтобы нажимать клавиши, кликать в углах и двигать окна за вас. Без него Pad+ видит жесты, но ничего не делает.
+
+**Какие жесты есть?**
+
+Края трекпада, клики в углах, тапы тремя, четырьмя и пятью пальцами, двойной тап тремя (фиксация перетаскивания), тип-тап, свайпы по кромкам и жесты окон: свайп двумя пальцами по заголовку ставит окно на половину экрана.
+
+**Что будет с настройками, если удалить Pad+?**
+
+Они лежат в файле ~/Library/Application Support/Ehroz/Pad+/settings.json и остаются. После повторной установки Pad+ всё восстановит сам.
+
+### Требования
+
+- macOS 13 Ventura и новее
+- Apple Silicon и Intel
+- Трекпад Apple
+
+- Скачать для Mac: https://github.com/ehroz1/padplus-releases/releases/latest/download/PadPlus.dmg
 
 ## Moss Pocket — Папка «Загрузки» рядом с Dock
 
@@ -1074,11 +1209,11 @@ Firefox (142+, в том числе на Android): нажмите «Расшир
 ## ANY CAMERA — Видео или фото вместо веб-камеры
 
 URL: https://ehroz1.github.io/ehroz.pro/any-camera/
-Платформы: Расширение · Статус: Скоро релиз · Версия: 1.0.0 · Обновлено: 2026-10-28
+Платформы: Расширение · Статус: Готово · Версия: 1.1.0 · Обновлено: 2026-11-12
 
 Сайты получают выбранное вами видео (по кругу) или фото вместо потока с веб-камеры.
 
-ANY CAMERA — виртуальная камера в виде расширения браузера. Пока подмена включена, сайт видит одну камеру «ANY CAMERA» и получает ваш файл; микрофон остаётся настоящим. Без файла сайт получает тестовую картинку — удобно проверять, как сервис работает с камерой. Одна кодовая база для Firefox на компьютере и на Android, есть версия для Chrome на Mac.
+ANY CAMERA — виртуальная камера в виде расширения браузера. Пока подмена включена, сайт видит одну камеру «ANY CAMERA» и получает ваш файл; микрофон остаётся настоящим. Без файла сайт получает тестовую картинку — удобно проверять, как сервис работает с камерой. Один код для Chrome и Firefox: на Mac в Chrome, Arc, Brave и Edge она ставится установщиком .pkg и обновляется сама, в Firefox — на компьютере и на Android.
 
 ### Для кого
 
@@ -1092,7 +1227,7 @@ ANY CAMERA — виртуальная камера в виде расширен�
 
 ### Как это работает
 
-1. Установите расширение в Firefox или Chrome.
+1. Скачайте установщик .pkg для Mac (Chrome, Arc, Brave, Edge) или поставьте расширение в Firefox.
 2. Нажмите значок ANY CAMERA → «Выбрать видео или фото».
 3. Включите подмену и включите камеру на сайте.
 
@@ -1115,16 +1250,17 @@ Firefox 128+ на компьютере и Android, Chrome 111+ и другие C
 - Firefox 128+ (компьютер или Android)
 - или Chrome 111+ на Mac
 
-- Получить расширение: https://t.me/hhrrzz1
+- Скачать для Mac: https://github.com/ehroz1/any-camera-releases/releases/latest/download/ANY-CAMERA.pkg
+- Расширение (.zip): https://github.com/ehroz1/any-camera-releases/releases/latest/download/ANY-CAMERA.zip
 
 ## Snowpuff — Тёплый снег на рабочем столе Mac и Windows
 
 URL: https://ehroz1.github.io/ehroz.pro/snowpuff/
-Платформы: macOS, Windows · Статус: Готово · Версия: 1.1.0 · Обновлено: 2026-10-31
+Платформы: macOS, Windows · Статус: Готово · Версия: 1.2.0 · Обновлено: 2026-11-12
 
 Снег падает, оседает на окнах и Dock и разлетается от курсора.
 
-Snowpuff — снегопад поверх рабочего стола macOS и Windows. Снег копится сугробами на окнах, Dock и панели задач, под окнами растут сосульки, активное окно светится тёплым светом. Можно подуть в микрофон, и снег разлетится. На созвонах снег прячется сам, а новые версии ставятся автоматически.
+Snowpuff — снегопад поверх рабочего стола macOS и Windows. Снег копится сугробами на окнах, Dock и панели задач, под окнами растут сосульки, активное окно светится тёплым светом. Есть режимы дождя и осенних листьев. Можно подуть в микрофон, и снег разлетится. На созвонах снег прячется сам, а новые версии ставятся автоматически.
 
 ### Для кого
 

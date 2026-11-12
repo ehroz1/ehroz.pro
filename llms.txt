@@ -6,18 +6,19 @@ Contacts: Telegram @hhrrzz1 (https://t.me/hhrrzz1), email ehrozbekisharifzoda@gm
 
 ## Apps
 
-- [Morfus](https://ehroz1.github.io/ehroz.pro/en/morfus/): Radial file converter for macOS. macOS; status: Available, version 0.2.2. Russian: https://ehroz1.github.io/ehroz.pro/morfus/
+- [Morfus](https://ehroz1.github.io/ehroz.pro/en/morfus/): Radial file converter for macOS. macOS; status: Available, version 0.2.3. Russian: https://ehroz1.github.io/ehroz.pro/morfus/
 - [Morfu](https://ehroz1.github.io/ehroz.pro/en/morfu/): Menu bar converter for macOS. macOS; status: Available, version 3.3. Russian: https://ehroz1.github.io/ehroz.pro/morfu/
 - [Pachaq](https://ehroz1.github.io/ehroz.pro/en/pachaq/): Image compression and cropping for the web. macOS, Windows; status: Available, version 0.1.2. Russian: https://ehroz1.github.io/ehroz.pro/pachaq/
 - [Sukhan](https://ehroz1.github.io/ehroz.pro/en/sukhan/): Auto captions for Reels, TikTok and Shorts. macOS; status: In development. Russian: https://ehroz1.github.io/ehroz.pro/sukhan/
-- [radius](https://ehroz1.github.io/ehroz.pro/en/radius/): Local background removal on Mac. macOS; status: In development. Russian: https://ehroz1.github.io/ehroz.pro/radius/
+- [radius](https://ehroz1.github.io/ehroz.pro/en/radius/): Background removal for photos on Mac. macOS; status: Available, version 1.1.0. Russian: https://ehroz1.github.io/ehroz.pro/radius/
 - [BLA-БЛА](https://ehroz1.github.io/ehroz.pro/en/bla-bla/): Audio & video transcription in the browser. Web; status: Available. Russian: https://ehroz1.github.io/ehroz.pro/bla-bla/
 - [Picta](https://ehroz1.github.io/ehroz.pro/en/picta/): Search photos, icons and video everywhere at once. Web; status: Available. Russian: https://ehroz1.github.io/ehroz.pro/picta/
-- [PadBridge](https://ehroz1.github.io/ehroz.pro/en/padbridge/): A gamepad in any game on Mac. macOS; status: Coming soon, version 0.4.0. Russian: https://ehroz1.github.io/ehroz.pro/padbridge/
+- [PadBridge](https://ehroz1.github.io/ehroz.pro/en/padbridge/): A gamepad in any game on Mac. macOS; status: Available, version 0.5.0. Russian: https://ehroz1.github.io/ehroz.pro/padbridge/
+- [Pad+](https://ehroz1.github.io/ehroz.pro/en/padplus/): New gestures for the Mac trackpad. macOS; status: Available, version 1.1.0. Russian: https://ehroz1.github.io/ehroz.pro/padplus/
 - [Moss Pocket](https://ehroz1.github.io/ehroz.pro/en/moss-pocket/): Your Downloads, right next to the Dock. macOS; status: In development, version 0.1.0. Russian: https://ehroz1.github.io/ehroz.pro/moss-pocket/
 - [Peecube](https://ehroz1.github.io/ehroz.pro/en/peecube/): Links in a window over the page. macOS, Extension; status: Available, version 4.1. Russian: https://ehroz1.github.io/ehroz.pro/peecube/
-- [ANY CAMERA](https://ehroz1.github.io/ehroz.pro/en/any-camera/): A video or photo instead of your webcam. Extension; status: Coming soon, version 1.0.0. Russian: https://ehroz1.github.io/ehroz.pro/any-camera/
-- [Snowpuff](https://ehroz1.github.io/ehroz.pro/en/snowpuff/): Cozy snow on your Mac and Windows desktop. macOS, Windows; status: Available, version 1.1.0. Russian: https://ehroz1.github.io/ehroz.pro/snowpuff/
+- [ANY CAMERA](https://ehroz1.github.io/ehroz.pro/en/any-camera/): A video or photo instead of your webcam. Extension; status: Available, version 1.1.0. Russian: https://ehroz1.github.io/ehroz.pro/any-camera/
+- [Snowpuff](https://ehroz1.github.io/ehroz.pro/en/snowpuff/): Cozy snow on your Mac and Windows desktop. macOS, Windows; status: Available, version 1.2.0. Russian: https://ehroz1.github.io/ehroz.pro/snowpuff/
 
 ## About
 
