@@ -141,6 +141,20 @@ html {
   -moz-osx-font-smoothing: grayscale;
   scroll-padding-top: calc(var(--menubar) + 16px);
 }
+/* Системная полоса прокрутки страницы скрыта; сама прокрутка (колесо, трекпад, клавиши, касание) работает */
+html,
+body,
+dialog {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+dialog::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
 body {
   min-height: 100dvh;
   overflow-x: clip;
