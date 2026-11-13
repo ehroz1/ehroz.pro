@@ -349,6 +349,51 @@ Yes, it’s a PWA: Install in the browser or Add to Home Screen on a phone.
 - Open picta.cc: https://picta.cc
 - GitHub: https://github.com/ehroz1/toptop-photo
 
+## Atlas — A hand-picked directory of useful sites and tools
+
+URL: https://ehroz1.github.io/ehroz.pro/en/atlas/
+Platforms: Web · Status: Available · Updated: 2026-11-13
+
+Useful sites picked by hand, to help you get things made.
+
+Atlas is a directory of over a hundred sites and tools for designers, developers and the curious. Every site is used for a while before it is added, and nobody pays for a spot on the list. Search by name, filter by category, price and platform, or scroll the Wall of previews. Pages in Russian and English, with an RSS feed.
+
+### Who it’s for
+
+Designers, developers and anyone looking for a reliable tool or inspiration without the noise.
+
+### What it does
+
+- **A directory with previews.** Every site is a card with a preview, a category and a short description: AI, design, inspiration, utilities, development, fonts. “Free”, “Free plan” and “Open source” badges are visible at a glance.
+- **Search and filters.** The “/” key opens search across sites and categories. Filters by category, price and platform narrow the list, and “I’m feeling lucky” opens a random site.
+- **The Wall.** Every site on one endless wall of previews. Scroll or drag to stumble on something unexpected.
+
+### How it works
+
+1. Open atlas.ehroz.pro — nothing to install.
+2. Press “/” and type a name, or pick a category and filters.
+3. Open a card to read the description, then visit the site.
+
+### FAQ
+
+**How do sites get in?**
+
+They are used for a while first. A site has to do its job better than the obvious choice, make sense within a minute and not require sign-up just to look around. Nobody pays for a spot.
+
+**Can I suggest a site?**
+
+Yes — the “Suggest a site” button on atlas.ehroz.pro opens a form.
+
+**Is there an RSS feed?**
+
+Yes: atlas.ehroz.pro/rss.xml — new sites arrive in your reader.
+
+### Requirements
+
+- Any modern browser on desktop or mobile
+
+- Open Atlas: https://atlas.ehroz.pro/
+
 ## PadBridge — A gamepad in any game on Mac
 
 URL: https://ehroz1.github.io/ehroz.pro/en/padbridge/
@@ -1003,6 +1048,51 @@ Picta ищет бесплатные фото сразу по нескольки�
 
 - Открыть picta.cc: https://picta.cc
 - GitHub: https://github.com/ehroz1/toptop-photo
+
+## Atlas — Каталог полезных сайтов и инструментов
+
+URL: https://ehroz1.github.io/ehroz.pro/atlas/
+Платформы: Веб · Статус: Готово · Обновлено: 2026-11-13
+
+Полезные сайты, отобранные вручную, — чтобы помогать делать вещи.
+
+Atlas — каталог из больше чем ста сайтов и инструментов для дизайнеров, разработчиков и любопытных. Каждым сайтом сначала пользуются какое-то время, и никто не платит за место в списке. Ищите по названию, фильтруйте по категории, цене и платформе или листайте «Стену» из превью. Страницы на русском и английском, есть RSS.
+
+### Для кого
+
+Дизайнерам, разработчикам и всем, кто ищет надёжный инструмент или вдохновение без шума.
+
+### Что умеет
+
+- **Каталог с превью.** Каждый сайт — карточка с превью, категорией и коротким описанием: нейросети, дизайн, вдохновение, утилиты, разработка, шрифты. Отметки «Бесплатно», «Есть бесплатный план» и «Открытый код» видны сразу.
+- **Поиск и фильтры.** Клавиша «/» открывает поиск по сайтам и категориям. Фильтры по категории, цене и платформе сужают список, а «Мне повезёт» открывает случайный сайт.
+- **Стена.** Все сайты — на одной бесконечной стене превью. Прокрутите или потяните, чтобы наткнуться на что-то неожиданное.
+
+### Как это работает
+
+1. Откройте atlas.ehroz.pro — ничего ставить не нужно.
+2. Нажмите «/» и введите название или выберите категорию и фильтры.
+3. Откройте карточку, чтобы прочитать описание, и переходите на сайт.
+
+### Вопросы
+
+**Как сайты попадают в каталог?**
+
+Ими сначала пользуются какое-то время. Сайт должен делать своё дело лучше очевидного выбора, быть понятным за минуту и не требовать регистрации, чтобы осмотреться. За место в списке никто не платит.
+
+**Можно предложить свой сайт?**
+
+Да, кнопка «Предложить сайт» на atlas.ehroz.pro ведёт на форму.
+
+**Есть ли RSS?**
+
+Да: atlas.ehroz.pro/rss.xml — новые сайты приходят в вашу читалку.
+
+### Требования
+
+- Любой современный браузер на компьютере или телефоне
+
+- Открыть Atlas: https://atlas.ehroz.pro/
 
 ## PadBridge — Геймпад в любой игре на Mac
 
