@@ -30,6 +30,7 @@ const sources = {
   pachaq: await readFile(new URL('pachaq.png', SRC)),
   sukhan: await sharp(await readFile(new URL('sukhan.png', SRC))).resize(1024, 1024).png().toBuffer(),
   picta: render(frame(`<image x="100" y="100" width="824" height="824" xlink:href="${await dataUri('picta-raw.png', 'image/png')}"/>`, '#0b0b0f')),
+  atlas: render(frame(`<image x="262" y="262" width="500" height="500" xlink:href="${await dataUri('atlas.svg', 'image/svg+xml')}"/>`, '#0d0d0d')),
   'bla-bla': render(frame(`<image x="232" y="226" width="560" height="580" xlink:href="${await dataUri('bla-logo.svg', 'image/svg+xml')}"/>`, '#ffffff')),
   radius: await readFile(new URL('radius.png', SRC)).catch(() => null),
   padbridge: await readFile(new URL('padbridge.png', SRC)),

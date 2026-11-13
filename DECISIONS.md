@@ -5,7 +5,7 @@
 
 ## Состав витрины
 
-- **На витрине 13 продуктов:** Morfus, Morfu, Pachaq, Sukhan, radius, BLA-БЛА, Picta, PadBridge, Pad+, Moss Pocket,
+- **На витрине 14 продуктов:** Morfus, Morfu, Pachaq, Sukhan, radius, BLA-БЛА, Picta, Atlas, PadBridge, Pad+, Moss Pocket,
   Peecube, ANY CAMERA. Таблица — в `projects.md`.
 - **Не присланы и не добавлены:** Androooo / Androoo, Local Conv. Добавить: новый объект в `src/content/apps.ts`
   + иконка в `assets-src/icons/<slug>.png` + `npm run icons`. Для сцен можно временно указать `scene: 'generic'`.
@@ -163,3 +163,9 @@ IntersectionObserver, код в `src/scripts/motion.ts`. «Появление п
 - **PadBridge 0.5.0, ANY CAMERA 1.1.0, radius 1.1.0** вышли в публичные релизы — на витрине «Доступно», кнопки скачивания.
   Страница radius переписана по README (раньше были только модели). Иконки radius и Pad+ — из репозиториев приложений.
 - **Sukhan** — релизов пока нет (в `sukhan-releases` только README), остаётся «В разработке». Репозиторий `tx` пуст.
+
+## Atlas (2026-11-13)
+
+- **Atlas — веб-инструмент** (`atlas.ehroz.pro`, каталог сайтов): оформлен как Picta и BLA-БЛА — кнопка «Открыть Atlas», без загрузки.
+  Сцены — настоящие скриншоты сайта (`public/shots/atlas-*.webp`), иконка — глобус с favicon сайта (`assets-src/icons/atlas.svg`).
+  Число сайтов в тексте не указано точно («больше ста»), чтобы не устаревало. Исходного репозитория у Atlas нет — GitHub-ссылки нет. **Проверить текст.**

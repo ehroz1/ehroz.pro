@@ -14,7 +14,7 @@ interface Props { id: string; lang: 'ru' | 'en'; label: string; fit?: boolean }
 const { id, lang, label, fit = false } = Astro.props;
 const group = id.split('-')[0];
 // Настоящие скриншоты и схема трекпада Pad+ (ShotScenes.astro)
-const shot = group === 'padplus' || id === 'radius-main';
+const shot = group === 'padplus' || group === 'atlas' || id === 'radius-main';
 ---
 <div class="scene-host" data-fit={fit ? '' : undefined}>
 {group === 'morfus' && <MorfusScenes id={id} lang={lang} label={label} />}
