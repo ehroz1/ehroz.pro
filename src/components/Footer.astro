@@ -106,14 +106,13 @@ const c = CONTACTS;
   }
   .foot-egg {
     padding: 0;
-    color: inherit;
+    color: var(--faint);
     font: inherit;
     letter-spacing: 0.2em;
     background: none;
     border: 0;
-    opacity: 0.35;
     cursor: default;
-    transition: opacity var(--fast) var(--ease), color var(--fast) var(--ease);
+    transition: color var(--fast) var(--ease);
   }
   /* на компьютере подсказка только текст — запуск Konami-кодом; кликается лишь на тач-экранах */
   @media (hover: hover) and (pointer: fine) {
@@ -123,7 +122,6 @@ const c = CONTACTS;
   }
   .foot-egg:hover,
   .foot-egg:focus-visible {
-    opacity: 1;
     color: var(--accent);
   }
   h2 {

@@ -68,10 +68,10 @@ const pad = (v: number) => String(v).padStart(2, '0');
       </div>
       <div class="ap-grid bleed">
         <div class="ap-pass">
-          <div class="ap-no" data-reveal><span class="tag-no">{no}</span><span class="pixel ap-no-big">№ {no}</span></div>
-          <h1 class="display ap-name" id="ap-name" data-reveal>{app.name}</h1>
-          <p class="ap-tag" data-reveal>{pick(lang, app.tagline)}</p>
-          <div class="ap-cta" data-reveal>
+          <div class="ap-no" data-intro style="--rv-d:0s"><span class="tag-no">{no}</span><span class="pixel ap-no-big">№ {no}</span></div>
+          <h1 class="display ap-name" id="ap-name" data-intro style="--rv-d:0.06s">{app.name}</h1>
+          <p class="ap-tag" data-intro style="--rv-d:0.12s">{pick(lang, app.tagline)}</p>
+          <div class="ap-cta" data-intro style="--rv-d:0.18s">
             {
               app.links.map((l, i) => {
                 /* Прямая ссылка на файл релиза — скачивание начинается в этой же вкладке, без перехода на GitHub. */
@@ -85,7 +85,7 @@ const pad = (v: number) => String(v).padStart(2, '0');
               })
             }
           </div>
-          <dl class="spec" data-reveal>
+          <dl class="spec" data-intro style="--rv-d:0.24s">
             <div>
               <dt>{ru ? 'Статус' : 'Status'}</dt>
               <dd><span class={`stag ${app.status}`}><i class="sq" />{pick(lang, STATUS[app.status])}</span></dd>
