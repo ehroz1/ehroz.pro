@@ -45,22 +45,22 @@ const stats = [
     </div>
     <div class="hero-grid bleed">
       <div class="hero-main">
-        <h1 class="hero-title" id="hero-title" data-reveal>
+        <h1 class="hero-title" id="hero-title" data-intro style="--rv-d:0s">
           <span class="hero-name">{tr(lang, 'hero.name')}</span>
           {ru ? 'Небольшие инструменты.' : 'Small tools.'}<br />
           {ru ? 'Одна ' : 'One '}<span class="hl">{ru ? 'мастерская' : 'workshop'}</span>.
         </h1>
-        <p class="hero-lead" data-reveal>
+        <p class="hero-lead" data-intro style="--rv-d:0.06s">
           {ru
             ? 'Я Эхроз (Ehroz), дизайнер и разработчик из Астаны. Конвертеры, работа с картинками, видео и речью, утилиты для Mac и расширения для браузера. Делаю их сам, пользуюсь каждый день — и каталог постоянно пополняется.'
             : 'I’m Ehroz (Эхроз), a designer and developer from Astana. Converters, tools for images, video and speech, Mac utilities and browser extensions. I make them myself, use them every day — and the catalogue keeps growing.'}
         </p>
-        <div class="hero-cta" data-reveal>
+        <div class="hero-cta" data-intro style="--rv-d:0.12s">
           <a class="btn btn-primary" href="#apps"><Icon name="arrow" />{tr(lang, 'hero.cta')}</a>
           <a class="btn" href={`https://t.me/${CONTACTS.telegram}`} target="_blank" rel="noopener"><Icon name="telegram" />{ru ? 'Написать в Telegram' : 'Message on Telegram'}</a>
           <a class="btn" href={`https://github.com/${CONTACTS.github}`} target="_blank" rel="noopener"><Icon name="github" />GitHub</a>
         </div>
-        <p class="hero-note" data-reveal>macOS · Windows · {ru ? 'веб · расширения браузера' : 'web · browser extensions'}</p>
+        <p class="hero-note" data-intro style="--rv-d:0.18s">macOS · Windows · {ru ? 'веб · расширения браузера' : 'web · browser extensions'}</p>
       </div>
       <nav class="hero-index" aria-label={ru ? 'Каталог приложений' : 'App index'}>
         <ol data-reveal-group="wave">

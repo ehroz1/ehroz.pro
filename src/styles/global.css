@@ -284,6 +284,21 @@ html.rv .sec-bar:not(.drawn) > * {
 .sec-bar.drawing > * {
   --rv-d: 0.15s;
 }
+/* Текст первого экрана проявляется CSS-анимацией с первой же отрисовки — не ждёт motion.js
+   и без blur: это элемент LCP, а filter не анимируется на GPU. Сетка иконок рядом идёт волной из motion.ts. */
+html.rv [data-intro] {
+  animation: rv-intro 700ms cubic-bezier(0.215, 0.61, 0.355, 1) var(--rv-d, 0s) backwards;
+}
+@keyframes rv-intro {
+  from {
+    opacity: 0;
+    translate: 0 20px;
+  }
+}
+/* остальное в первом экране — тоже без blur */
+html.rv main section:first-of-type [data-reveal]:not(.rv-in) {
+  filter: none;
+}
 /* линия раздела вытягивается слева направо */
 html.rv .sec-bar {
   border-top-color: transparent;
@@ -315,8 +330,10 @@ html.rv .sec-bar:not(.drawn)::after {
   transition-delay: 0.41s;
 }
 @media print {
+  html.rv [data-intro],
   html.rv [data-reveal],
   html.rv .sec-bar > * {
+    animation: none !important;
     opacity: 1 !important;
     translate: none !important;
     filter: none !important;
