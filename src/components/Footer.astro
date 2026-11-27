@@ -2,7 +2,7 @@
 import type { Lang } from '../content/apps';
 import { apps } from '../content/apps';
 import { tr, path, CONTACTS } from '../i18n';
-import Logo from './Logo.astro';
+import ZMark from './ZMark.astro';
 import { analyticsEnabled } from '../analytics.config';
 
 interface Props {
@@ -11,98 +11,608 @@ interface Props {
 const { lang } = Astro.props;
 const other: Lang = lang === 'ru' ? 'en' : 'ru';
 const c = CONTACTS;
+const ru = lang === 'ru';
+
+/* Вордмарк EHROZ «на чертеже»: буквы логотипа (сетка 224 по высоте, штрих 64/54) только контуром,
+   вокруг — линии построения, засечки и кресты, как на кальке. */
+const GLYPHS = [
+  // E + H — общий контур, как в Logo.astro
+  { d: 'M0 0H292V85H372V0H436V224H372V139H292V224H228V54H64V85H160V139H64V170H192V224H0Z' },
+  { d: 'M0 0H64V224H0Z', t: 472 },
+  { d: 'M0 0H208V108A64 64 0 0 1 144 172H0Z M64 54H144V92A26 26 0 0 1 118 118H64Z', t: 472 },
+  { d: 'M95 118H155L208 224H148Z', t: 472 },
+  { d: 'M64 0H208V160A64 64 0 0 1 144 224H64A64 64 0 0 1 0 160V64A64 64 0 0 1 64 0Z M90 54H144V144A26 26 0 0 1 118 170H90A26 26 0 0 1 64 144V80A26 26 0 0 1 90 54Z', t: 708 },
+  { d: 'M0 0H228V54L170 170H228V224H0V170L58 54H0Z M118 54H168L110 170H60Z', t: 942 },
+];
+// Габариты букв: E, H, R, O, Z
+const BOXES = [
+  [0, 192],
+  [228, 436],
+  [472, 680],
+  [708, 916],
+  [942, 1170],
+];
+const W = 1170;
+const H = 224;
+const GUIDES_Y = [54, 112, 170];
+const T = 12; // длина засечки
+const crosses = BOXES.flatMap(([a, b]) => [
+  [a, 0], [b, 0], [a, H], [b, H], [a, H / 2], [b, H / 2],
+]);
+const ticksX = BOXES.flatMap(([a, b]) => [a, b, (a + b) / 2]);
+const ruler = Array.from({ length: 121 }, (_, i) => i);
+
+const year = 2026;
 ---
 
 <footer class="foot container">
-  <i class="ikat ikat-sep" aria-hidden="true"></i>
   <div class="foot-grid">
-    <div class="foot-brand">
-      <a href={path(lang)} class="foot-logo" aria-label="ehroz.pro"><Logo height={22} /></a>
-      <p>{analyticsEnabled() ? tr(lang, 'foot.consent') : tr(lang, 'foot.made')}</p>
-      {analyticsEnabled() && <p><a href="#" data-consent-open>{tr(lang, 'foot.cookies')}</a></p>}
+    <div class="cell cell-head">
+      <p class="foot-title">
+        {ru ? 'Небольшие инструменты, которые экономят время' : 'Small tools that save time'}
+      </p>
+      <p class="foot-note">{analyticsEnabled() ? tr(lang, 'foot.consent') : tr(lang, 'foot.made')}</p>
     </div>
-    <nav aria-label={lang === 'ru' ? 'Приложения в подвале' : 'Footer: apps'}>
+
+    <nav class="cell cell-apps" aria-label={ru ? 'Приложения в подвале' : 'Footer: apps'}>
       <h2>{tr(lang, 'menu.apps')}</h2>
-      <ul>
-        {
-          apps.map((a, i) => (
-            <li>
-              <a href={path(lang, a.slug)}>
-                {a.name}
-              </a>
-            </li>
-          ))
-        }
+      <ul class="cols">
+        {apps.map((a) => <li><a href={path(lang, a.slug)}>{a.name}</a></li>)}
       </ul>
     </nav>
-    <nav aria-label={tr(lang, 'cc.title')}>
-      <h2>{tr(lang, 'cc.title')}</h2>
-      <ul>
-        <li><a href={`https://t.me/${c.telegram}`} target="_blank" rel="noopener">Telegram</a></li>
-        <li><a href={`mailto:${c.email}`}>Email</a></li>
-        <li><a href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noopener">Instagram</a></li>
-        <li><a href={`https://github.com/${c.github}`} target="_blank" rel="noopener">GitHub</a></li>
-        <li><a href={`https://www.behance.net/${c.behance}`} target="_blank" rel="noopener">Behance</a></li>
-      </ul>
-    </nav>
-    <nav aria-label="ehroz.pro">
+
+    <nav class="cell cell-site" aria-label="ehroz.pro">
       <h2>ehroz.pro</h2>
       <ul>
+        <li><a href={path(lang)}>{tr(lang, 'menu.home')}</a></li>
         <li><a href={path(lang, 'about')}>{tr(lang, 'about.page.h1')}</a></li>
         <li><a href={path(lang, 'contacts')}>{tr(lang, 'contacts.page.h1')}</a></li>
-        <li><a href={path(lang, 'website-astana')}>{lang === 'ru' ? 'Сайт под ключ в Астане' : 'Websites in Astana'}</a></li>
-        <li><a href={c.order} target="_blank" rel="noopener">{tr(lang, 'contact.order')}</a></li>
-        <li><a href={path(other)} hreflang={other} lang={other}>{other === 'en' ? 'English' : 'Русский'}</a></li>
+        <li><a href={path(lang, 'website-astana')}>{ru ? 'Сайт под ключ в Астане' : 'Websites in Astana'}</a></li>
+      </ul>
+    </nav>
+
+    <div class="cell cell-mark" aria-hidden="true">
+      <span class="mark-frame">
+        <i class="cross c-tl"></i><i class="cross c-tr"></i><i class="cross c-bl"></i><i class="cross c-br"></i>
+        <ZMark size={150} class="foot-z" />
+      </span>
+    </div>
+
+    <div class="cell cell-order">
+      <h2>{ru ? 'Заказ' : 'Work with me'}</h2>
+      <p>{ru ? 'Нужен сайт или инструмент? Напишите — отвечаю быстро.' : 'Need a website or a tool? Message me — I reply fast.'}</p>
+      <a class="foot-field" href={`https://t.me/${c.telegram}`} target="_blank" rel="noopener">
+        <span>@{c.telegram}</span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div class="cell cell-addr">
+      <h2>{ru ? 'Где' : 'Location'}</h2>
+      <p class="big">{c.city[lang]}, {ru ? 'Казахстан' : 'Kazakhstan'}<br />UTC+5</p>
+      <a class="bottom-link" href={c.order} target="_blank" rel="noopener">{tr(lang, 'contact.order')}</a>
+    </div>
+
+    <div class="cell cell-mail">
+      <div>
+        <h2>{ru ? 'Новые проекты' : 'New business'}</h2>
+        <a class="big" href={`https://t.me/${c.telegram}`} target="_blank" rel="noopener">t.me/{c.telegram}</a>
+      </div>
+      <div>
+        <h2>{ru ? 'Общие вопросы' : 'General inquiries'}</h2>
+        <a class="big" href={`mailto:${c.email}`}>{c.email}</a>
+      </div>
+    </div>
+
+    <nav class="cell cell-social" aria-label={tr(lang, 'cc.title')}>
+      <h2>{ru ? 'Соцсети' : 'Social'}</h2>
+      <ul class="cols">
+        <li><a href={`https://t.me/${c.telegram}`} target="_blank" rel="noopener">Telegram</a></li>
+        <li><a href={`https://github.com/${c.github}`} target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href={`https://instagram.com/${c.instagram}`} target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href={`https://www.behance.net/${c.behance}`} target="_blank" rel="noopener">Behance</a></li>
+        <li><a href={`mailto:${c.email}`}>Email</a></li>
       </ul>
     </nav>
   </div>
+
+  <div class="foot-draft" data-draft>
+    <div class="ruler" aria-hidden="true">
+      <i class="plus"></i>
+      <span class="ruler-ticks">{ruler.map((i) => <i class={i % 10 === 0 ? 'l' : ''}></i>)}</span>
+      <i class="plus"></i>
+    </div>
+    <svg class="wordmark" viewBox={`-60 -40 ${W + 120} ${H + 80}`} role="img" aria-label="EHROZ">
+      <g class="guides">
+        <line x1="-60" x2={W + 60} y1="0" y2="0" />
+        <line x1="-60" x2={W + 60} y1={H} y2={H} />
+        {GUIDES_Y.map((y) => <line class="dash" x1="-60" x2={W + 60} y1={y} y2={y} />)}
+        {ticksX.map((x) => <line class="dash" x1={x} x2={x} y1="-40" y2={H + 40} />)}
+      </g>
+      <g class="crosses">
+        {crosses.map(([x, y]) => <path d={`M${x - T} ${y}H${x + T}M${x} ${y - T}V${y + T}`} />)}
+      </g>
+      <g class="glyphs">
+        {GLYPHS.map((g) => <path d={g.d} transform={g.t ? `translate(${g.t} 0)` : undefined} pathLength="1" />)}
+      </g>
+      <circle class="dot" cx={708 + 104} cy={112} r="5" />
+    </svg>
+    <div class="ruler" aria-hidden="true">
+      <i class="plus"></i>
+      <span class="ruler-ticks">{ruler.map((i) => <i class={i % 10 === 0 ? 'l' : ''}></i>)}</span>
+      <i class="plus"></i>
+    </div>
+  </div>
+
   <div class="foot-bottom">
-    <span>© 2026 Ehroz</span>
-    <button type="button" class="foot-egg" data-game-start title={tr(lang, 'foot.egg')}>↑↑↓↓←→←→BA</button>
-    <span>{c.city[lang]} · UTC+5</span>
+    <span class="copy">
+      © {year} Ehroz. {ru ? 'Дизайн и код —' : 'Design & code by'} <a href={path(lang, 'about')}>{ru ? 'Эхроз' : 'Ehroz'}</a>
+      <button type="button" class="foot-egg" data-game-start title={tr(lang, 'foot.egg')}>↑↑↓↓←→←→BA</button>
+    </span>
+    <span class="bottom-links">
+      {analyticsEnabled() && <a href="#" data-consent-open>{tr(lang, 'foot.cookies')}</a>}
+      <a href={path(lang, 'contacts')}>{tr(lang, 'contacts.page.h1')}</a>
+      <a href={path(other)} hreflang={other} lang={other}>{other === 'en' ? 'English' : 'Русский'}</a>
+    </span>
   </div>
 </footer>
+
+<script>
+  // Вордмарк «прорисовывается» при появлении в кадре; без анимаций — сразу целиком.
+  const el = document.querySelector<HTMLElement>('[data-draft]');
+  if (el) {
+    const reduced =
+      matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.dataset.motion === 'reduce';
+    if (reduced || !('IntersectionObserver' in window)) el.classList.add('is-drawn');
+    else {
+      el.classList.add('will-draw');
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            el.classList.add('is-drawn');
+            io.disconnect();
+          }
+        },
+        { threshold: 0.3 },
+      );
+      io.observe(el);
+    }
+  }
+</script>
 
 <style>
   .foot {
     margin-top: 120px;
+    --cellpad: 20px 16px;
   }
+  @media (min-width: 900px) {
+    .foot {
+      --cellpad: 22px 20px;
+    }
+  }
+
+  /* ── Сетка ячеек ── */
   .foot-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     border-top: 1px solid var(--line);
     border-left: 1px solid var(--line);
-    margin-top: 24px;
   }
-  .foot-grid > * {
-    padding: 20px 16px 28px;
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+    padding: var(--cellpad);
     border-right: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    min-width: 0;
   }
-  .foot-brand {
+  .cell-head,
+  .cell-apps,
+  .cell-order,
+  .cell-mail,
+  .cell-social,
+  .cell-mark {
     grid-column: 1 / -1;
   }
-  @media (min-width: 900px) {
+  .cell-mark {
+    display: none;
+  }
+  /* на телефоне «Где» встаёт в пару к «ehroz.pro» */
+  .cell-order,
+  .cell-mail,
+  .cell-social {
+    order: 2;
+  }
+  @media (min-width: 700px) {
     .foot-grid {
-      grid-template-columns: 2fr 1fr 1fr 1fr;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
-    .foot-brand {
+    .cell {
+      order: 0;
+    }
+    .cell-head,
+    .cell-order {
+      grid-column: 1 / -1;
+    }
+    .cell-apps,
+    .cell-mail {
+      grid-column: span 2;
+    }
+  }
+  @media (min-width: 1100px) {
+    .foot-grid {
+      grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)) minmax(0, 1.1fr);
+    }
+    .cell-head,
+    .cell-order {
+      grid-column: 1;
+    }
+    .cell-apps {
+      grid-column: span 2;
+    }
+    .cell-site,
+    .cell-addr,
+    .cell-social {
       grid-column: auto;
     }
+    .cell-mail {
+      grid-column: auto;
+    }
+    .cell-mark {
+      display: grid;
+      place-items: center;
+      grid-column: 5;
+      grid-row: 1 / span 2;
+    }
+    .cell-head {
+      min-height: 280px;
+    }
   }
-  .foot-logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font: 700 18px/1 var(--font-sans);
-    letter-spacing: -0.02em;
+
+  h2 {
+    color: var(--faint);
+    font: 500 11px/1 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
-  .foot-brand p {
-    margin-top: 12px;
+  .cell-head {
+    container-type: inline-size;
+  }
+  .cell .foot-title {
+    max-width: 14ch;
+    color: var(--text);
+    font: 700 clamp(24px, 10.5cqi, 44px) / 0.98 var(--font-display);
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+  .foot-note {
+    margin-top: auto;
     max-width: 36ch;
     color: var(--muted);
     font-size: 14px;
+  }
+  .cell p {
+    color: var(--text-2);
+    font-size: 15px;
+    line-height: 1.35;
+  }
+  .cell p.big,
+  a.big {
+    color: var(--text);
+    font-size: 17px;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+  a.big {
+    transition: color var(--fast) var(--ease);
+  }
+  a.big:hover {
+    color: var(--accent);
+  }
+
+  ul {
+    display: grid;
+    gap: 10px 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  ul.cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 700px) {
+    .cell-apps ul.cols {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1100px) {
+    .cell-apps ul.cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  ul a,
+  .bottom-link {
+    color: var(--text);
+    font-size: 16px;
+    transition: color var(--fast) var(--ease);
+  }
+  ul a:hover,
+  .bottom-link:hover {
+    color: var(--accent);
+  }
+  .bottom-link {
+    margin-top: auto;
+  }
+
+  .cell-mail {
+    gap: 0;
+    padding: 0;
+  }
+  .cell-mail > div {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 14px;
+    padding: var(--cellpad);
+  }
+  .cell-mail > div + div {
+    border-top: 1px solid var(--line);
+  }
+
+  /* Поле как в форме подписки, но это ссылка в Telegram */
+  .cell-order {
+    padding-bottom: 0;
+  }
+  .foot-field {
+    display: flex;
+    align-items: stretch;
+    margin: auto -16px 0;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 16px;
+    transition: color var(--fast) var(--ease);
+  }
+  @media (min-width: 900px) {
+    .foot-field {
+      margin-inline: -20px;
+    }
+  }
+  .foot-field span:first-child {
+    flex: 1;
+    padding: 16px 20px;
+  }
+  .foot-field .arrow {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    border-left: 1px solid var(--line);
+    transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+  }
+  .foot-field:hover {
+    color: var(--text);
+  }
+  .foot-field:hover .arrow {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  /* Знак в рамке с крестами */
+  .mark-frame {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    max-width: 230px;
+    padding: 34px;
+    color: var(--text);
+  }
+  .mark-frame :global(.foot-z) {
+    width: 100%;
+    height: auto;
+  }
+  .cross {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+  }
+  .cross::before,
+  .cross::after {
+    content: '';
+    position: absolute;
+    background: var(--line-strong);
+  }
+  .cross::before {
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+  }
+  .cross::after {
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+  }
+  .c-tl { top: 0; left: 0; }
+  .c-tr { top: 0; right: 0; }
+  .c-bl { bottom: 0; left: 0; }
+  .c-br { bottom: 0; right: 0; }
+
+  /* ── Чертёж вордмарка ── */
+  .foot-draft {
+    padding: 10px 0;
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    color: var(--text);
+  }
+  .ruler {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-inline: 10px;
+    color: var(--faint);
+  }
+  .plus {
+    position: relative;
+    flex: none;
+    width: 11px;
+    height: 11px;
+  }
+  .plus::before,
+  .plus::after {
+    content: '';
+    position: absolute;
+    background: currentColor;
+  }
+  .plus::before { left: 0; right: 0; top: 5px; height: 1px; }
+  .plus::after { top: 0; bottom: 0; left: 5px; width: 1px; }
+  .ruler-ticks {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    height: 10px;
+    overflow: hidden;
+  }
+  .ruler-ticks i {
+    flex: none;
+    width: 1px;
+    height: 6px;
+    margin-top: 4px;
+    background: var(--line-strong);
+  }
+  .ruler-ticks i.l {
+    height: 10px;
+    margin-top: 0;
+    background: var(--faint);
+  }
+  /* на узком экране — каждое второе деление */
+  @media (max-width: 699px) {
+    .ruler-ticks i:nth-child(even) {
+      display: none;
+    }
+  }
+  .wordmark {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 6px 0;
+    overflow: visible;
+  }
+  .wordmark * {
+    vector-effect: non-scaling-stroke;
+    fill: none;
+  }
+  .guides line {
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .guides line.dash {
+    stroke-dasharray: 3 5;
+  }
+  .crosses path {
+    stroke: var(--line-strong);
+    stroke-width: 1;
+  }
+  .glyphs path {
+    stroke: currentColor;
+    stroke-width: 1.25;
+    stroke-linejoin: miter;
+  }
+  @media (min-width: 900px) {
+    .glyphs path {
+      stroke-width: 1.5;
+    }
+  }
+  .wordmark .dot {
+    fill: var(--accent);
+  }
+
+  /* прорисовка: контур бежит по пути, линии построения проявляются */
+  .will-draw .glyphs path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .will-draw .guides,
+  .will-draw .crosses,
+  .will-draw .dot {
+    opacity: 0;
+  }
+  .will-draw.is-drawn .guides,
+  .will-draw.is-drawn .crosses {
+    opacity: 1;
+    transition: opacity 0.8s var(--ease);
+  }
+  .will-draw.is-drawn .glyphs path {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 2.2s cubic-bezier(0.6, 0.1, 0.2, 1) 0.2s;
+  }
+  .will-draw.is-drawn .glyphs path:nth-child(2) { transition-delay: 0.35s; }
+  .will-draw.is-drawn .glyphs path:nth-child(3) { transition-delay: 0.45s; }
+  .will-draw.is-drawn .glyphs path:nth-child(4) { transition-delay: 0.55s; }
+  .will-draw.is-drawn .glyphs path:nth-child(5) { transition-delay: 0.65s; }
+  .will-draw.is-drawn .glyphs path:nth-child(6) { transition-delay: 0.8s; }
+  .will-draw.is-drawn .dot {
+    opacity: 1;
+    transition: opacity 0.4s var(--ease) 2.4s;
+  }
+
+  /* ── Нижняя полоса ── */
+  .foot-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    border: 1px solid var(--line);
+    color: var(--faint);
+    font: 500 11px/1.4 var(--font-mono);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .copy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 16px;
+    padding: 16px;
+  }
+  .copy a {
+    color: var(--text-2);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .copy a:hover {
+    color: var(--accent);
+  }
+  .bottom-links {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .bottom-links a {
+    padding: 16px 20px;
+    border-left: 1px solid var(--line);
+    color: var(--text);
+    font: 400 15px/1.2 var(--font-sans);
+    letter-spacing: 0;
+    text-transform: none;
+    transition: color var(--fast) var(--ease), background var(--fast) var(--ease);
+  }
+  .bottom-links a:hover {
+    background: var(--hover);
+    color: var(--accent);
+  }
+  @media (max-width: 699px) {
+    .bottom-links {
+      width: 100%;
+      border-top: 1px solid var(--line);
+    }
+    .bottom-links a {
+      flex: 1;
+      text-align: center;
+    }
+    .bottom-links a:first-child {
+      border-left: 0;
+    }
   }
   .foot-egg {
     padding: 0;
@@ -125,39 +635,5 @@ const c = CONTACTS;
   .foot-egg:focus-visible {
     opacity: 1;
     color: var(--accent);
-  }
-  h2 {
-    margin-bottom: 12px;
-    color: var(--faint);
-    font: 500 10.5px/1 var(--font-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-  ul {
-    display: grid;
-    gap: 8px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  ul a {
-    display: inline-flex;
-    gap: 10px;
-    color: var(--text-2);
-    font-size: 14px;
-    transition: color var(--fast) var(--ease);
-  }
-  ul a:hover {
-    color: var(--accent);
-  }
-  .foot-bottom {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 14px 0;
-    color: var(--faint);
-    font: 500 10.5px/1.4 var(--font-mono);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
   }
 </style>
